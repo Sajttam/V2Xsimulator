@@ -4,13 +4,17 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import entities.EntityNode.Direction;
+
 public class EntityRoad extends Entity{
-	EntityNode enterNode, exitNode;
+	private EntityNode enterNode, exitNode;
 	int x2, y2;
-	
-	public EntityRoad(EntityNode enterNode, EntityNode exitNode) {
+	private Direction direction;
+
+	public EntityRoad(EntityNode enterNode, EntityNode exitNode, Direction direction) {
 		this.enterNode = enterNode;
 		this.exitNode = exitNode;
+		this.direction = direction;
 	}
 	
 	public void setPosition(int x1, int y1, int x2, int y2) {
@@ -18,6 +22,14 @@ public class EntityRoad extends Entity{
 		setYPosition(y1);
 		this.x2 = x2;
 		this.y2 = y2;
+	}
+	
+	public Direction getDirection() {
+		return direction;
+	}
+
+	public void setDirection(Direction direction) {
+		this.direction = direction;
 	}
 	
 	public void setPosition(EntityNode node, int x, int y) {

@@ -123,8 +123,8 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		nodeEast.addConnectionTo(nodeCenter, EntityNode.Direction.WEST);
 		
 		//TOP - CENTER
-		nodeTop.addConnectionTo(nodeCenter, EntityNode.Direction.BOTTOM);
-		nodeCenter.addConnectionTo(nodeTop, EntityNode.Direction.TOP);
+		nodeTop.addConnectionTo(nodeCenter, EntityNode.Direction.SOUTH);
+		nodeCenter.addConnectionTo(nodeTop, EntityNode.Direction.NORTH);
 	}
 
 	/**

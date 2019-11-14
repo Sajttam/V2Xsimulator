@@ -8,13 +8,13 @@ import java.util.ArrayList;
 public class EntityNode extends Entity {
 
 	public enum Direction {
-		WEST, EAST, TOP, BOTTOM;
+		WEST, EAST, NORTH, SOUTH;
 	}
 
 	private ArrayList<EntityRoad> roadsWest = new ArrayList<EntityRoad>();
 	private ArrayList<EntityRoad> roadsEast = new ArrayList<EntityRoad>();
-	private ArrayList<EntityRoad> roadsTop = new ArrayList<EntityRoad>();
-	private ArrayList<EntityRoad> roadsBottom = new ArrayList<EntityRoad>();
+	private ArrayList<EntityRoad> roadsNorth = new ArrayList<EntityRoad>();
+	private ArrayList<EntityRoad> roadsSouth = new ArrayList<EntityRoad>();
 
 	private int wait = 0;
 
@@ -35,16 +35,16 @@ public class EntityNode extends Entity {
 			return Direction.EAST;
 		case EAST:
 			return Direction.WEST;
-		case TOP:
-			return Direction.BOTTOM;
-		case BOTTOM:
-			return Direction.TOP;
+		case NORTH:
+			return Direction.SOUTH;
+		case SOUTH:
+			return Direction.NORTH;
 		}
 		return direction;
 	}
 
 	public void addConnectionTo(EntityNode other, Direction direction) {
-		EntityRoad road = new EntityRoad(this, other);
+		EntityRoad road = new EntityRoad(this, other, direction);
 		addRoad(road, direction);
 		other.addRoad(road, getOppositDirection(direction));
 		instanceCreate(road);
@@ -63,13 +63,13 @@ public class EntityNode extends Entity {
 			roads.add(road);
 			for (int i = 0; i < roads.size(); i++) roads.get(i).setPosition(this, getXPosition() + getWidth(), getYPosition() + i * 24 + 24);
 			break;
-		case TOP:
-			roads = roadsTop;
+		case NORTH:
+			roads = roadsNorth;
 			roads.add(road);
 			for (int i = 0; i < roads.size(); i++) roads.get(i).setPosition(this, getXPosition() + i * 48 + 24, getYPosition());
 			break;
-		case BOTTOM:
-			roads = roadsBottom;
+		case SOUTH:
+			roads = roadsSouth;
 			roads.add(road);
 			for (int i = 0; i < roads.size(); i++) roads.get(i).setPosition(this, getXPosition() + i * 48 + 24, getYPosition() + getHeight());
 			break;

@@ -3,6 +3,8 @@ package entities;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import entities.EntityNode.Direction;
+
 public class EntityCar extends Entity {
 	EntityRoad road;
 	int speed = 1;
@@ -15,13 +17,29 @@ public class EntityCar extends Entity {
 	
 	@Override
 	public void step() {
-		if (getXPosition() < road.x2)
-			setXPosition(getXPosition()+speed);
-		else
-			setXPosition(getXPosition()-speed);
 		
-		if (getXPosition() == road.x2)
-			instanceDestroy();
+		switch (road.getDirection()) {
+		case WEST:
+			setXPosition(getXPosition()-speed);
+			if (getXPosition() == road.x2)
+				instanceDestroy();
+			break;
+		case EAST:
+			setXPosition(getXPosition()+speed);
+			if (getXPosition() == road.x2)
+				instanceDestroy();
+			break;
+		case NORTH:
+			setYPosition(getYPosition()-speed);
+			if (getYPosition() == road.y2)
+				instanceDestroy();
+			break;
+		case SOUTH:
+			setYPosition(getYPosition()+speed);
+			if (getYPosition() == road.y2)
+				instanceDestroy();
+			break;
+		}
 	}
 	
 	@Override
