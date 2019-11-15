@@ -35,6 +35,10 @@ public abstract class Entity {
 	public Entity() {
 		setCollisionBounds();
 	}
+	
+	public Entity(int width, int height) {
+		setCollisionBounds(width, height);
+	}
 
 	/**
 	 * Creates an instance of an Entity at the given coordinates with the given
@@ -84,7 +88,7 @@ public abstract class Entity {
 	 * @param x, how many pixels Entity is supposed to be moved in x-Axis.
 	 * @param y, how many pixels Entity is supposed to be moved in y-Axis.
 	 */
-	public void move(int x, int y) {
+	public void move(double x, double y) {
 		xPosition += x;
 		yPosition += y;
 		setCollisionBoundsLocation();
@@ -254,7 +258,7 @@ public abstract class Entity {
 	 */
 	public void setCollisionBoundsLocation() {
 		if (collisionBounds != null) {
-			//setLocation(getXPosition() + collisionBoundsXOffset, getYPosition() + collisionBoundsYOffset);
+			collisionBounds.setLocation((int)getXPosition() + collisionBoundsXOffset, (int)getYPosition() + collisionBoundsYOffset);
 		}
 	}
 

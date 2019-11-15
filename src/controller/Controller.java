@@ -102,14 +102,15 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	 */
 	public void initializeGame(String fileName) {
 		//Create node objects
-		EntityNode nodeWest = new EntityNode(64, 472);
-		EntityNode nodeEast = new EntityNode(748, 472);
+		EntityNode nodeWest = new EntityNode(64, 472-32);
+		EntityNode nodeEast = new EntityNode(748, 472-32);
 		EntityNode nodeTop = new EntityNode(406, 128);
 		EntityNode nodeCenter = new EntityNode(406, 472);
 		
 		nodeWest.setSpawning(true);
 		nodeEast.setSpawning(true);
 		nodeTop.setSpawning(true);
+		//nodeCenter.setSpawning(true);
 		
 		//Create simulation instances
 		createInstance(nodeWest);
@@ -231,10 +232,15 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		// Do step event and collision events for entities
 		for (Entity entity : instances) {
 			entity.step();
+			
+		}
+		
+		for (Entity entity : instances) {
 			if (entity instanceof Collidable) {
 				collisionChecking(entity);
 			}
 		}
+		
 		// Update GUI
 		guiPanel.repaint();
 

@@ -4,7 +4,10 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import entities.EntityRoad.RoadType;
 
@@ -13,12 +16,39 @@ public class EntityNode extends Entity {
 	public enum Direction {
 		WEST, EAST, NORTH, SOUTH;
 	}
+	
+	public class RoadPair {
+		EntityRoad road1, road2;
+		
+		public RoadPair (EntityRoad road1, EntityRoad road2) {
+			this.road1 = road1;
+			this.road2 = road2;
+		}
+		
+		public EntityRoad getRoad1() {
+			return road1;
+		}
+		
+		public EntityRoad getRoad2() {
+			return road2;
+		}
+		
+		public void setRoad1(EntityRoad road1) {
+			this.road1 = road1;
+		}
+		
+		public void setRoad2(EntityRoad road2) {
+			this.road2 = road2;
+		}
+	}
 
 	private ArrayList<EntityRoad> roadsWest = new ArrayList<EntityRoad>();
 	private ArrayList<EntityRoad> roadsEast = new ArrayList<EntityRoad>();
 	private ArrayList<EntityRoad> roadsNorth = new ArrayList<EntityRoad>();
 	private ArrayList<EntityRoad> roadsSouth = new ArrayList<EntityRoad>();
 
+	private Map<EntityRoad, RoadPair> roadConnections = new HashMap<EntityRoad, RoadPair>();;
+	
 	private boolean spawning = false;
 
 	public EntityNode(int x, int y) {
@@ -42,8 +72,8 @@ public class EntityNode extends Entity {
 			for (EntityRoad r : getAllRoads()) {
 				if (wait == 0) {
 					if (equals(r.getEntryNode()))
-						instanceCreate(new EntityVehicles(r));
-					wait = (int) (20 + (Math.random() * 400));
+						instanceCreate(new EntityVehicle(r));
+					wait = (int) (40 + (Math.random() * 400));
 				} else
 					wait--;
 			}
@@ -79,23 +109,47 @@ public class EntityNode extends Entity {
 		return direction;
 	}
 	
+	public EntityRoad getNextRoad(EntityRoad road, Boolean turn) {
+		if (roadConnections.containsKey(road)) {
+			RoadPair rp = roadConnections.get(road);
+			return turn ? rp.getRoad1() : rp.getRoad2();
+		}
+		else {
+			return null;
+		}
+	}
+	
 	public void doInternalConnections(List<EntityRoad> roads) {
 		for (EntityRoad r : roads) {
 			if (equals(r.getExitNode())) {
+				//roadConnections.put(r, new RoadPair(null, null));
 				List<EntityRoad> allOtherRoads = getAllRoads();
 				allOtherRoads.removeAll(roads);
 
 				for (EntityRoad otherRoad : allOtherRoads) {
 					if (equals(otherRoad.getEntryNode()) && otherRoad.getRoadType() == r.getRoadType()) {
-						System.out.println("CONNECTION");
-						EntityRoad newRoad = new EntityRoad(this, this, null, r.getRoadType());
+						
+						EntityRoad newRoad = new EntityRoad(this, this, r.getDirection(), r.getRoadType());
+						
+						
+						
 						newRoad.setPosition(r.x2, r.y2, (int)otherRoad.getXPosition(),
 								(int)otherRoad.getYPosition());
+
+						if (roadConnections.containsKey(r)) {
+							RoadPair rp = roadConnections.get(r);
+							rp.setRoad2(newRoad);
+						}
+						else {
+							roadConnections.put(r, new RoadPair(newRoad, newRoad));
+						}
+						roadConnections.put(newRoad, new RoadPair(otherRoad, otherRoad));
 						instanceCreate(newRoad);
 					}
 				}
 			}
 		}
+		
 	}
 	
 	public void doInternalConnections() {

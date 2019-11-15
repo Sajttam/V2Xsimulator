@@ -51,6 +51,10 @@ public class EntityRoad extends Entity{
 		}
 	}
 	
+	public EntityRoad getNextRoad(Boolean turn) {
+		return exitNode.getNextRoad(this, turn);
+	}
+	
 	public EntityNode getEntryNode() {
 		return enterNode;
 	}
@@ -87,5 +91,11 @@ public class EntityRoad extends Entity{
 		
 		g.drawLine((int)getXPosition(), (int)getYPosition(), x2, y2);
 		//g.fillRect(x2,y2-4,8,8);
+	}
+	
+	public String toString() {
+		StringBuilder s = new StringBuilder();
+		s.append("x1:" + getXPosition() + " y1:" +getYPosition() + " x2:" + x2 + " y2:" +y2);
+		return s.toString();
 	}
 }
