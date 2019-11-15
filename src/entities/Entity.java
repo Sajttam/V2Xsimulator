@@ -23,8 +23,8 @@ import view.*;
 
 public abstract class Entity {
 
-	private int xPosition;
-	private int yPosition;
+	private double xPosition;
+	private double yPosition;
 	private Rectangle collisionBounds;
 	private BufferedImage sprite;
 	private Animation anim;
@@ -137,7 +137,7 @@ public abstract class Entity {
 	 *
 	 * @return value of xPosition.
 	 */
-	public int getXPosition() {
+	public double getXPosition() {
 		return xPosition;
 	}
 
@@ -146,7 +146,7 @@ public abstract class Entity {
 	 *
 	 * @return value of yPosition.
 	 */
-	public int getYPosition() {
+	public double getYPosition() {
 		return yPosition;
 	}
 
@@ -224,13 +224,13 @@ public abstract class Entity {
 			width = getSprite().getWidth();
 			height = getSprite().getHeight();
 		}
-		setCollisionBounds(new Rectangle(getXPosition(), getYPosition(), width, height), 0, 0);
+		setCollisionBounds(new Rectangle((int)getXPosition(), (int)getYPosition(), width, height), 0, 0);
 	}
 	
 	public void setCollisionBounds(int width, int height) {
 		collisionBoundsXOffset = 0;
 		collisionBoundsYOffset = 0;
-		setCollisionBounds(new Rectangle(getXPosition(), getYPosition(), width, height), 0, 0);
+		setCollisionBounds(new Rectangle((int)getXPosition(), (int)getYPosition(), width, height), 0, 0);
 	}
 
 	/**
@@ -275,7 +275,7 @@ public abstract class Entity {
 	 * @param image, the BufferedImage sprite to be drawn.
 	 */
 	public void drawFlippedImage(Graphics2D g2d, BufferedImage image) {
-		g2d.drawImage(image, getXPosition() + image.getWidth(), getYPosition(), -image.getWidth(), image.getHeight(),
+		g2d.drawImage(image, (int)(getXPosition() + image.getWidth()), (int)getYPosition(), -image.getWidth(), image.getHeight(),
 				null);
 	}
 }

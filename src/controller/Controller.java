@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import entities.*;
+import entities.EntityRoad.RoadType;
 import view.*;
 
 /**
@@ -106,6 +107,10 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		EntityNode nodeTop = new EntityNode(406, 128);
 		EntityNode nodeCenter = new EntityNode(406, 472);
 		
+		nodeWest.setSpawning(true);
+		nodeEast.setSpawning(true);
+		nodeTop.setSpawning(true);
+		
 		//Create simulation instances
 		createInstance(nodeWest);
 		createInstance(nodeEast);
@@ -113,18 +118,20 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		createInstance(nodeCenter);
 		
 		//WEST - CENTER
-		nodeWest.addConnectionTo(nodeCenter, EntityNode.Direction.EAST);
-		nodeWest.addConnectionTo(nodeCenter, EntityNode.Direction.EAST);
-		nodeCenter.addConnectionTo(nodeWest, EntityNode.Direction.WEST);
+		nodeWest.addConnectionTo(nodeCenter, EntityNode.Direction.EAST, RoadType.BICYCLE);
+		nodeCenter.addConnectionTo(nodeWest, EntityNode.Direction.WEST, RoadType.CAR);
+		nodeWest.addConnectionTo(nodeCenter, EntityNode.Direction.EAST, RoadType.CAR);
 		
 		//EAST - CENTER
-		nodeCenter.addConnectionTo(nodeEast, EntityNode.Direction.EAST);
-		nodeCenter.addConnectionTo(nodeEast, EntityNode.Direction.EAST);
-		nodeEast.addConnectionTo(nodeCenter, EntityNode.Direction.WEST);
+		nodeCenter.addConnectionTo(nodeEast, EntityNode.Direction.EAST, RoadType.BICYCLE);
+		nodeEast.addConnectionTo(nodeCenter, EntityNode.Direction.WEST, RoadType.CAR);
+		nodeCenter.addConnectionTo(nodeEast, EntityNode.Direction.EAST, RoadType.CAR);
 		
 		//TOP - CENTER
-		nodeTop.addConnectionTo(nodeCenter, EntityNode.Direction.SOUTH);
-		nodeCenter.addConnectionTo(nodeTop, EntityNode.Direction.NORTH);
+		nodeTop.addConnectionTo(nodeCenter, EntityNode.Direction.SOUTH, RoadType.CAR);
+		nodeCenter.addConnectionTo(nodeTop, EntityNode.Direction.NORTH, RoadType.CAR);
+		
+		nodeCenter.doInternalConnections();
 	}
 
 	/**
