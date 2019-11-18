@@ -84,7 +84,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 			actionPerformed(null);
 			long endTime = System.nanoTime();
 			try {
-				int timeOutValue = (int) (16.6667 - (endTime - startTime) * 0.000001);
+				int timeOutValue = ((int) (16.6667 - (endTime - startTime) * 0.000001));
 				if (timeOutValue >= 0)
 					sleep(timeOutValue);
 			} catch (InterruptedException e) {
@@ -144,6 +144,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	 */
 	public void createInstance(Entity entity) {
 		createInstances.add(entity);
+		entity.setController(this);
 		entity.addObserver(this);
 	}
 
@@ -167,6 +168,14 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 				}
 			}
 		}
+	}
+	
+	public Entity getEntityAtPosition(int x, int y) {
+		for (Entity entity : instances) {
+			Rectangle entityBounds = entity.getCollisionBounds();
+			if (entityBounds.contains(x, y)) return entity;
+		}
+		return null;
 	}
 
 	@Override

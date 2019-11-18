@@ -21,14 +21,19 @@ public class EntityVehicle extends Entity implements Collidable {
 		if (road.getRoadType() == RoadType.CAR) {
 			setCollisionBounds(16, 16);
 			setCollisionBounds(getCollisionBounds(), -8, -8);
-			speed = 1.25;
 		}
 		else {
 			setCollisionBounds(12, 12);
 			setCollisionBounds(getCollisionBounds(), -6, -6);
 		}
-		smartVehicle = Math.random() > 0.8 ? true : false;
 		setRoad(road);
+		setSpeed();
+		smartVehicle = Math.random() > 0.8 ? true : false;		
+	}
+	
+	public void setSpeed() {
+		if (road.getRoadType() == RoadType.CAR) speed = 1.25;
+		else speed = 0.75;
 	}
 
 	public void setRoad(EntityRoad road) {
@@ -54,14 +59,19 @@ public class EntityVehicle extends Entity implements Collidable {
 	@Override
 	public void step() {
 
-		// System.out.println("hSpeed: " + hSpeed + " vSpeed: " +vSpeed + "angle: " +
-		// angle);
+		if (getEntityAtPosition((int)(24*Math.cos(angle)+getXPosition()), (int)(24*Math.sin(angle)+getYPosition())) != null) {
+			hSpeed = 0;
+			vSpeed = 0;
+		}
+		else {
+			hSpeed = speed * Math.cos(angle);
+			vSpeed = speed * Math.sin(angle);
+		}
 
 		move(hSpeed, vSpeed);
 
 		if (Math.abs((getXPosition() - road.getXPosition())) >= Math.abs(distX)
 				&& Math.abs(getYPosition() - road.getYPosition()) >= Math.abs(distY)) {
-
 			EntityRoad nextRoad = road.getNextRoad(Math.random() > 0.5 ? true : false);
 			if (nextRoad == null) {
 				instanceDestroy();

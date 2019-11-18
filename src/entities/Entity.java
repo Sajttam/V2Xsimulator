@@ -31,6 +31,7 @@ public abstract class Entity {
 	private int collisionBoundsXOffset;
 	private int collisionBoundsYOffset;
 	private PropertyChangeSupport propertyChangeSupport;
+	private Controller controller;
 
 	public Entity() {
 		setCollisionBounds();
@@ -80,6 +81,15 @@ public abstract class Entity {
 	
 	public void draw(Graphics g) {
 		
+	}
+	
+	public void setController(Controller controller) {
+		this.controller = controller;
+	}
+	
+	public Entity getEntityAtPosition(int x, int y) {
+		if (controller == null) return null;
+		return controller.getEntityAtPosition(x, y);
 	}
 
 	/**
