@@ -112,7 +112,7 @@ public class GuiPanel extends JPanel {
 		frame.setTitle(PROJECT_TITLE);
 		frame.setIconImage(TileSet.getTile(19, 3));
 
-		setPreferredSize(new Dimension((int) (width * scaling*2), (int) (height * scaling*2)));
+		setPreferredSize(new Dimension((int) (width * scaling*4), (int) (height * scaling*4)));
 		setDoubleBuffered(true);
 		Container contentPane = frame.getContentPane();
 		

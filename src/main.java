@@ -25,11 +25,11 @@ public class main {
 		JFrame stats;
 		//try {
 			//TileSet.loadTileSet();
-			int scaling = 2;
+			int scaling = 1;
 			gui = new GuiPanel(231*scaling, 189*scaling, scaling);
 			stats = new JFrame("Statistics");
 			StatsController statscontroller = new StatsController(stats);
-		
+			stats.setSize(500, 500);
 			Controller controller = new Controller(gui);
 			gui.makeMenu(controller);
 		/*} catch (IOException e) {

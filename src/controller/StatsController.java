@@ -43,8 +43,6 @@ public class StatsController implements PropertyChangeListener {
 		jpanel.add(labelBicycle); 
 		jpanel.add(labelCollision);
 		jframe.add(jpanel);
-		
-		jframe.setSize(700,700);
 		jframe.setVisible(true);
 		collisionobserver = CollisionObserver.getInstance();
 		collisionobserver.addObserver(this);
