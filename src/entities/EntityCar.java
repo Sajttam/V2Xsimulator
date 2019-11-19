@@ -5,7 +5,7 @@ import java.awt.Graphics;
 
 public class EntityCar extends EntityVehicle{
 
-	boolean smartVehicle = false;
+	private boolean smartVehicle = false;
 	
 	public EntityCar(EntityRoad road) {
 		super(road);

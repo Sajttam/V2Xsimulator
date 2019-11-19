@@ -7,15 +7,13 @@ import entities.EntityNode.Direction;
 import entities.EntityRoad.RoadType;
 
 public class EntityVehicle extends Entity implements Collidable {
-	EntityRoad road;
-	double speed = 0.75;
-	
-
-	double distX = 0;
-	double distY = 0;
-	double angle = 0;
-	double hSpeed = 0;
-	double vSpeed = 0;
+	private EntityRoad road;
+	private double speed = 0.75;
+	private double distX = 0;
+	private double distY = 0;
+	private double angle = 0;
+	private double hSpeed = 0;
+	private double vSpeed = 0;
 
 
 	public EntityVehicle(EntityRoad road) {
@@ -75,7 +73,7 @@ public class EntityVehicle extends Entity implements Collidable {
 
 	@Override
 	public void collision(Entity other) {
-		//System.out.println("Collision");
+		System.out.println("Collision");
 		if (other instanceof EntityVehicle)
 			instanceDestroy();
 	}
