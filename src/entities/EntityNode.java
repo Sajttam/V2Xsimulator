@@ -64,27 +64,6 @@ public class EntityNode extends Entity {
 		this.spawning = spawning;
 	}
 
-	int wait = (int) (20 + (Math.random() * 400));
-
-	@Override
-	public void step() {
-		if (spawning) {
-			for (EntityRoad r : getAllRoads()) {
-				if (wait == 0) {
-					if (equals(r.getEntryNode()))
-						if (r.getRoadType() == RoadType.BICYCLE) {
-						instanceCreate(new EntityBicycle(r));
-						}
-						else {
-							instanceCreate(new EntityCar(r));
-						}
-						
-					wait = (int) (40 + (Math.random() * 400));
-				} else
-					wait--;
-			}
-		}
-	}
 
 	public List<EntityRoad> getAllRoads() {
 		List<EntityRoad> allRoads = new ArrayList<EntityRoad>(roadsWest);
@@ -135,7 +114,7 @@ public class EntityNode extends Entity {
 				for (EntityRoad otherRoad : allOtherRoads) {
 					if (equals(otherRoad.getEntryNode()) && otherRoad.getRoadType() == r.getRoadType()) {
 						
-						EntityRoad newRoad = new EntityRoad(this, this, r.getRoadType());
+						EntityRoad newRoad = new EntityRoad(this, this, r.getRoadType(),spawning);
 						
 						
 						
@@ -166,7 +145,7 @@ public class EntityNode extends Entity {
 	}
 
 	public void addConnectionTo(EntityNode other, Direction direction, RoadType roadType) {
-		EntityRoad road = new EntityRoad(this, other, roadType);
+		EntityRoad road = new EntityRoad(this, other, roadType,spawning);
 		addRoad(road, direction);
 		other.addRoad(road, getOppositDirection(direction));
 		instanceCreate(road);

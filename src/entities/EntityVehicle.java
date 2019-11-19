@@ -2,24 +2,26 @@ package entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 import entities.EntityNode.Direction;
 import entities.EntityRoad.RoadType;
 
 public class EntityVehicle extends Entity implements Collidable {
 	EntityRoad road;
-	double speed = 0.75;
-	
-
+	double speed = 0;
 	double distX = 0;
 	double distY = 0;
 	double angle = 0;
 	double hSpeed = 0;
 	double vSpeed = 0;
+	private PropertyChangeSupport propertyChangeSupportCounter;
+	
 
-
-	public EntityVehicle(EntityRoad road) {
+	public EntityVehicle(EntityRoad road,PropertyChangeListener listener) {
 		setRoad(road);
+		addCounter(listener);
 	}
 	
 
@@ -36,6 +38,12 @@ public class EntityVehicle extends Entity implements Collidable {
 
 		hSpeed = speed * Math.cos(angle);
 		vSpeed = speed * Math.sin(angle);
+	}
+	
+	private void addCounter(PropertyChangeListener listener) {
+		if (propertyChangeSupportCounter == null)
+			propertyChangeSupportCounter = new PropertyChangeSupport(this);
+		propertyChangeSupportCounter.addPropertyChangeListener(listener);
 	}
 
 	@Override
@@ -64,6 +72,9 @@ public class EntityVehicle extends Entity implements Collidable {
 
 	}
 
+	public void castPropertyChange(String eventname) {
+		propertyChangeSupportCounter.firePropertyChange(eventname, null, 1);
+	}
 
 	@Override
 	public void draw(Graphics g) {
@@ -75,8 +86,8 @@ public class EntityVehicle extends Entity implements Collidable {
 
 	@Override
 	public void collision(Entity other) {
-		System.out.println("Collision");
 		if (other instanceof EntityVehicle)
+			castPropertyChange("COLLISION");
 			instanceDestroy();
 	}
 	
