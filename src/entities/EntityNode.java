@@ -129,7 +129,7 @@ public class EntityNode extends Entity {
 				for (EntityRoad otherRoad : allOtherRoads) {
 					if (equals(otherRoad.getEntryNode()) && otherRoad.getRoadType() == r.getRoadType()) {
 						
-						EntityRoad newRoad = new EntityRoad(this, this, r.getDirection(), r.getRoadType());
+						EntityRoad newRoad = new EntityRoad(this, this, r.getRoadType());
 						
 						
 						
@@ -160,7 +160,7 @@ public class EntityNode extends Entity {
 	}
 
 	public void addConnectionTo(EntityNode other, Direction direction, RoadType roadType) {
-		EntityRoad road = new EntityRoad(this, other, direction, roadType);
+		EntityRoad road = new EntityRoad(this, other, roadType);
 		addRoad(road, direction);
 		other.addRoad(road, getOppositDirection(direction));
 		instanceCreate(road);

@@ -16,20 +16,22 @@ public class main {
 	 * Loads the controller, guiPanel and local HighscoreServer.
 	 * 
 	 * @param args are not used
+	 * @throws IOException 
 	 */
-	public static void main(String args[]) {
+	public static void main(String args[]) throws IOException {
 		GuiPanel gui;
-		try {
+		//try {
 			//TileSet.loadTileSet();
 			gui = new GuiPanel(231, 189, 4);
 			Controller controller = new Controller(gui);
 			gui.makeMenu(controller);
-		} catch (IOException e) {
+		/*} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, e.getStackTrace(), "Failed to load game", JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getStackTrace(), "Failed to load game", JOptionPane.ERROR_MESSAGE);
+			System.out.println(e);
 			System.exit(0);
-		}
+		}*/
 	}
 }

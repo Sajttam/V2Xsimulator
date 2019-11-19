@@ -11,13 +11,14 @@ public class EntityRoad extends Entity{
 	
 	private EntityNode enterNode, exitNode;
 	int x2, y2;
-	private Direction direction;
 	private RoadType roadType;
+	private double angle = 0;
+	private double distX = 0;
+	private double distY = 0;
 
-	public EntityRoad(EntityNode enterNode, EntityNode exitNode, Direction direction, RoadType roadType) {
+	public EntityRoad(EntityNode enterNode, EntityNode exitNode, RoadType roadType) {
 		this.enterNode = enterNode;
 		this.exitNode = exitNode;
-		this.direction = direction;
 		this.roadType = roadType;
 	}
 	
@@ -26,14 +27,12 @@ public class EntityRoad extends Entity{
 		setYPosition(y1);
 		this.x2 = x2;
 		this.y2 = y2;
-	}
-	
-	public Direction getDirection() {
-		return direction;
-	}
-
-	public void setDirection(Direction direction) {
-		this.direction = direction;
+		
+		distX = x2-x1;
+		distY = y2-y1;
+		
+		angle = Math.atan(distY/distX);
+		if (distX < 0) angle += Math.PI;
 	}
 	
 	public RoadType getRoadType() {
@@ -41,14 +40,28 @@ public class EntityRoad extends Entity{
 	}
 	
 	public void setPosition(EntityNode node, int x, int y) {
-		if (node.equals(enterNode)) {			
-			setXPosition(x);
-			setYPosition(y);
+		if (node.equals(enterNode)) {
+			setPosition(x,y,x2,y2);
 		}
 		else {
-			x2 = x;
-			y2 = y;
+			setPosition((int)getXPosition(),(int)getYPosition(),x,y);
 		}
+	}
+	
+	public double getDistX() {
+		return distX;
+	}
+
+	public void setDistX(double distX) {
+		this.distX = distX;
+	}
+
+	public double getDistY() {
+		return distY;
+	}
+
+	public void setDistY(double distY) {
+		this.distY = distY;
 	}
 	
 	public EntityRoad getNextRoad(Boolean turn) {
@@ -78,6 +91,10 @@ public class EntityRoad extends Entity{
 		wait--;*/
 	}
 	
+	public double getAngle() {
+		return angle;
+	}
+	
 	@Override
 	public void draw(Graphics g) {
 		switch (roadType) {
@@ -91,6 +108,9 @@ public class EntityRoad extends Entity{
 		
 		g.drawLine((int)getXPosition(), (int)getYPosition(), x2, y2);
 		//g.fillRect(x2,y2-4,8,8);
+		g.setColor(Color.WHITE);
+		//g.drawString((angle*(180.0/Math.PI)) + "°", (int)(getXPosition()+(distX/2)), (int)(getYPosition()+distY/2));
+		
 	}
 	
 	public String toString() {

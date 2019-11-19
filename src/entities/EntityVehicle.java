@@ -44,13 +44,8 @@ public class EntityVehicle extends Entity implements Collidable {
 
 		distX = road.x2 - road.getXPosition();
 		distY = road.y2 - road.getYPosition();
-
-		angle = Math.PI * 1 / 2;
-		if (distX != 0) {
-			angle = Math.atan(distY / distX);
-		}
-		if (distX < 0 || (distY < 0 && road.getDirection() == Direction.NORTH))
-			angle += Math.PI;
+		
+		angle = road.getAngle();
 
 		hSpeed = speed * Math.cos(angle);
 		vSpeed = speed * Math.sin(angle);
@@ -96,6 +91,9 @@ public class EntityVehicle extends Entity implements Collidable {
 			g.fillOval((int) getXPosition() - 6, (int) getYPosition() - 6, 12, 12);
 			break;
 		}
+		
+		g.setColor(Color.YELLOW);
+		g.fillOval((int)(24*Math.cos(angle)+getXPosition())-2, (int)(24*Math.sin(angle)+getYPosition())-2, 4, 4);
 
 	}
 
