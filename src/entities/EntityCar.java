@@ -19,6 +19,7 @@ public class EntityCar extends EntityVehicle{
 	
 	@Override
 	public void draw(Graphics g) {
+		super.draw(g);
 			g.setColor(Color.GREEN);
 			if (smartVehicle) {
 				g.setColor(Color.BLUE);

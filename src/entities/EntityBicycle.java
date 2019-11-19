@@ -15,6 +15,7 @@ public class EntityBicycle extends EntityVehicle {
 	
 	@Override
 	public void draw(Graphics g) {
+		super.draw(g);
 		g.setColor(Color.ORANGE);
 		g.fillOval((int) getXPosition() - 6, (int) getYPosition() - 6, 12, 12);
 	}
