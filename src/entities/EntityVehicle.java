@@ -38,8 +38,10 @@ public class EntityVehicle extends Entity implements Collidable {
 
 	@Override
 	public void step() {
-
-		if (getEntityAtPosition((int)(24*Math.cos(angle)+getXPosition()), (int)(24*Math.sin(angle)+getYPosition())) != null) {
+		
+		Entity inSight = getEntityAtPosition((int)(24*Math.cos(angle)+getXPosition()), (int)(24*Math.sin(angle)+getYPosition())); 
+		
+		if (inSight != null) {
 			hSpeed = 0;
 			vSpeed = 0;
 		}
