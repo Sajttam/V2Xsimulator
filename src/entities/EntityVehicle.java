@@ -88,9 +88,10 @@ public class EntityVehicle extends Entity implements Collidable {
 
 	@Override
 	public void collision(Entity other) {
-		if (other instanceof EntityVehicle)
+		if (other instanceof EntityVehicle) {
 			castPropertyChange("COLLISION");
 			instanceDestroy();
+		}
 	}
 	
 	public double getSpeed() {
