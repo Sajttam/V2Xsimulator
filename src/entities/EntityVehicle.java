@@ -9,32 +9,19 @@ import entities.EntityRoad.RoadType;
 public class EntityVehicle extends Entity implements Collidable {
 	EntityRoad road;
 	double speed = 0.75;
+	
+
 	double distX = 0;
 	double distY = 0;
 	double angle = 0;
 	double hSpeed = 0;
 	double vSpeed = 0;
 
-	boolean smartVehicle = false;
 
 	public EntityVehicle(EntityRoad road) {
-		if (road.getRoadType() == RoadType.CAR) {
-			setCollisionBounds(16, 16);
-			setCollisionBounds(getCollisionBounds(), -8, -8);
-		}
-		else {
-			setCollisionBounds(12, 12);
-			setCollisionBounds(getCollisionBounds(), -6, -6);
-		}
 		setRoad(road);
-		setSpeed();
-		smartVehicle = Math.random() > 0.8 ? true : false;		
 	}
 	
-	public void setSpeed() {
-		if (road.getRoadType() == RoadType.CAR) speed = 1.25;
-		else speed = 0.75;
-	}
 
 	public void setRoad(EntityRoad road) {
 		setXPosition((int) road.getXPosition());
@@ -77,25 +64,14 @@ public class EntityVehicle extends Entity implements Collidable {
 
 	}
 
+
 	@Override
 	public void draw(Graphics g) {
-		switch (road.getRoadType()) {
-		case CAR:
-			g.setColor(Color.GREEN);
-			if (smartVehicle)
-				g.setColor(Color.BLUE);
-			g.fillOval((int) getXPosition() - 8, (int) getYPosition() - 8, 16, 16);
-			break;
-		case BICYCLE:
-			g.setColor(Color.ORANGE);
-			g.fillOval((int) getXPosition() - 6, (int) getYPosition() - 6, 12, 12);
-			break;
-		}
-		
 		g.setColor(Color.YELLOW);
 		g.fillOval((int)(24*Math.cos(angle)+getXPosition())-2, (int)(24*Math.sin(angle)+getYPosition())-2, 4, 4);
 
 	}
+
 
 	@Override
 	public void collision(Entity other) {
@@ -103,4 +79,69 @@ public class EntityVehicle extends Entity implements Collidable {
 		if (other instanceof EntityVehicle)
 			instanceDestroy();
 	}
+	
+	public double getSpeed() {
+		return speed;
+	}
+
+
+	public void setSpeed(double speed) {
+		this.speed = speed;
+	}
+
+
+	public double getDistX() {
+		return distX;
+	}
+
+
+	public void setDistX(double distX) {
+		this.distX = distX;
+	}
+
+
+	public double getDistY() {
+		return distY;
+	}
+
+
+	public void setDistY(double distY) {
+		this.distY = distY;
+	}
+
+
+	public double getAngle() {
+		return angle;
+	}
+
+
+	public void setAngle(double angle) {
+		this.angle = angle;
+	}
+
+
+	public double gethSpeed() {
+		return hSpeed;
+	}
+
+
+	public void sethSpeed(double hSpeed) {
+		this.hSpeed = hSpeed;
+	}
+
+
+	public double getvSpeed() {
+		return vSpeed;
+	}
+
+
+	public void setvSpeed(double vSpeed) {
+		this.vSpeed = vSpeed;
+	}
+
+
+	public EntityRoad getRoad() {
+		return road;
+	}
+
 }
