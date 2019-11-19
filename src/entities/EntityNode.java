@@ -74,10 +74,10 @@ public class EntityNode extends Entity {
 				if (wait == 0) {
 					if (equals(r.getEntryNode()))
 						if (r.getRoadType() == RoadType.BICYCLE) {
-						instanceCreate(new EntityBicycle(r));
+						instanceCreate(new EntityBicycle(r, CollisionObserver.getInstance()));
 						}
 						else {
-							instanceCreate(new EntityCar(r));
+							instanceCreate(new EntityCar(r, CollisionObserver.getInstance()));
 						}
 						
 					wait = (int) (40 + (Math.random() * 400));
@@ -174,30 +174,36 @@ public class EntityNode extends Entity {
 
 	public void addRoad(EntityRoad road, Direction direction) {
 		ArrayList<EntityRoad> roads = null;
+		int roadOffset = (int) ( getHeight() * 0.15);
+		int seperation = (int) ((getHeight() - (2*roadOffset)));
 		switch (direction) {
 		case WEST:
 			roads = roadsWest;
 			roads.add(road);
+			if (roads.size() > 1)
 			for (int i = 0; i < roads.size(); i++)
-				roads.get(i).setPosition(this, (int)getXPosition(), (int)getYPosition() + i * 40 + 8);
+				roads.get(i).setPosition(this, (int)getXPosition(),  (int)getYPosition() + i * (seperation/(roads.size()-1)) + roadOffset);
 			break;
 		case EAST:
 			roads = roadsEast;
 			roads.add(road);
+			if (roads.size() > 1)
 			for (int i = 0; i < roads.size(); i++)
-				roads.get(i).setPosition(this, (int)getXPosition() + getWidth(), (int)getYPosition() + i * 40 + 8);
+				roads.get(i).setPosition(this, (int)getXPosition() + getWidth(), (int)getYPosition() + i * (seperation/(roads.size()-1))  + roadOffset);
 			break;
 		case NORTH:
 			roads = roadsNorth;
 			roads.add(road);
+			if (roads.size() > 1)
 			for (int i = 0; i < roads.size(); i++)
-				roads.get(i).setPosition(this, (int)getXPosition() + i * 40 + 8, (int)getYPosition());
+				roads.get(i).setPosition(this, (int)getXPosition() + i * (seperation/(roads.size()-1))  + roadOffset, (int)getYPosition());
 			break;
 		case SOUTH:
 			roads = roadsSouth;
 			roads.add(road);
+			if (roads.size() > 1)
 			for (int i = 0; i < roads.size(); i++)
-				roads.get(i).setPosition(this, (int)getXPosition() + i * 40 + 8, (int)getYPosition() + getHeight());
+				roads.get(i).setPosition(this, (int)getXPosition() + i * (seperation/(roads.size()-1))  + roadOffset, (int)getYPosition() + getHeight());
 			break;
 		}
 	}
