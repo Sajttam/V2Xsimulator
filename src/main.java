@@ -1,12 +1,14 @@
 import java.io.IOException;
 import javax.swing.JOptionPane;
+import javax.swing.JFrame;
 
 import controller.Controller;
+import controller.StatsController;
 import view.*;
 /**
  * This class contains the main method for the program.
  * 
- * @author Mattias Sikvall Källström
+ * @author Mattias Sikvall Kï¿½llstrï¿½m
  *
  */
 public class main {
@@ -20,9 +22,14 @@ public class main {
 	 */
 	public static void main(String args[]) throws IOException {
 		GuiPanel gui;
+		JFrame stats;
 		//try {
 			//TileSet.loadTileSet();
-			gui = new GuiPanel(231, 189, 4);
+			int scaling = 2;
+			gui = new GuiPanel(231*scaling, 189*scaling, scaling);
+			stats = new JFrame("Statistics");
+			StatsController statscontroller = new StatsController(stats);
+		
 			Controller controller = new Controller(gui);
 			gui.makeMenu(controller);
 		/*} catch (IOException e) {
