@@ -72,7 +72,13 @@ public class EntityNode extends Entity {
 			for (EntityRoad r : getAllRoads()) {
 				if (wait == 0) {
 					if (equals(r.getEntryNode()))
-						instanceCreate(new EntityVehicle(r));
+						if (r.getRoadType() == RoadType.BICYCLE) {
+						instanceCreate(new EntityBicycle(r));
+						}
+						else {
+							instanceCreate(new EntityCar(r));
+						}
+						
 					wait = (int) (40 + (Math.random() * 400));
 				} else
 					wait--;
