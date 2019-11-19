@@ -2,20 +2,22 @@ package entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 public class EntityCar extends EntityVehicle{
 
 	private boolean smartVehicle = false;
 	
-	public EntityCar(EntityRoad road) {
-		super(road);
+	
+	public EntityCar(EntityRoad road,PropertyChangeListener listener) {
+		super(road,listener);
 		setSpeed(1.25);
 		setCollisionBounds(16, 16);
 		setCollisionBounds(getCollisionBounds(), -8, -8);
 		smartVehicle = Math.random() > 0.8 ? true : false;	
+		super.castPropertyChange("CAR CREATED");
 	}
-	
-	
 	
 	@Override
 	public void draw(Graphics g) {

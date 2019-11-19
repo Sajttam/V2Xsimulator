@@ -13,7 +13,7 @@ public class EntityCurvedRoad extends EntityRoad {
 		protected EntityRoad last = null;
 		
 		public RoadPart(EntityNode enterNode, EntityNode exitNode, RoadType roadType) {
-			super(enterNode, exitNode, roadType);
+			super(enterNode, exitNode, roadType,false); //False is for roadspawning
 			// TODO Auto-generated constructor stub
 		}
 		
@@ -28,7 +28,7 @@ public class EntityCurvedRoad extends EntityRoad {
 	private EntityRoad last = null;
 	
 	public EntityCurvedRoad(EntityNode enterNode, EntityNode exitNode, RoadType roadType) {
-		super(enterNode, exitNode, roadType);
+		super(enterNode, exitNode, roadType,false); //False is for roadspawning
 		// TODO Auto-generated constructor stub
 	}
 	
