@@ -13,6 +13,7 @@ import entities.EntityRoad.RoadType;
 
 public class EntityNode extends Entity {
 
+	private boolean spawning;
 	public enum Direction {
 		WEST, EAST, NORTH, SOUTH;
 	}
@@ -49,11 +50,11 @@ public class EntityNode extends Entity {
 
 	private Map<EntityRoad, RoadPair> roadConnections = new HashMap<EntityRoad, RoadPair>();;
 	
-	private boolean spawning = false;
 
 	public EntityNode(int x, int y) {
 		setXPosition(x);
 		setYPosition(y);
+		setSpawning(false);
 	}
 
 	public boolean isSpawning() {
@@ -114,9 +115,7 @@ public class EntityNode extends Entity {
 				for (EntityRoad otherRoad : allOtherRoads) {
 					if (equals(otherRoad.getEntryNode()) && otherRoad.getRoadType() == r.getRoadType()) {
 						
-						EntityRoad newRoad = new EntityRoad(this, this, r.getRoadType(),spawning);
-						
-						
+						EntityRoad newRoad = new EntityRoad(this, this, r.getRoadType(),false); // False due to it should only be able to spawn on exit from node
 						
 						newRoad.setPosition(r.x2, r.y2, (int)otherRoad.getXPosition(),
 								(int)otherRoad.getYPosition());
@@ -192,4 +191,5 @@ public class EntityNode extends Entity {
 	public int getHeight() {
 		return 96;
 	}
+
 }
