@@ -75,7 +75,7 @@ public class EntityVehicle extends Entity implements Collidable {
 
 	@Override
 	public void collision(Entity other) {
-		System.out.println("Collision");
+		//System.out.println("Collision");
 		if (other instanceof EntityVehicle)
 			instanceDestroy();
 	}

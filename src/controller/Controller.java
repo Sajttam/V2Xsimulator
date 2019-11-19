@@ -23,6 +23,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import entities.*;
 import entities.EntityRoad.RoadType;
+import mapModels.SimulationMap;
+import mapModels.mapAlpha;
+import mapModels.mapBeta;
 import view.*;
 
 /**
@@ -92,6 +95,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 			}
 		}
 	}
+	
 
 	/**
 	 * Initializes the game from a text file that follows the correct syntax. This
@@ -101,38 +105,8 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	 *                 level.
 	 */
 	public void initializeGame(String fileName) {
-		//Create node objects
-		EntityNode nodeWest = new EntityNode(64, 472-32);
-		EntityNode nodeEast = new EntityNode(748, 472-32);
-		EntityNode nodeTop = new EntityNode(406, 128);
-		EntityNode nodeCenter = new EntityNode(406, 472);
-		
-		nodeWest.setSpawning(true);
-		nodeEast.setSpawning(true);
-		nodeTop.setSpawning(true);
-		//nodeCenter.setSpawning(true);
-		
-		//Create simulation instances
-		createInstance(nodeWest);
-		createInstance(nodeEast);
-		createInstance(nodeTop);
-		createInstance(nodeCenter);
-		
-		//WEST - CENTER
-		nodeWest.addConnectionTo(nodeCenter, EntityNode.Direction.EAST, RoadType.BICYCLE);
-		nodeCenter.addConnectionTo(nodeWest, EntityNode.Direction.WEST, RoadType.CAR);
-		nodeWest.addConnectionTo(nodeCenter, EntityNode.Direction.EAST, RoadType.CAR);
-		
-		//EAST - CENTER
-		nodeCenter.addConnectionTo(nodeEast, EntityNode.Direction.EAST, RoadType.BICYCLE);
-		nodeEast.addConnectionTo(nodeCenter, EntityNode.Direction.WEST, RoadType.CAR);
-		nodeCenter.addConnectionTo(nodeEast, EntityNode.Direction.EAST, RoadType.CAR);
-		
-		//TOP - CENTER
-		nodeTop.addConnectionTo(nodeCenter, EntityNode.Direction.SOUTH, RoadType.CAR);
-		nodeCenter.addConnectionTo(nodeTop, EntityNode.Direction.NORTH, RoadType.CAR);
-		
-		nodeCenter.doInternalConnections();
+		//(new mapAlpha()).getMap(this);
+		(new mapBeta()).getMap(this);
 	}
 
 	/**
