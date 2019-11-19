@@ -17,7 +17,7 @@ import entities.*;
  * methods every time repaint() is called. GuiPanel extends Panel but it also
  * has a JFrame and a JMenu.
  * 
- * @author Mattias Sikvall Källström
+ * @author Mattias Sikvall Kï¿½llstrï¿½m
  * @version 2019-03-10
  */
 public class GuiPanel extends JPanel {
@@ -112,7 +112,7 @@ public class GuiPanel extends JPanel {
 		frame.setTitle(PROJECT_TITLE);
 		frame.setIconImage(TileSet.getTile(19, 3));
 
-		setPreferredSize(new Dimension((int) (width * scaling), (int) (height * scaling)));
+		setPreferredSize(new Dimension((int) (width * scaling*2), (int) (height * scaling*2)));
 		setDoubleBuffered(true);
 		Container contentPane = frame.getContentPane();
 		
@@ -208,7 +208,7 @@ public class GuiPanel extends JPanel {
 		super.paintComponent(g);
 		int paintXOffset = 0;
 		Graphics2D g2d = (Graphics2D) g;
-		//g2d.scale(scaling, scaling);
+		g2d.scale(scaling, scaling);
 		g2d.translate(paintXOffset, 0);
 		super.paintComponent(g);
 		for (int i = 0; i < 20; i++)
