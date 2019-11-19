@@ -241,6 +241,11 @@ public abstract class Entity {
 		setCollisionBounds(new Rectangle((int)getXPosition(), (int)getYPosition(), width, height), 0, 0);
 	}
 	
+	public void setCollisionBounds(int width, int height, int xOffset, int yOffset) {
+		setCollisionBounds(width, height);
+		setCollisionBounds(getCollisionBounds(), xOffset, yOffset);
+	}
+	
 	public void setCollisionBounds(int width, int height) {
 		collisionBoundsXOffset = 0;
 		collisionBoundsYOffset = 0;

@@ -65,6 +65,28 @@ public class EntityNode extends Entity {
 		this.spawning = spawning;
 	}
 
+	int wait = (int) (20 + (Math.random() * 400));
+
+	@Override
+	public void step() {
+		if (spawning) {
+			for (EntityRoad r : getAllRoads()) {
+				if (wait == 0) {
+					if (equals(r.getEntryNode()))
+						if (r.getRoadType() == RoadType.BICYCLE) {
+						instanceCreate(new EntityBicycle(r));
+						}
+						else {
+							instanceCreate(new EntityCar(r));
+						}
+						
+					wait = (int) (40 + (Math.random() * 400));
+				} else
+					wait--;
+				
+			}
+		}
+	}
 
 	public List<EntityRoad> getAllRoads() {
 		List<EntityRoad> allRoads = new ArrayList<EntityRoad>(roadsWest);
@@ -157,25 +179,25 @@ public class EntityNode extends Entity {
 			roads = roadsWest;
 			roads.add(road);
 			for (int i = 0; i < roads.size(); i++)
-				roads.get(i).setPosition(this, (int)getXPosition(), (int)getYPosition() + i * 40 + 12);
+				roads.get(i).setPosition(this, (int)getXPosition(), (int)getYPosition() + i * 40 + 8);
 			break;
 		case EAST:
 			roads = roadsEast;
 			roads.add(road);
 			for (int i = 0; i < roads.size(); i++)
-				roads.get(i).setPosition(this, (int)getXPosition() + getWidth(), (int)getYPosition() + i * 40 + 12);
+				roads.get(i).setPosition(this, (int)getXPosition() + getWidth(), (int)getYPosition() + i * 40 + 8);
 			break;
 		case NORTH:
 			roads = roadsNorth;
 			roads.add(road);
 			for (int i = 0; i < roads.size(); i++)
-				roads.get(i).setPosition(this, (int)getXPosition() + i * 40 + 12, (int)getYPosition());
+				roads.get(i).setPosition(this, (int)getXPosition() + i * 40 + 8, (int)getYPosition());
 			break;
 		case SOUTH:
 			roads = roadsSouth;
 			roads.add(road);
 			for (int i = 0; i < roads.size(); i++)
-				roads.get(i).setPosition(this, (int)getXPosition() + i * 40 + 12, (int)getYPosition() + getHeight());
+				roads.get(i).setPosition(this, (int)getXPosition() + i * 40 + 8, (int)getYPosition() + getHeight());
 			break;
 		}
 	}

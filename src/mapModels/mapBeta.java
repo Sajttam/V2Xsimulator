@@ -7,6 +7,7 @@ import controller.Controller;
 import entities.Entity;
 import entities.EntityNode;
 import entities.EntityRoad.RoadType;
+import entities.EntityTrafficLightNode;
 
 public class mapBeta implements SimulationMap {
 
@@ -16,8 +17,9 @@ public class mapBeta implements SimulationMap {
 
 		EntityNode nodeWest = new EntityNode(64, 472);
 		EntityNode nodeEast = new EntityNode(748, 472);
-		EntityNode nodeNorth = new EntityNode(406, 128);
-		EntityNode nodeCenter = new EntityNode(406, 472);
+		EntityTrafficLightNode nodeTop = new EntityTrafficLightNode(406, 128);
+		EntityTrafficLightNode nodeCenter = new EntityTrafficLightNode(406, 472);
+
 		EntityNode nodeNorthWest = new EntityNode(64, 128);
 		EntityNode nodeNorthEast = new EntityNode(748, 128);
 		
@@ -31,6 +33,7 @@ public class mapBeta implements SimulationMap {
 
 
 		nodeWest.setSpawning(true);
+
 		
 		//WEST - CENTER, W - NE
 		
@@ -46,25 +49,28 @@ public class mapBeta implements SimulationMap {
 
 
 		
-		//EAST - CENTER, E-NW
-		nodeEast.addConnectionTo(nodeCenter, EntityNode.Direction.WEST,RoadType.BICYCLE);
+		//EAST - CENTER, E-NE
+		nodeCenter.addConnectionTo(nodeEast, EntityNode.Direction.EAST,RoadType.BICYCLE);
 		nodeEast.addConnectionTo(nodeCenter, EntityNode.Direction.WEST,RoadType.CAR);
 		nodeCenter.addConnectionTo(nodeEast, EntityNode.Direction.EAST,RoadType.CAR);
 
 		
-		nodeNorthEast.addConnectionTo(nodeEast, EntityNode.Direction.SOUTH,RoadType.BICYCLE);
+		nodeEast.addConnectionTo(nodeNorthEast, EntityNode.Direction.NORTH,RoadType.BICYCLE);
 		nodeNorthEast.addConnectionTo(nodeEast, EntityNode.Direction.SOUTH,RoadType.CAR);
 		nodeEast.addConnectionTo(nodeNorthEast, EntityNode.Direction.NORTH,RoadType.CAR);
 		
 		//TOP - CENTER, T - NW, T-NE
-		nodeCenter.addConnectionTo(nodeNorth, EntityNode.Direction.NORTH,RoadType.BICYCLE);
-		nodeNorth.addConnectionTo(nodeCenter, EntityNode.Direction.SOUTH,RoadType.CAR);
-		nodeCenter.addConnectionTo(nodeNorth, EntityNode.Direction.NORTH,RoadType.CAR);
-		
+
+		//nodeCenter.addConnectionTo(nodeTop, EntityNode.Direction.NORTH,RoadType.BICYCLE);
+		nodeTop.addConnectionTo(nodeCenter, EntityNode.Direction.SOUTH,RoadType.CAR);
+		nodeCenter.addConnectionTo(nodeTop, EntityNode.Direction.NORTH,RoadType.CAR);
+
 		nodeNorthEast.addConnectionTo(nodeNorth, EntityNode.Direction.WEST,RoadType.CAR);
 		nodeNorth.addConnectionTo(nodeNorthEast, EntityNode.Direction.EAST,RoadType.CAR);
 
 		nodeNorth.addConnectionTo(nodeNorthEast, EntityNode.Direction.EAST,RoadType.BICYCLE);
+
+		nodeNorthEast.addConnectionTo(nodeTop, EntityNode.Direction.WEST,RoadType.BICYCLE);
 
 		
 		nodeNorth.addConnectionTo(nodeNorthWest, EntityNode.Direction.WEST,RoadType.CAR);
@@ -80,11 +86,10 @@ public class mapBeta implements SimulationMap {
 		nodeNorthEast.doInternalConnections();
 		nodeNorthWest.doInternalConnections();
 		
-		
-		
+		nodeCenter.generateTrafficLights();
+		nodeTop.generateTrafficLights();
 
-
-		
+		nodeWest.setSpawning(true);
 
 		return list;
 	}
