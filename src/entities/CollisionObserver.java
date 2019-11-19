@@ -32,17 +32,14 @@ public class CollisionObserver extends Entity implements PropertyChangeListener 
 		case "CAR CREATED":
 			car ++;
 			castPropertyChange(eventname, car);
-			System.out.println(eventname + " " + car);
 			break;
 		case "BICYCLE CREATED":
 			bike ++;
 			castPropertyChange(eventname, bike);
-			System.out.println(eventname + " " + bike);
 			break;
 		case "COLLISION":
 			collision ++;
 			castPropertyChange(eventname, collision);
-			System.out.println(eventname + " " + collision);
 			break;
 		}
 	}
