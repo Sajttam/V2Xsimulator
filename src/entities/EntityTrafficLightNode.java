@@ -86,4 +86,6 @@ public class EntityTrafficLightNode extends EntityNode implements Runnable {
 			e.printStackTrace();
 		}
 	}
+	
+	
 }
