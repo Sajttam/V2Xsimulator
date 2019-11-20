@@ -17,8 +17,8 @@ public class mapBeta implements SimulationMap {
 
 		EntityNode nodeWest = new EntityNode(64, 472);
 		EntityNode nodeEast = new EntityNode(748, 472);
-		EntityTrafficLightNode nodeNorth = new EntityTrafficLightNode(406, 128);
-		EntityTrafficLightNode nodeCenter = new EntityTrafficLightNode(406, 472);
+		EntityTrafficLightNode nodeNorth = new EntityTrafficLightNode(358, 128);
+		EntityTrafficLightNode nodeCenter = new EntityTrafficLightNode(358, 472);
 
 		EntityNode nodeNorthWest = new EntityNode(64, 128);
 		EntityNode nodeNorthEast = new EntityNode(748, 128);

@@ -8,7 +8,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+
+
 import entities.EntityNode.Direction;
+import javafx.scene.effect.Light.Point;
 
 public class EntityCurvedRoad extends EntityRoad {
 	
@@ -30,74 +33,166 @@ public class EntityCurvedRoad extends EntityRoad {
 	private Map<EntityRoad, EntityRoad> roadToRoad;
 	private EntityRoad first = null;
 	private EntityRoad last = null;
+	private double startAngle;
+	private double exitAngle;
+	private double standardRadius;
 	
-	public EntityCurvedRoad(EntityNode enterNode, EntityNode exitNode, RoadType roadType) {
+	public EntityCurvedRoad(EntityNode enterNode, EntityNode exitNode, RoadType roadType, double startAngle, double exitAngle) {
 		super(enterNode, exitNode, roadType,false); //False is for roadspawning
+		this.startAngle = startAngle;
+		this.exitAngle = exitAngle;
 		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
 	public void setPosition(int x1, int y1, int x2, int y2) {		
-		double origoX = x2;
-		double origoY = y1;		
 		
+		double origoX;
+		double origoY;
+		int preX2 = x1;
+		int preY2 = y1;	
+		int nextX2;
+		int nextY2;
 		
 		int numPoints = 10;
-		double angleDiff = -1*Math.PI/(2.0 * numPoints);
+		double angleDiff;
 		roadToRoad = new LinkedHashMap<EntityRoad, EntityRoad>();
 		
 		
 		//super.setPosition(x1,y1,(int) (origoX + (x2-x1) * Math.cos(angleDiff*1)), (int) (origoY + (y2-y1) * Math.sin(angleDiff*1)));
 		first = this;
 		
-		int preX2 = x2;
-		int preY2 = y2;
+		
 		EntityRoad preRoad = this;
 		
+		startAngle = startAngle*180/Math.PI;
+
+		exitAngle = exitAngle*180/Math.PI;
+
 		
-		for (int i = 1; i <= numPoints; i++) {
+		for (int i = 1; i <= numPoints; i++) { 
 			RoadPart newRoad = new RoadPart(null, null, getRoadType());
 			
+		
+			if(startAngle == 0 && exitAngle==90) { // done
+				
+
+				
+				angleDiff = -Math.PI/(2*numPoints);
+				
+				origoX = x1;
+				origoY = y2;
+				nextX2 = (int) (origoX - Math.abs(x1-x2) * Math.sin(angleDiff * i));
+				nextY2 = (int) (origoY - Math.abs(y1-y2) * Math.cos(angleDiff * i));
+
+				
+			}else if(startAngle == 90 && exitAngle==180){
+				
+
+				angleDiff = -Math.PI/(2*numPoints);
+				
+				origoX = x2;
+				origoY = y1;
+				nextX2 = (int) (origoX + Math.abs(x2-x1) * Math.cos(angleDiff * i));
+				nextY2 = (int) (origoY - Math.abs(y2-y1) * Math.sin(angleDiff * i));
+				
+				
+			}
+			else if(startAngle == 180 && exitAngle==-90){//done
+
+				angleDiff = -Math.PI/(2*numPoints);
+				
+				origoX = x1;
+				origoY = y2;
+				nextX2 = (int) (origoX - Math.abs(x2-x1) * Math.sin(-angleDiff * i));
+				nextY2 = (int) (origoY + Math.abs(y2-y1) * Math.cos(angleDiff * i));
+					
+			}
+			else if(startAngle == -90 && exitAngle==0){//done
+
+				angleDiff = -Math.PI/(2*numPoints);
+				
+				origoX = x2;
+				origoY = y1;
+				nextX2 = (int) (origoX - Math.abs(x2-x1) * Math.cos(angleDiff * i));
+				nextY2 = (int) (origoY + Math.abs(y2-y1) * Math.sin(angleDiff * i));
+				
+			}
+			else if(startAngle == 0 && exitAngle==-90){ // done
+				
+
+				angleDiff = -Math.PI/(2*numPoints);
+				
+				origoX = x1;
+				origoY = y2;
+				nextX2 = (int) (origoX - Math.abs(x2-x1) * Math.sin(angleDiff * i));
+				nextY2 = (int) (origoY - (y2-y1) * Math.cos(angleDiff * i));
+				
+				
+			}
+			else if(startAngle == -90 && exitAngle==180){ //done
+
+				angleDiff = Math.PI/(2*numPoints);
+				
+				origoX = x2;
+				origoY = y1;
+				nextX2 = (int) (origoX + Math.abs(x2-x1) * Math.cos(angleDiff * i));
+				nextY2 = (int) (origoY - Math.abs(y2-y1) * Math.sin(angleDiff * i));
+				
+				
+				
+			}
+			else if(startAngle == 180 && exitAngle==90){ //done
+
+				angleDiff = Math.PI/(2*numPoints);
+				
+				origoX = x1;
+				origoY = y2;
+				nextX2 = (int) (origoX - Math.abs(x2-x1) * Math.sin(angleDiff * i));
+				nextY2 = (int) (origoY - Math.abs(y2-y1) * Math.cos(angleDiff * i));
+
+			}
+			else if(startAngle == 90 && exitAngle==0){ //done
+
+				angleDiff = -Math.PI/(2*numPoints);
+				
+				origoX = x2;
+				origoY = y1;
+				nextX2 = (int) (origoX - Math.abs(x2-x1) * Math.cos(angleDiff * i));
+				nextY2 = (int) (origoY - Math.abs(y2-y1) * Math.sin(angleDiff * i));
+				
+				
+				
+			}else if(startAngle == 0){
+
+
+					nextX2 = x1 + i*(Math.abs(x2-x1)/numPoints);
+					nextY2 = y2;
+	
+				
+			}
+			else {
+				
+				nextX2 = x1 - i*(Math.abs(x2-x1)/numPoints);
+				nextY2 = y2;
+		
+			}
 			
-			int nextX2 = (int) (origoX + (x2-x1) * Math.cos(angleDiff * i));
-			int nextY2 = (int) (origoY + (y2-y1) * Math.sin(angleDiff * i));
-			
-			////////////////////////////HÄR FEL
-			
+		
 			newRoad.setPosition(preX2, preY2, nextX2, nextY2);
-			newRoad.first = this;
 			
+			newRoad.first = this;
 			
 			getEntryNode().instanceCreate(newRoad);
 
-
-			//////////////////////
-		
 			roadToRoad.put(preRoad, newRoad);
-			
-			
+		
 			
 			preX2 = nextX2;
 			preY2 = nextY2;
 			preRoad = newRoad;
 		}
-		
-//		HashMap <EntityRoad, EntityRoad>tempMap = new HashMap<EntityRoad, EntityRoad>();
-//		ArrayList<EntityRoad> tempList = new ArrayList<EntityRoad>();
-//		tempList.addAll(roadToRoad.keySet());
-//		
-//		for(int i=tempList.size()-1; i>-1; i-- ){
-//			
-//			tempMap.put(tempList.get(i), roadToRoad.get(tempList.get(i)));
-//			
-//			System.out.println("tempmap " + tempMap.get(tempList.get(i)));
-//			
-//			
-//		}
-//		roadToRoad.clear();
-//		
-//		roadToRoad = tempMap;
- 
+
 	
 		last = preRoad;
 	}
@@ -113,4 +208,8 @@ public class EntityCurvedRoad extends EntityRoad {
 		else
 			return roadToRoad.get(road);
 	}
+	
+	
+	
+
 }

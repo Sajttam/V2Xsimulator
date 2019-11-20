@@ -138,7 +138,7 @@ public class EntityNode extends Entity {
 					if (equals(otherRoad.getEntryNode()) && otherRoad.getRoadType() == r.getRoadType()) {
 						
 						//EntityRoad newRoad = new EntityRoad(this, this, r.getRoadType(),false); // False due to it should only be able to spawn on exit from node
-						EntityCurvedRoad newRoad = new EntityCurvedRoad(this, this, r.getRoadType()); // False due to it should only be able to spawn on exit from node
+						EntityCurvedRoad newRoad = new EntityCurvedRoad(this, this, r.getRoadType(),r.getAngle(),otherRoad.getAngle()); // False due to it should only be able to spawn on exit from node
 						
 						newRoad.setPosition(r.x2, r.y2, (int)otherRoad.getXPosition(),
 								(int)otherRoad.getYPosition());
