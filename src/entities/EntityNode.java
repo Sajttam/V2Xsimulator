@@ -137,11 +137,18 @@ public class EntityNode extends Entity {
 				for (EntityRoad otherRoad : allOtherRoads) {
 					if (equals(otherRoad.getEntryNode()) && otherRoad.getRoadType() == r.getRoadType()) {
 						
-						EntityRoad newRoad = new EntityRoad(this, this, r.getRoadType(),false); // False due to it should only be able to spawn on exit from node
+						Boolean left = false;
 						
-						newRoad.setPosition(r.x2, r.y2, (int)otherRoad.getXPosition(),
-								(int)otherRoad.getYPosition());
-
+						int x1 = r.x2;
+						int y1 = r.y2;
+						int x2 = (int)otherRoad.getXPosition();
+						int y2 = (int)otherRoad.getYPosition();
+						
+						
+						
+						EntityRoad newRoad = new EntityRoad(this, this, r.getRoadType(),false, false, false); // False due to it should only be able to spawn on exit from node						
+						newRoad.setPosition(x1, y1, x2, y2);
+						
 						if (roadConnections.containsKey(r)) {
 							RoadPair rp = roadConnections.get(r);
 							rp.setRoad2(newRoad);

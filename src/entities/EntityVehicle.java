@@ -22,7 +22,10 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	private double vSpeed = 0;
 	private PropertyChangeSupport propertyChangeSupportCounter;
 	private Polygon visionArea;
-
+	
+	private boolean turningLeft;
+	private boolean turningRight;
+	
 	public EntityVehicle(EntityRoad road,PropertyChangeListener listener) {
 		setRoad(road);
 		addCounter(listener);
@@ -161,7 +164,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		Color hitBoxYellow = new Color(235, 229, 52, alpha);
 		g.setColor(hitBoxYellow);
 		
-		//g.fillPolygon(visionArea);
+		g.fillPolygon(visionArea);
 	}
 
 
