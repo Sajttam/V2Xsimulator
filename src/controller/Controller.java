@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -150,6 +151,22 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 			if (entityBounds.contains(x, y)) return entity;
 		}
 		return null;
+	}
+	
+	public List<Entity> getEntitiesInsideArea(Polygon area) {
+		List<Entity> entities = new ArrayList<Entity>();
+		Rectangle polygonBounds = area.getBounds();
+		//double ploygonDistOrigo = Math.sqrt(x*x+y*y);
+		
+		for (Entity entity : instances) {
+			Rectangle entityBounds = entity.getCollisionBounds();
+			
+			if (area.intersects(entityBounds)) {
+				entities.add(entity);
+			}
+		}		
+		
+		return entities;
 	}
 
 	@Override

@@ -9,7 +9,7 @@ import java.beans.PropertyChangeSupport;
 public class EntityCar extends EntityVehicle{
 
 	private boolean smartVehicle = false;
-	private Polygon visionArea;
+	
 	
 	
 	public EntityCar(EntityRoad road,PropertyChangeListener listener) {
@@ -21,14 +21,6 @@ public class EntityCar extends EntityVehicle{
 		super.castPropertyChange("CAR CREATED");
 	}
 	
-	public Polygon getVisionArea() {
-		if (visionArea == null) {
-			visionArea = new Polygon();
-			
-		}
-		return visionArea;		
-	}
-	
 	@Override
 	public void draw(Graphics g) {
 		super.draw(g);
@@ -38,11 +30,7 @@ public class EntityCar extends EntityVehicle{
 			}
 			g.fillOval((int) getXPosition() - 8, (int) getYPosition() - 8, 16, 16);
 			
-			int alpha = 127; // 50% transparent
-			Color hitBoxYellow = new Color(235, 229, 52, alpha);
-			g.setColor(hitBoxYellow);
 			
-			//g.drawPolygon(visionArea);
 	}
 	
 }

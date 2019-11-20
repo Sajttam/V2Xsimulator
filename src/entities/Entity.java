@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.List;
 import java.util.Observable;
 
 import javax.swing.JComponent;
@@ -90,6 +91,11 @@ public abstract class Entity {
 	public Entity getEntityAtPosition(int x, int y) {
 		if (controller == null) return null;
 		return controller.getEntityAtPosition(x, y);
+	}
+	
+	public List<Entity> getEntitiesInsideArea(Polygon area) {
+		if (controller == null) return null;
+		return controller.getEntitiesInsideArea(area);
 	}
 
 	/**
