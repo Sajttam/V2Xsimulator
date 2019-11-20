@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import controller.Controller;
+import controller.StatsController;
 import entities.*;
 
 /**
@@ -148,6 +149,11 @@ public class GuiPanel extends JPanel {
 		JMenuItem itemPerformance = new JMenuItem("Performance");
 		itemCollisionBoxes.addActionListener(e -> showCollisionBoxes());
 		itemPerformance.addActionListener(e -> controller.addPerformanceMonitor());
+		
+		JMenu menuView = new JMenu("View");
+		JMenuItem itemStatisticsView = new JMenuItem("Statistics");
+		itemStatisticsView.addActionListener(e -> new StatsController(new JFrame("Statistics")));
+		itemPerformance.addActionListener(e -> controller.addPerformanceMonitor());
 
 		JMenu menuHelp = new JMenu("Help");
 		JMenuItem itemObjectives = new JMenuItem("Objectives");
@@ -157,19 +163,22 @@ public class GuiPanel extends JPanel {
 
 		menuBar.add(menuFile);
 		// menuFile.add(itemSave);
-		menuFile.add(itemLoad);
+		//menuFile.add(itemLoad);
 		menuFile.add(itemExit);
 
 		menuBar.add(menuOptions);
 		//menuOptions.add(itemFullscreen);
-		menuOptions.add(itemHighscore);
+		//menuOptions.add(itemHighscore);
 
 		menuBar.add(menuDebug);
 		// menuDebug.add(itemServer);
 		// menuDebug.add(itemGetFromServer);
 		menuDebug.add(itemCollisionBoxes);
 		menuDebug.add(itemPerformance);
-
+		
+		menuBar.add(menuView);
+		menuView.add(itemStatisticsView);
+		
 		menuBar.add(menuHelp);
 		// menuHelp.add(itemObjectives);
 		menuHelp.add(itemAbout);

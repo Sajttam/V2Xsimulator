@@ -46,6 +46,7 @@ public class StatsController implements PropertyChangeListener {
 		jframe.setVisible(true);
 		collisionobserver = CollisionObserver.getInstance();
 		collisionobserver.addObserver(this);
+		jframe.pack();
 	}
 	
 	private void setFont() {
