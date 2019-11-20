@@ -19,20 +19,14 @@ public class EntityRoad extends Entity{
 	private double distY = 0;
 	private Boolean spawning;
 	
-	private boolean leftTurn = false;
-	private boolean rightTurn = false;
+	public boolean straight = true;
+	public boolean leftCurve = false;
 	
 	public EntityRoad(EntityNode enterNode, EntityNode exitNode, RoadType roadType, Boolean spawning) {
 		this.enterNode = enterNode;
 		this.exitNode = exitNode;
 		this.roadType = roadType;
 		this.spawning = spawning;
-	}
-	
-	public EntityRoad(EntityNode enterNode, EntityNode exitNode, RoadType roadType, Boolean spawning, boolean leftTurn, boolean rightTurn) {
-		this(enterNode, exitNode, roadType, spawning);
-		this.leftTurn = leftTurn;
-		this.rightTurn = rightTurn;
 	}
 	
 	public void setPosition(int x1, int y1, int x2, int y2) {

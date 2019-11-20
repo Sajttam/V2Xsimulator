@@ -36,8 +36,8 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		
 		int centerX = (int)(getXPosition());
 		int centerY = (int)(getYPosition());		
-		double radius = 32;
-		double visionAngle = Math.PI/180.0 * 40;		
+		double radius = 42;
+		double visionAngle = Math.PI/180.0 * 55;		
 		double angleLeft = getAngle() - visionAngle;
 		double angleRight = getAngle() + visionAngle;
 		
@@ -116,9 +116,12 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		hSpeed = speed * Math.cos(angle);
 		vSpeed = speed * Math.sin(angle);
 		
+		if (!road.straight) System.out.println("CURVED");
+		
 		for (Entity e : entitiesInSight) {
 			if (e instanceof EntityVehicle) {
-				if (entityRelation(e) != -1) {
+				int v = entityRelation(e);
+				if (v != -1 && !road.straight || road.straight && v == 0) {
 					hSpeed = 0;
 					vSpeed = 0;
 				}
@@ -243,7 +246,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (getCollisionBounds().contains(e.getX(), e.getY())) {
-			
+			instanceDestroy();
 			System.out.println(entitiesInSight);
 		}
 	}
