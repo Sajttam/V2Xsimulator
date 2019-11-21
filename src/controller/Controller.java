@@ -172,7 +172,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 				if (entityBounds.intersects(otherBounds)) {
 					if (entity instanceof Collidable) {
 						
-						if(!(entity instanceof EntityTrafficLight || other instanceof EntityTrafficLight ) ) {
+						if(!(entity instanceof EntityTrafficLight || other instanceof EntityTrafficLight ) ) { //avoid collision handling with traffic light
 						
 							((Collidable) entity).collision(other);
 							
