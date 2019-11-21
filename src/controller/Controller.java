@@ -57,7 +57,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	private KeyEvent keypressed;
 	private KeyEvent keyReleased;
 	private MouseEvent mouseEvent;
-	private AtomicInteger carCounter = new AtomicInteger(6);
+	private AtomicInteger carCounter = new AtomicInteger(8);
 	private AtomicInteger bicycleCounter = new AtomicInteger(0);
 	private int temp=0;
 
@@ -131,7 +131,6 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 			
 			if (carCounter.get() > 0) {
 				System.out.println("Cars: " + carCounter.getAndDecrement());
-
 				
 				createInstances.add(entity);
 				entity.setController(this);
@@ -172,14 +171,23 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 				Rectangle otherBounds = other.getCollisionBounds();
 				if (entityBounds.intersects(otherBounds)) {
 					if (entity instanceof Collidable) {
-						if (entity instanceof EntityBicycle) {
-							System.out.println("Cars: " + bicycleCounter.getAndIncrement());
+						
+						if(!(entity instanceof EntityTrafficLight || other instanceof EntityTrafficLight ) ) {
+						
+							((Collidable) entity).collision(other);
 							
-						} else if (entity instanceof EntityCar) {
-							carCounter.getAndIncrement();
+							System.out.println(entity.getClass() + " " + entity.toString() + " collided with " + other.getClass() + " " + other.toString());
+							
+							if (entity instanceof EntityBicycle) {
+								System.out.println("Cars: " + bicycleCounter.getAndIncrement());
+								
+							} else if (entity instanceof EntityCar) {
+								carCounter.getAndIncrement();
+							}
+						
 						}
 
-						((Collidable) entity).collision(other);
+						
 					}
 				}
 			}
