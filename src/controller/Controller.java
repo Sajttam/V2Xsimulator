@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -56,6 +57,9 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	private KeyEvent keypressed;
 	private KeyEvent keyReleased;
 	private MouseEvent mouseEvent;
+	private AtomicInteger carCounter = new AtomicInteger(6);
+	private AtomicInteger bicycleCounter = new AtomicInteger(0);
+	private int temp=0;
 
 	/**
 	 * Initializes a new controller with a given GUI.
@@ -71,6 +75,8 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		guiPanel.addMouseListener(new MAdapater());
 		gridSize = 21;
 		height = 189;
+		
+		System.out.println("Controller constructed");
 
 		initializeGame("resources/map2.txt");
 		guiPanel.setDrawInstaces(instances);
@@ -84,6 +90,8 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	@Override
 	public void run() {
 		while (true) {
+			
+
 			long startTime = System.nanoTime();
 			actionPerformed(null);
 			long endTime = System.nanoTime();
@@ -96,7 +104,6 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 			}
 		}
 	}
-	
 
 	/**
 	 * Initializes the game from a text file that follows the correct syntax. This
@@ -106,7 +113,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	 *                 level.
 	 */
 	public void initializeGame(String fileName) {
-		//(new mapAlpha()).getMap(this);
+		// (new mapAlpha()).getMap(this);
 		(new mapBeta()).getMap(this);
 	}
 
@@ -117,10 +124,37 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	 * 
 	 * @param entity the Entity which is to be added to the game
 	 */
-	public void createInstance(Entity entity) {
-		createInstances.add(entity);
-		entity.setController(this);
-		entity.addObserver(this);
+	public synchronized void createInstance(Entity entity) {
+
+		if (entity instanceof EntityCar) {
+
+			
+			if (carCounter.get() > 0) {
+				System.out.println("Cars: " + carCounter.getAndDecrement());
+
+				
+				createInstances.add(entity);
+				entity.setController(this);
+				entity.addObserver(this);
+			}
+		}
+
+		else if (entity instanceof EntityBicycle) {		
+
+			if (bicycleCounter.get() > 0) {
+				System.out.println("Bicycles: " + bicycleCounter.getAndDecrement());
+				createInstances.add(entity);
+				entity.setController(this);
+				entity.addObserver(this);
+			}
+		} else {
+
+			System.out.println(entity.getClass());
+			createInstances.add(entity);
+			entity.setController(this);
+			entity.addObserver(this);
+		}
+
 	}
 
 	/**
@@ -131,41 +165,49 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	 * 
 	 * @param entity The Entity that collisions are tested for.
 	 */
-	public void collisionChecking(Entity entity) {
+	public synchronized void collisionChecking(Entity entity) {
 		for (Entity other : instances) {
 			if (entity != other) {
 				Rectangle entityBounds = entity.getCollisionBounds();
 				Rectangle otherBounds = other.getCollisionBounds();
 				if (entityBounds.intersects(otherBounds)) {
 					if (entity instanceof Collidable) {
+						if (entity instanceof EntityBicycle) {
+							System.out.println("Cars: " + bicycleCounter.getAndIncrement());
+							
+						} else if (entity instanceof EntityCar) {
+							carCounter.getAndIncrement();
+						}
+
 						((Collidable) entity).collision(other);
 					}
 				}
 			}
 		}
 	}
-	
+
 	public Entity getEntityAtPosition(int x, int y) {
 		for (Entity entity : instances) {
 			Rectangle entityBounds = entity.getCollisionBounds();
-			if (entityBounds.contains(x, y)) return entity;
+			if (entityBounds.contains(x, y))
+				return entity;
 		}
 		return null;
 	}
-	
+
 	public List<Entity> getEntitiesInsideArea(Polygon area) {
 		List<Entity> entities = new ArrayList<Entity>();
 		Rectangle polygonBounds = area.getBounds();
-		//double ploygonDistOrigo = Math.sqrt(x*x+y*y);
-		
+		// double ploygonDistOrigo = Math.sqrt(x*x+y*y);
+
 		for (Entity entity : instances) {
 			Rectangle entityBounds = entity.getCollisionBounds();
-			
+
 			if (area.intersects(entityBounds)) {
 				entities.add(entity);
 			}
-		}		
-		
+		}
+
 		return entities;
 	}
 
@@ -174,8 +216,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		if (evt.getSource() instanceof Entity) {
 			if (evt.getOldValue() == null && evt.getNewValue() instanceof Entity) {
 				createInstance((Entity) evt.getNewValue());
-			}
-			else if (evt.getOldValue().equals(evt.getSource()) && evt.getNewValue() == null) {
+			} else if (evt.getOldValue().equals(evt.getSource()) && evt.getNewValue() == null) {
 				deleteInstances.add((Entity) evt.getOldValue());
 			}
 		}
@@ -219,7 +260,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 			// playerOne.keyReleased(keyReleased);
 			keyReleased = null;
 		}
-		
+
 		if (mouseEvent != null) {
 			for (Entity entity : instances) {
 				if (entity instanceof EntityMouseListener) {
@@ -232,15 +273,15 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		// Do step event and collision events for entities
 		for (Entity entity : instances) {
 			entity.step();
-			
+
 		}
-		
+
 		for (Entity entity : instances) {
 			if (entity instanceof Collidable) {
 				collisionChecking(entity);
 			}
 		}
-		
+
 		// Update GUI
 		guiPanel.repaint();
 
