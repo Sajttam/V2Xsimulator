@@ -41,12 +41,24 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		double visionAngle = Math.PI/180.0 * 55;		
 		double angleLeft = getAngle() - visionAngle;
 		double angleRight = getAngle() + visionAngle;
+		int points = 5;
 		
 		visionArea.addPoint(centerX, centerY);
 		
-		visionArea.addPoint((int)(centerX +  radius * Math.cos(angleLeft)), (int)(centerY +  radius * Math.sin(angleLeft)));
-		visionArea.addPoint((int)(centerX +  radius * Math.cos(getAngle())), (int)(centerY +  radius * Math.sin(getAngle())));
-		visionArea.addPoint((int)(centerX +  radius * Math.cos(angleRight)), (int)(centerY +  radius * Math.sin(angleRight)));
+		for (int i = 0; i <= points; i++) {
+			double angleLeftA = angleLeft+(visionAngle/points)*i;
+			int pointX = (int)(centerX +  radius * Math.cos(angleLeftA));
+			int pointY = (int)(centerY +  radius * Math.sin(angleLeftA));			
+			visionArea.addPoint(pointX, pointY);
+		}
+		
+		
+		for (int i = 1; i <= points; i++) {			
+			double angleRightA = angleRight-(visionAngle/points)*(points-i);
+			int pointX = (int)(centerX +  radius * Math.cos(angleRightA));
+			int pointY = (int)(centerY +  radius * Math.sin(angleRightA));			
+			visionArea.addPoint(pointX, pointY);
+		}
 		
 		return visionArea;
 	}
@@ -82,13 +94,6 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		propertyChangeSupportCounter.addPropertyChangeListener(listener);
 	}
 	
-	public double getAngleBetweenPoints(double x1, double y1, double x2, double y2) {
-		double delta_x = x2 - x1;
-		double delta_y = y2 - y1;
-		double theta_radians = Math.atan2(delta_y, delta_x);
-		return theta_radians;
-	}
-	
 	/**
 	 * 
 	 * @param e
@@ -99,7 +104,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		double angle2 = getAngleBetweenPoints(getXPosition(), getYPosition(), e.getXPosition(), e.getYPosition());
 		double angleDiff = (180/Math.PI) * 40;
 		
-		if (angle1 > angle2-0.05 && angle1 < angle2+0.05)
+		if (angle1 > angle2-0.1 && angle1 < angle2+0.1)
 			return 0;
 		else if ((angle1 - angleDiff) > angle2 || angle2 < angle1)
 			return -1;
@@ -122,7 +127,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		for (Entity e : entitiesInSight) {
 			if (e instanceof EntityVehicle) {
 				int v = entityRelation(e);
-				if (v != -1 && !road.straight || road.straight && v == 0) {
+				if ((!road.straight && e instanceof EntityBicycle) || (!road.straight && v==1) || (road.straight && v == 0)) {
 					hSpeed = 0;
 					vSpeed = 0;
 				}
@@ -253,8 +258,8 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (getCollisionBounds().contains(e.getX(), e.getY())) {
-			instanceDestroy();
-			System.out.println(entitiesInSight);
+			//instanceDestroy();
+			System.out.println(entitiesInSight + ": " + road.straight);
 		}
 	}
 
