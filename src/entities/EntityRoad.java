@@ -10,7 +10,7 @@ public class EntityRoad extends Entity{
 	private EntityNode enterNode, exitNode;
 	int x2, y2;
 	private RoadType roadType;
-	private double angle = 0;
+	protected double angle = 0;
 	private double distX = 0;
 	private double distY = 0;
 	private Boolean spawning;
@@ -91,11 +91,7 @@ public class EntityRoad extends Entity{
 		
 	}
 	
-	public String toString() {
-		StringBuilder s = new StringBuilder();
-		s.append("x1:" + getXPosition() + " y1:" +getYPosition() + " x2:" + x2 + " y2:" +y2);
-		return s.toString();
-	}
+	
 	public double getDistX() {
 		return distX;
 	}
@@ -127,5 +123,11 @@ public class EntityRoad extends Entity{
 	public EntityNode getOtherNode(EntityNode node) {
 		if (node.equals(enterNode)) return exitNode;
 		else return enterNode;
+	}
+	
+	public String toString() {
+		StringBuilder s = new StringBuilder();
+		s.append("EntityRoad: " + "x1:" + getXPosition() + " y1:" +getYPosition() + " x2:" + x2 + " y2:" +y2);
+		return s.toString();
 	}
 }

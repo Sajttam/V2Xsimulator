@@ -141,11 +141,7 @@ public class EntityNode extends Entity {
 						int x1 = r.x2;
 						int y1 = r.y2;
 						int x2 = (int)otherRoad.getXPosition();
-						int y2 = (int)otherRoad.getYPosition();
-						
-						
-						
-
+						int y2 = (int)otherRoad.getYPosition();					
 
 						//EntityRoad newRoad = new EntityRoad(this, this, r.getRoadType(),false); // False due to it should only be able to spawn on exit from node
 						EntityCurvedRoad newRoad = new EntityCurvedRoad(this, this, r.getRoadType(),r.getAngle(),otherRoad.getAngle()); // False due to it should only be able to spawn on exit from node

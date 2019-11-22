@@ -25,6 +25,12 @@ public class EntityCurvedRoad extends EntityRoad {
 		public EntityRoad getNextRoad(Boolean turn) {
 			return first.getNextRoadPart(this, turn);
 		}
+		
+		public String toString() {
+			StringBuilder s = new StringBuilder();
+			s.append("RoadPart: " + "x1:" + getXPosition() + " y1:" +getYPosition() + " x2:" + x2 + " y2:" +y2);
+			return s.toString();
+		}
 
 	}
 
@@ -60,11 +66,16 @@ public class EntityCurvedRoad extends EntityRoad {
 		// super.setPosition(x1,y1,(int) (origoX + (x2-x1) * Math.cos(angleDiff*1)),
 		// (int) (origoY + (y2-y1) * Math.sin(angleDiff*1)));
 		first = this;
-
+		
+		setXPosition(x1);
+		setYPosition(y1);
+		this.x2 = x1;
+		this.y2 = y1;
+		
 		EntityRoad preRoad = this;
-
+		
+		angle = startAngle; 
 		startAngle = startAngle * 180 / Math.PI;
-
 		exitAngle = exitAngle * 180 / Math.PI;
 
 		for (int i = 1; i <= numPoints; i++) {
@@ -185,6 +196,8 @@ public class EntityCurvedRoad extends EntityRoad {
 		}
 
 		last = preRoad;
+		
+		System.out.println(this);
 	}
 
 	@Override
@@ -197,6 +210,20 @@ public class EntityCurvedRoad extends EntityRoad {
 			return getExitNode().getNextRoad(this, turn);
 		else
 			return roadToRoad.get(road);
+	}
+	
+	public String toString() {
+		StringBuilder s = new StringBuilder();
+		s.append("EntityCurvedRoad: " + "x1:" + getXPosition() + " y1:" +getYPosition() + " x2:" + x2 + " y2:" +y2);
+		
+		EntityRoad child = getNextRoad(false);
+		
+		while (child != null) {
+			s.append("\n\t" + child.toString() + "");
+			child = child.getNextRoad(false);
+		}
+		
+		return s.toString();
 	}
 
 }

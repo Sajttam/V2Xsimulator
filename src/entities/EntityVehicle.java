@@ -116,7 +116,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		hSpeed = speed * Math.cos(angle);
 		vSpeed = speed * Math.sin(angle);
 		
-		if (!road.straight) System.out.println("CURVED");
+		//if (!road.straight) System.out.println("CURVED");
 		
 		for (Entity e : entitiesInSight) {
 			if (e instanceof EntityVehicle) {
