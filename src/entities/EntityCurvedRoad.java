@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import entities.EntityNode.Direction;
-import javafx.scene.effect.Light.Point;
+//import javafx.scene.effect.Light.Point;
 
 public class EntityCurvedRoad extends EntityRoad {
 
