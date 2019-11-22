@@ -62,8 +62,7 @@ public class EntityRoad extends Entity{
 	public void step() {
 		if(spawning)
 			if (wait == 0) {
-				if (roadType == RoadType.BICYCLE) {
-					
+				if (roadType == RoadType.BICYCLE) {					
 					if(SharedValues.getInstance().getBicycleCounter()>0){
 						instanceCreate(new EntityBicycle(this,StatisticsObserver.getInstance()));
 						SharedValues.getInstance().decrementBicycleCounter();

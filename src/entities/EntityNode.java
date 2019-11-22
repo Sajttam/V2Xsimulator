@@ -7,36 +7,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import entities.EntityRoad.RoadType;
 
 public class EntityNode extends Entity {
 
 	private boolean spawning;
+
 	public enum Direction {
 		WEST, EAST, NORTH, SOUTH;
 	}
-	
+
 	public class RoadPair {
 		EntityRoad road1, road2;
-		
-		public RoadPair (EntityRoad road1, EntityRoad road2) {
+
+		public RoadPair(EntityRoad road1, EntityRoad road2) {
 			this.road1 = road1;
 			this.road2 = road2;
 		}
-		
+
 		public EntityRoad getRoad1() {
 			return road1;
 		}
-		
+
 		public EntityRoad getRoad2() {
 			return road2;
 		}
-		
+
 		public void setRoad1(EntityRoad road1) {
 			this.road1 = road1;
 		}
-		
+
 		public void setRoad2(EntityRoad road2) {
 			this.road2 = road2;
 		}
@@ -48,7 +48,6 @@ public class EntityNode extends Entity {
 	private ArrayList<EntityRoad> roadsSouth = new ArrayList<EntityRoad>();
 
 	private Map<EntityRoad, RoadPair> roadConnections = new HashMap<EntityRoad, RoadPair>();;
-	
 
 	public EntityNode(int x, int y) {
 		setXPosition(x);
@@ -98,8 +97,23 @@ public class EntityNode extends Entity {
 
 	@Override
 	public void draw(Graphics g) {
+		int count = 0;
+		if (roadsWest.isEmpty())
+			count++;
+		if (roadsEast.isEmpty())
+			count++;
+		if (roadsNorth.isEmpty())
+			count++;
+		if (roadsSouth.isEmpty())
+			count++;
+		
+		boolean starightRoads = !(count == 2);
+		
+		if (starightRoads)
 		g.setColor(Color.WHITE);
-		g.drawRect((int)getXPosition(), (int)getYPosition(), getWidth(), getHeight());
+		else
+			g.setColor(Color.BLUE);
+		g.drawRect((int) getXPosition(), (int) getYPosition(), getWidth(), getHeight());
 	}
 
 	public Direction getOppositDirection(Direction direction) {
@@ -115,48 +129,81 @@ public class EntityNode extends Entity {
 		}
 		return direction;
 	}
-	
+
 	public EntityRoad getNextRoad(EntityRoad road, Boolean turn) {
 		if (roadConnections.containsKey(road)) {
 			RoadPair rp = roadConnections.get(road);
 			return turn ? rp.getRoad1() : rp.getRoad2();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
-	
+
 	public void doInternalConnections(List<EntityRoad> roads) {
+		int count = 0;
+		if (roadsWest.isEmpty())
+			count++;
+		if (roadsEast.isEmpty())
+			count++;
+		if (roadsNorth.isEmpty())
+			count++;
+		if (roadsSouth.isEmpty())
+			count++;
+		
+		boolean starightRoads = !(count == 2);
+		
+		if (starightRoads) System.out.println("YES");
+		
 		for (EntityRoad r : roads) {
 			if (equals(r.getExitNode())) {
-				//roadConnections.put(r, new RoadPair(null, null));
+				// roadConnections.put(r, new RoadPair(null, null));
 				List<EntityRoad> allOtherRoads = getAllRoads();
 				allOtherRoads.removeAll(roads);
 
 				for (EntityRoad otherRoad : allOtherRoads) {
 					if (equals(otherRoad.getEntryNode()) && otherRoad.getRoadType() == r.getRoadType()) {
-						
+
 						Boolean left = false;
-						
+
 						double x1 = r.x2;
 						double y1 = r.y2;
 						double x2 = otherRoad.getXPosition();
-						double y2 = otherRoad.getYPosition();	
-						
-						
+						double y2 = otherRoad.getYPosition();
 
-						//EntityRoad newRoad = new EntityRoad(this, this, r.getRoadType(),false); // False due to it should only be able to spawn on exit from node
-						EntityCurvedRoad newRoad = new EntityCurvedRoad(this, this, r.getRoadType(),r.getAngle(),otherRoad.getAngle()); // False due to it should only be able to spawn on exit from node
+						double difAngle = Math.toDegrees(getAngleBetweenPoints(x1, y1, x2, y2));
+						//System.out.print("Angle: " + difAngle);
 
-						newRoad.setPosition(r.x2, r.y2, otherRoad.getXPosition(),
-								otherRoad.getYPosition());
+						// EntityRoad newRoad = new EntityRoad(this, this, r.getRoadType(),false); //
+						// False due to it should only be able to spawn on exit from node
+						EntityCurvedRoad newRoad = new EntityCurvedRoad(this, this, r.getRoadType(), r.getAngle(),
+								otherRoad.getAngle()); // False due to it should only be able to spawn on exit from node
+						if (starightRoads) {
+							if (difAngle > -90 && difAngle < 0 || difAngle > 90 && difAngle < 180) {
+								newRoad.straight = false;
+								newRoad.leftCurve = true;
+								//System.out.println(" left");
+							} else if (difAngle > -180 && difAngle < -90 || difAngle > 0 && difAngle < 90) {
+								newRoad.straight = false;
+								newRoad.leftCurve = false;
+								//System.out.println(" right");
+							} else {
+								newRoad.straight = true;
+								newRoad.leftCurve = false;
+								//System.out.println(" straight");
+							}
+						}
+						else {
+							newRoad.straight = true;
+							newRoad.leftCurve = false;
+						}
+							
 
-						
+						newRoad.setPosition(r.x2, r.y2, otherRoad.getXPosition(), otherRoad.getYPosition());
+
 						if (roadConnections.containsKey(r)) {
 							RoadPair rp = roadConnections.get(r);
 							rp.setRoad2(newRoad);
-						}
-						else {
+						} else {
 							roadConnections.put(r, new RoadPair(newRoad, newRoad));
 						}
 						roadConnections.put(newRoad, new RoadPair(otherRoad, otherRoad));
@@ -165,9 +212,9 @@ public class EntityNode extends Entity {
 				}
 			}
 		}
-		
+
 	}
-	
+
 	public void doInternalConnections() {
 		doInternalConnections(roadsWest);
 		doInternalConnections(roadsEast);
@@ -176,7 +223,7 @@ public class EntityNode extends Entity {
 	}
 
 	public void addConnectionTo(EntityNode other, Direction direction, RoadType roadType) {
-		EntityRoad road = new EntityRoad(this, other, roadType,spawning);
+		EntityRoad road = new EntityRoad(this, other, roadType, spawning);
 		addRoad(road, direction);
 		other.addRoad(road, getOppositDirection(direction));
 		instanceCreate(road);
@@ -184,36 +231,42 @@ public class EntityNode extends Entity {
 
 	public void addRoad(EntityRoad road, Direction direction) {
 		ArrayList<EntityRoad> roads = null;
-		int roadOffset = (int) ( getHeight() * 0.15);
-		int seperation = (int) ((getHeight() - (2*roadOffset)));
+		int roadOffset = (int) (getHeight() * 0.15);
+		int seperation = (int) ((getHeight() - (2 * roadOffset)));
 		switch (direction) {
 		case WEST:
 			roads = roadsWest;
 			roads.add(road);
 			if (roads.size() > 1)
-			for (int i = 0; i < roads.size(); i++)
-				roads.get(i).setPosition(this, (int)getXPosition(),  (int)getYPosition() + i * (seperation/(roads.size()-1)) + roadOffset);
+				for (int i = 0; i < roads.size(); i++)
+					roads.get(i).setPosition(this, (int) getXPosition(),
+							(int) getYPosition() + i * (seperation / (roads.size() - 1)) + roadOffset);
 			break;
 		case EAST:
 			roads = roadsEast;
 			roads.add(road);
 			if (roads.size() > 1)
-			for (int i = 0; i < roads.size(); i++)
-				roads.get(i).setPosition(this, (int)getXPosition() + getWidth(), (int)getYPosition() + i * (seperation/(roads.size()-1))  + roadOffset);
+				for (int i = 0; i < roads.size(); i++)
+					roads.get(i).setPosition(this, (int) getXPosition() + getWidth(),
+							(int) getYPosition() + i * (seperation / (roads.size() - 1)) + roadOffset);
 			break;
 		case NORTH:
 			roads = roadsNorth;
 			roads.add(road);
 			if (roads.size() > 1)
-			for (int i = 0; i < roads.size(); i++)
-				roads.get(i).setPosition(this, (int)getXPosition() + i * (seperation/(roads.size()-1))  + roadOffset, (int)getYPosition());
+				for (int i = 0; i < roads.size(); i++)
+					roads.get(i).setPosition(this,
+							(int) getXPosition() + i * (seperation / (roads.size() - 1)) + roadOffset,
+							(int) getYPosition());
 			break;
 		case SOUTH:
 			roads = roadsSouth;
 			roads.add(road);
 			if (roads.size() > 1)
-			for (int i = 0; i < roads.size(); i++)
-				roads.get(i).setPosition(this, (int)getXPosition() + i * (seperation/(roads.size()-1))  + roadOffset, (int)getYPosition() + getHeight());
+				for (int i = 0; i < roads.size(); i++)
+					roads.get(i).setPosition(this,
+							(int) getXPosition() + i * (seperation / (roads.size() - 1)) + roadOffset,
+							(int) getYPosition() + getHeight());
 			break;
 		}
 	}

@@ -291,6 +291,13 @@ public abstract class Entity {
 	public Rectangle getCollisionBounds() {
 		return collisionBounds;
 	}
+	
+	public double getAngleBetweenPoints(double x1, double y1, double x2, double y2) {
+		double delta_x = x2 - x1;
+		double delta_y = y2 - y1;
+		double theta_radians = Math.atan2(delta_y, delta_x);
+		return theta_radians;
+	}
 
 	/**
 	 * drawFlippedImage draws an image in reversed, used in animation to get the

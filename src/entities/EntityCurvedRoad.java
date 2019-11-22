@@ -99,9 +99,6 @@ public class EntityCurvedRoad extends EntityRoad {
 				origoY = y2;
 				nextX2 =  (origoX - Math.abs(x1 - x2) * Math.sin(angleDiff * i));
 				nextY2 = (origoY - Math.abs(y1 - y2) * Math.cos(angleDiff * i));
-				newRoad.straight = false;
-				newRoad.leftCurve = false;
-
 			} else if (startAngle == 90 && exitAngle == 180) {
 
 				angleDiff = -Math.PI / (2 * numPoints);
@@ -110,8 +107,6 @@ public class EntityCurvedRoad extends EntityRoad {
 				origoY = y1;
 				nextX2 =(origoX + Math.abs(x2 - x1) * Math.cos(angleDiff * i));
 				nextY2 = (origoY - Math.abs(y2 - y1) * Math.sin(angleDiff * i));
-				newRoad.straight = false;
-				newRoad.leftCurve = false;
 
 			} else if (startAngle == 180 && exitAngle == -90) {// done
 
@@ -121,8 +116,6 @@ public class EntityCurvedRoad extends EntityRoad {
 				origoY = y2;
 				nextX2 = (origoX - Math.abs(x2 - x1) * Math.sin(-angleDiff * i));
 				nextY2 = (origoY + Math.abs(y2 - y1) * Math.cos(angleDiff * i));
-				newRoad.straight = false;
-				newRoad.leftCurve = false;
 			} else if (startAngle == -90 && exitAngle == 0) {// done
 
 				angleDiff = -Math.PI / (2 * numPoints);
@@ -131,8 +124,6 @@ public class EntityCurvedRoad extends EntityRoad {
 				origoY = y1;
 				nextX2 =(origoX - Math.abs(x2 - x1) * Math.cos(angleDiff * i));
 				nextY2 =  (origoY + Math.abs(y2 - y1) * Math.sin(angleDiff * i));
-				newRoad.straight = false;
-				newRoad.leftCurve = false;
 			} else if (startAngle == 0 && exitAngle == -90) { // done
 
 				angleDiff = -Math.PI / (2 * numPoints);
@@ -141,8 +132,6 @@ public class EntityCurvedRoad extends EntityRoad {
 				origoY = y2;
 				nextX2 =(origoX - Math.abs(x2 - x1) * Math.sin(angleDiff * i));
 				nextY2 = (origoY - (y2 - y1) * Math.cos(angleDiff * i));
-				newRoad.straight = false;
-				newRoad.leftCurve = true;
 
 			} else if (startAngle == -90 && exitAngle == 180) { // done
 
@@ -152,8 +141,6 @@ public class EntityCurvedRoad extends EntityRoad {
 				origoY = y1;
 				nextX2 = (origoX + Math.abs(x2 - x1) * Math.cos(angleDiff * i));
 				nextY2 = (origoY - Math.abs(y2 - y1) * Math.sin(angleDiff * i));
-				newRoad.straight = false;
-				newRoad.leftCurve = true;
 
 			} else if (startAngle == 180 && exitAngle == 90) { // done
 
@@ -163,8 +150,6 @@ public class EntityCurvedRoad extends EntityRoad {
 				origoY = y2;
 				nextX2 = (origoX - Math.abs(x2 - x1) * Math.sin(angleDiff * i));
 				nextY2 = (origoY - Math.abs(y2 - y1) * Math.cos(angleDiff * i));
-				newRoad.straight = false;
-				newRoad.leftCurve = true;
 			} else if (startAngle == 90 && exitAngle == 0) { // done
 
 				angleDiff = -Math.PI / (2 * numPoints);
@@ -173,8 +158,6 @@ public class EntityCurvedRoad extends EntityRoad {
 				origoY = y1;
 				nextX2 = (origoX - Math.abs(x2 - x1) * Math.cos(angleDiff * i));
 				nextY2 = (origoY - Math.abs(y2 - y1) * Math.sin(angleDiff * i));
-				newRoad.straight = false;
-				newRoad.leftCurve = true;
 
 			} else if (startAngle == 0) {
 
@@ -182,15 +165,11 @@ public class EntityCurvedRoad extends EntityRoad {
 				
 				nextX2 = x1 + i * (Math.abs(x2 - x1) / numPoints);
 				nextY2 = y2;
-				newRoad.straight = true;
-				newRoad.leftCurve = false;
 
 			} else {
 
 				nextX2 = x1 - i * (Math.abs(x2 - x1) / numPoints);
 				nextY2 = y2;
-				newRoad.straight = true;
-				newRoad.leftCurve = false;
 
 			}
 			
@@ -212,7 +191,8 @@ public class EntityCurvedRoad extends EntityRoad {
 							
 
 			newRoad.setPosition(preX2, preY2, nextX2, nextY2);
-
+			newRoad.straight = this.straight;
+			newRoad.leftCurve = this.leftCurve;
 			newRoad.first = this;
 
 			getEntryNode().instanceCreate(newRoad);
@@ -224,7 +204,7 @@ public class EntityCurvedRoad extends EntityRoad {
 			preRoad = newRoad;
 		}
 		
-	
+		
 		last = preRoad;
 		
 		

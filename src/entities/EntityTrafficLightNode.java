@@ -5,7 +5,7 @@ import java.util.List;
 
 import entities.EntityTrafficLight.LightCycle;
 
-public class EntityTrafficLightNode extends EntityNode implements Runnable {
+public class EntityTrafficLightNode extends EntityNode  {
 
 	private List<EntityTrafficLight> trafficLights;
 	private Thread t = null;
@@ -38,8 +38,8 @@ public class EntityTrafficLightNode extends EntityNode implements Runnable {
 			}
 		}
 
-		t = new Thread(this);
-		t.start();
+		//t = new Thread(this);
+		//t.start();
 	}
 	
 	public void toggleSignal(List<EntityTrafficLight> list) {
@@ -58,8 +58,40 @@ public class EntityTrafficLightNode extends EntityNode implements Runnable {
 			tl.setLightCycle(l);
 		}
 	}
-
+	
+	
+	int wait = 0;
+	int caseTest = 0;
 	@Override
+	public void step() {
+		if (wait == 0) {
+			switch (caseTest) {
+			case 0:
+				toggleSignal(setVertical, LightCycle.STOP);
+				wait = 120;
+				caseTest = 1;
+				break;
+			case 1:
+				toggleSignal(setHorizontal, LightCycle.DRIVE);
+				wait = 300;
+				caseTest = 2;
+				break;
+			case 2:
+				toggleSignal(setHorizontal, LightCycle.STOP);
+				wait = 120;
+				caseTest = 3;
+				break;
+			case 3:
+				toggleSignal(setVertical, LightCycle.DRIVE);
+				wait = 300;
+				caseTest = 0;
+				break;
+			}			
+		}
+		else wait--;
+	}
+
+	/*@Override
 	public void run() {
 		try {
 			while (true) {
@@ -85,7 +117,7 @@ public class EntityTrafficLightNode extends EntityNode implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}*/
 	
 	
 }
