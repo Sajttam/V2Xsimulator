@@ -66,26 +66,26 @@ public class EntityNode extends Entity {
 
 	int wait = (int) (20 + (Math.random() * 400));
 
-	@Override
-	public void step() {
-		if (spawning) {
-			for (EntityRoad r : getAllRoads()) {
-				if (wait == 0) {
-					if (equals(r.getEntryNode()))
-						if (r.getRoadType() == RoadType.BICYCLE) {
-						instanceCreate(new EntityBicycle(r, CollisionObserver.getInstance()));
-						}
-						else {
-							instanceCreate(new EntityCar(r, CollisionObserver.getInstance()));
-						}
-						
-					wait = (int) (40 + (Math.random() * 400));
-				} else
-					wait--;
-				
-			}
-		}
-	}
+//	@Override
+//	public void step() {
+//		if (spawning) {
+//			for (EntityRoad r : getAllRoads()) {
+//				if (wait == 0) {
+//					if (equals(r.getEntryNode()))
+//						if (r.getRoadType() == RoadType.BICYCLE) {
+//						instanceCreate(new EntityBicycle(r, StatisticsObserver.getInstance()));
+//						}
+//						else {
+//							instanceCreate(new EntityCar(r, StatisticsObserver.getInstance()));
+//						}
+//						
+//					wait = (int) (40 + (Math.random() * 400));
+//				} else
+//					wait--;
+//				
+//			}
+//		}
+//	}
 
 	public List<EntityRoad> getAllRoads() {
 		List<EntityRoad> allRoads = new ArrayList<EntityRoad>(roadsWest);
@@ -138,16 +138,18 @@ public class EntityNode extends Entity {
 						
 						Boolean left = false;
 						
-						int x1 = r.x2;
-						int y1 = r.y2;
-						int x2 = (int)otherRoad.getXPosition();
-						int y2 = (int)otherRoad.getYPosition();					
+						double x1 = r.x2;
+						double y1 = r.y2;
+						double x2 = otherRoad.getXPosition();
+						double y2 = otherRoad.getYPosition();	
+						
+						
 
 						//EntityRoad newRoad = new EntityRoad(this, this, r.getRoadType(),false); // False due to it should only be able to spawn on exit from node
 						EntityCurvedRoad newRoad = new EntityCurvedRoad(this, this, r.getRoadType(),r.getAngle(),otherRoad.getAngle()); // False due to it should only be able to spawn on exit from node
 
-						newRoad.setPosition(r.x2, r.y2, (int)otherRoad.getXPosition(),
-								(int)otherRoad.getYPosition());
+						newRoad.setPosition(r.x2, r.y2, otherRoad.getXPosition(),
+								otherRoad.getYPosition());
 
 						
 						if (roadConnections.containsKey(r)) {

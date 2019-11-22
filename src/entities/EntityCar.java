@@ -6,6 +6,8 @@ import java.awt.Polygon;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+import models.SharedValues;
+
 public class EntityCar extends EntityVehicle{
 
 	private boolean smartVehicle = false;
@@ -40,5 +42,13 @@ public class EntityCar extends EntityVehicle{
 			
 			
 	}
+	
+	@Override
+	public void collision(Entity other) {
+		super.collision(other);
+
+		SharedValues.getInstance().incrementCarCounter();
+	}
+	
 	
 }

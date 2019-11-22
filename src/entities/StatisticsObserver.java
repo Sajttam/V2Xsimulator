@@ -4,14 +4,14 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class CollisionObserver extends Entity implements PropertyChangeListener  {
+public class StatisticsObserver extends Entity implements PropertyChangeListener  {
 	
 	private PropertyChangeSupport propertyChangeSupportCounter;
-	private CollisionObserver() {}
-	private static final CollisionObserver collisionobserver = new CollisionObserver();
+	private StatisticsObserver() {}
+	private static final StatisticsObserver collisionobserver = new StatisticsObserver();
 	private int car,bike,collision;
 	
-	public static CollisionObserver getInstance() {
+	public static StatisticsObserver getInstance() {
 		return collisionobserver;
 	}
 	

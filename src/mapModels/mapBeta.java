@@ -17,13 +17,14 @@ public class mapBeta implements SimulationMap {
 
 		EntityNode nodeWest = new EntityNode(64, 472);
 		EntityNode nodeEast = new EntityNode(748, 472);
+		EntityNode nodeNorthWest = new EntityNode(64, 128);
+		EntityNode nodeNorthEast = new EntityNode(748, 128);
 		EntityTrafficLightNode nodeNorth = new EntityTrafficLightNode(358, 128);
 		EntityTrafficLightNode nodeCenter = new EntityTrafficLightNode(358, 472);
 
-		EntityNode nodeNorthWest = new EntityNode(64, 128);
-		EntityNode nodeNorthEast = new EntityNode(748, 128);
 		
-		//Create simulation instances
+		
+		//Create simulation instances 
 		controller.createInstance(nodeWest);
 		controller.createInstance(nodeEast);
 		controller.createInstance(nodeNorth);

@@ -72,6 +72,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		vSpeed = speed * Math.sin(angle);
 		
 		visionArea = getVisionArea();
+
 	}
 	
 	private void addCounter(PropertyChangeListener listener) {
@@ -116,7 +117,6 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		hSpeed = speed * Math.cos(angle);
 		vSpeed = speed * Math.sin(angle);
 		
-		//if (!road.straight) System.out.println("CURVED");
 		
 		for (Entity e : entitiesInSight) {
 			if (e instanceof EntityVehicle) {
@@ -144,6 +144,8 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 		if (Math.abs((getXPosition() - road.getXPosition())) >= Math.abs(distX)
 				&& Math.abs(getYPosition() - road.getYPosition()) >= Math.abs(distY)) {
+			
+			
 			EntityRoad nextRoad = road.getNextRoad(Math.random() > 0.5 ? true : false);
 			if (nextRoad == null) {
 				instanceDestroy();
@@ -151,6 +153,8 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 				setRoad(nextRoad);
 			}
 		}
+		
+		
 
 	}
 
@@ -175,6 +179,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	public void collision(Entity other) {
 		if (other instanceof EntityVehicle) {
 			castPropertyChange("COLLISION");
+			
 			instanceDestroy();
 		}
 	}
