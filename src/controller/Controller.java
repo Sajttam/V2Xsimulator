@@ -155,7 +155,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 						
 							((Collidable) entity).collision(other);
 							
-							System.out.println(entity.getClass() + " " + entity.toString() + " collided with " + other.getClass() + " " + other.toString());
+							//System.out.println(entity.getClass() + " " + entity.toString() + " collided with " + other.getClass() + " " + other.toString());
 							
 			
 						

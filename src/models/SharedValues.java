@@ -9,11 +9,7 @@ public class SharedValues {
 	
 	
 	
-	private SharedValues() {
-		
-		
-	
-	}
+	private SharedValues() {}
 	
 	public static SharedValues getInstance(){
 		

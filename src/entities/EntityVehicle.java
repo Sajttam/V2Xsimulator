@@ -10,6 +10,7 @@ import java.util.List;
 
 import entities.EntityNode.Direction;
 import entities.EntityRoad.RoadType;
+import models.SharedValues;
 
 public class EntityVehicle extends Entity implements Collidable, EntityMouseListener {
 
@@ -178,6 +179,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	@Override
 	public void collision(Entity other) {
 		if (other instanceof EntityVehicle) {
+			
 			castPropertyChange("COLLISION");
 			
 			instanceDestroy();

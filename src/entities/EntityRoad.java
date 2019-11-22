@@ -64,15 +64,17 @@ public class EntityRoad extends Entity{
 			if (wait == 0) {
 				if (roadType == RoadType.BICYCLE) {
 					
-					if(SharedValues.getInstance().getBicycleCounter()>0)
+					if(SharedValues.getInstance().getBicycleCounter()>0){
 						instanceCreate(new EntityBicycle(this,StatisticsObserver.getInstance()));
 						SharedValues.getInstance().decrementBicycleCounter();
+					}
 					
 				}
 				else {
-					if(SharedValues.getInstance().getCarCounter()>0)
+					if(SharedValues.getInstance().getCarCounter()>0) {
 						instanceCreate(new EntityCar(this,StatisticsObserver.getInstance()));
 						SharedValues.getInstance().decrementCarCounter();
+					}
 				}
 				wait = (int) (50 + (Math.random()*400));
 			}
