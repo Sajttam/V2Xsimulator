@@ -9,10 +9,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import entities.CollisionObserver;
+import entities.StatisticsObserver;
 
 public class StatsController implements PropertyChangeListener {
-	private CollisionObserver collisionobserver;
+	private StatisticsObserver collisionobserver;
 	private JFrame jframe;
 	private int car = 0;
 	private int bicycle = 0;
@@ -44,7 +44,7 @@ public class StatsController implements PropertyChangeListener {
 		jpanel.add(labelCollision);
 		jframe.add(jpanel);
 		jframe.setVisible(true);
-		collisionobserver = CollisionObserver.getInstance();
+		collisionobserver = StatisticsObserver.getInstance();
 		collisionobserver.addObserver(this);
 		jframe.pack();
 	}

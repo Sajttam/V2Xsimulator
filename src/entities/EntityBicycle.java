@@ -5,9 +5,9 @@ import java.awt.Graphics;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class EntityBicycle extends EntityVehicle {
-	
+import models.SharedValues;
 
+public class EntityBicycle extends EntityVehicle {
 	
 	public EntityBicycle(EntityRoad road, PropertyChangeListener listener) {
 		super(road,listener);
@@ -25,5 +25,12 @@ public class EntityBicycle extends EntityVehicle {
 		super.draw(g);
 		g.setColor(Color.ORANGE);
 		g.fillOval((int) getXPosition() - 6, (int) getYPosition() - 6, 12, 12);
+	}
+	
+	@Override
+	public void collision(Entity other) {
+		super.collision(other);
+
+		SharedValues.getInstance().incrementBicycleCounter();
 	}
 }

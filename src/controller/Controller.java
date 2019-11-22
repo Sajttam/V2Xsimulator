@@ -28,6 +28,7 @@ import entities.EntityRoad.RoadType;
 import mapModels.SimulationMap;
 import mapModels.mapAlpha;
 import mapModels.mapBeta;
+import models.SharedValues;
 import view.*;
 
 /**
@@ -57,8 +58,6 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	private KeyEvent keypressed;
 	private KeyEvent keyReleased;
 	private MouseEvent mouseEvent;
-	private AtomicInteger carCounter = new AtomicInteger(8);
-	private AtomicInteger bicycleCounter = new AtomicInteger(0);
 	private int temp=0;
 
 	/**
@@ -76,7 +75,8 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		gridSize = 21;
 		height = 189;
 		
-		System.out.println("Controller constructed");
+		SharedValues.getInstance().setBicycleCounter(8);
+		SharedValues.getInstance().setCarCounter(8);
 
 		initializeGame("resources/map2.txt");
 		guiPanel.setDrawInstaces(instances);
@@ -126,33 +126,12 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	 */
 	public synchronized void createInstance(Entity entity) {
 
-		if (entity instanceof EntityCar) {
-
-			
-			if (carCounter.get() > 0) {
-				System.out.println("Cars: " + carCounter.getAndDecrement());
+	
 				
 				createInstances.add(entity);
 				entity.setController(this);
 				entity.addObserver(this);
-			}
-		}
 
-		else if (entity instanceof EntityBicycle) {		
-
-			if (bicycleCounter.get() > 0) {
-				System.out.println("Bicycles: " + bicycleCounter.getAndDecrement());
-				createInstances.add(entity);
-				entity.setController(this);
-				entity.addObserver(this);
-			}
-		} else {
-
-			System.out.println(entity.getClass());
-			createInstances.add(entity);
-			entity.setController(this);
-			entity.addObserver(this);
-		}
 
 	}
 
@@ -178,12 +157,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 							
 							System.out.println(entity.getClass() + " " + entity.toString() + " collided with " + other.getClass() + " " + other.toString());
 							
-							if (entity instanceof EntityBicycle) {
-								System.out.println("Cars: " + bicycleCounter.getAndIncrement());
-								
-							} else if (entity instanceof EntityCar) {
-								carCounter.getAndIncrement();
-							}
+			
 						
 						}
 

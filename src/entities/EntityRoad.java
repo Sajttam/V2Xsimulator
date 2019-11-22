@@ -3,14 +3,18 @@ package entities;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import models.SharedValues;
+
 
 public class EntityRoad extends Entity{
 	public enum RoadType {CAR, BICYCLE;}
 	
-	private EntityNode enterNode, exitNode;
-	int x2, y2;
+	protected EntityNode enterNode;
+	protected EntityNode exitNode;
+	double x2;
+	double y2;
 	private RoadType roadType;
-	private double angle = 0;
+	protected double angle = 0;
 	private double distX = 0;
 	private double distY = 0;
 	private Boolean spawning;
@@ -25,14 +29,14 @@ public class EntityRoad extends Entity{
 		this.spawning = spawning;
 	}
 	
-	public void setPosition(int x1, int y1, int x2, int y2) {
+	public void setPosition(double x1, double y1, double nextX2, double nextY2) {
 		setXPosition(x1);
 		setYPosition(y1);
-		this.x2 = x2;
-		this.y2 = y2;
+		this.x2 = nextX2;
+		this.y2 = nextY2;
 		
-		distX = x2-x1;
-		distY = y2-y1;
+		distX = nextX2-x1;
+		distY = nextY2-y1;
 		
 		angle = Math.atan(distY/distX);
 		if (distX < 0) angle += Math.PI;
@@ -53,16 +57,22 @@ public class EntityRoad extends Entity{
 	
 
 	
-	int wait = (int) (50 + (Math.random()*400));;
+	int wait = (int) (50 + (Math.random()*400));
 	@Override
 	public void step() {
 		if(spawning)
-			if (wait <= 0) {
+			if (wait == 0) {
 				if (roadType == RoadType.BICYCLE) {
-					instanceCreate(new EntityBicycle(this,CollisionObserver.getInstance()));
+					
+					if(SharedValues.getInstance().getBicycleCounter()>0)
+						instanceCreate(new EntityBicycle(this,StatisticsObserver.getInstance()));
+						SharedValues.getInstance().decrementBicycleCounter();
+					
 				}
 				else {
-					instanceCreate(new EntityCar(this,CollisionObserver.getInstance()));
+					if(SharedValues.getInstance().getCarCounter()>0)
+						instanceCreate(new EntityCar(this,StatisticsObserver.getInstance()));
+						SharedValues.getInstance().decrementCarCounter();
 				}
 				wait = (int) (50 + (Math.random()*400));
 			}
@@ -77,6 +87,7 @@ public class EntityRoad extends Entity{
 	public void draw(Graphics g) {
 		switch (roadType) {
 		case CAR:
+			
 			g.setColor(Color.GREEN);
 			break;
 		case BICYCLE:
@@ -84,18 +95,14 @@ public class EntityRoad extends Entity{
 			break;
 		}
 		
-		g.drawLine((int)getXPosition(), (int)getYPosition(), x2, y2);
+		g.drawLine((int)getXPosition(), (int)getYPosition(), (int)x2, (int)y2);
 		//g.fillRect(x2,y2-4,8,8);
 		g.setColor(Color.WHITE);
 		//g.drawString((angle*(180.0/Math.PI)) + "°", (int)(getXPosition()+(distX/2)), (int)(getYPosition()+distY/2));
 		
 	}
 	
-	public String toString() {
-		StringBuilder s = new StringBuilder();
-		s.append("x1:" + getXPosition() + " y1:" +getYPosition() + " x2:" + x2 + " y2:" +y2);
-		return s.toString();
-	}
+	
 	public double getDistX() {
 		return distX;
 	}
@@ -127,5 +134,11 @@ public class EntityRoad extends Entity{
 	public EntityNode getOtherNode(EntityNode node) {
 		if (node.equals(enterNode)) return exitNode;
 		else return enterNode;
+	}
+	
+	public String toString() {
+		StringBuilder s = new StringBuilder();
+		s.append("EntityRoad: " + "x1:" + getXPosition() + " y1:" +getYPosition() + " x2:" + x2 + " y2:" +y2);
+		return s.toString();
 	}
 }

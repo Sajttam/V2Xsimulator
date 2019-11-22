@@ -196,8 +196,8 @@ public abstract class Entity {
 	 *
 	 * @param x, the new value for the xPosition.
 	 */
-	public void setXPosition(int x) {
-		xPosition = x;
+	public void setXPosition(double x1) {
+		xPosition = x1;
 		setCollisionBoundsLocation();
 	}
 
@@ -207,8 +207,8 @@ public abstract class Entity {
 	 *
 	 * @param y, the new value for the yPosition.
 	 */
-	public void setYPosition(int y) {
-		yPosition = y;
+	public void setYPosition(double y1) {
+		yPosition = y1;
 		setCollisionBoundsLocation();
 	}
 
