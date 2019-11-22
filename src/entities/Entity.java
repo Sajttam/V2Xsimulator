@@ -261,7 +261,7 @@ public abstract class Entity {
 	/**
 	 * setCollisionBounds with parameters for offset and base collisionBounds
 	 *
-	 * @param collisionBounds, used to set a new collisionBounds using the old
+	 * @param collisionBounds, used to set a new collisionBounds using the old 
 	 * @param xOffset, offset in x-Axis
 	 * @param yOffset, offset in y-Axis
 	 */

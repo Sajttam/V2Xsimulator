@@ -34,6 +34,9 @@ public class EntityCurvedRoad extends EntityRoad {
 			s.append("RoadPart: " + "x1:" + getXPosition() + " y1:" +getYPosition() + " x2:" + x2 + " y2:" +y2);
 			return s.toString();
 		}
+		
+
+		
 	}
 		
 	
@@ -53,6 +56,7 @@ public class EntityCurvedRoad extends EntityRoad {
 		// TODO Auto-generated constructor stub
 	}
 	
+
 	
 
 	@Override
@@ -189,6 +193,23 @@ public class EntityCurvedRoad extends EntityRoad {
 				newRoad.leftCurve = false;
 
 			}
+			
+			
+//			if(Math.abs(x1 -nextX2) > Math.abs(x1-x2)) {
+//
+//				
+//				nextX2 = x2;
+//				
+//			}
+//	
+//			
+//			if(Math.abs(y1 -nextY2) > Math.abs(y1-y2)) {
+//				
+//	
+//				nextY2 = y2;
+//				
+//			}
+							
 
 			newRoad.setPosition(preX2, preY2, nextX2, nextY2);
 

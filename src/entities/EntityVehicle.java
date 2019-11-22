@@ -59,6 +59,8 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	
 
 	public void setRoad(EntityRoad road) {
+		
+		
 		setXPosition((int) road.getXPosition());
 		setYPosition((int) road.getYPosition());
 
@@ -141,21 +143,24 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			}
 		}
 
-		move(hSpeed, vSpeed);
 
-		if (Math.abs((getXPosition() - road.getXPosition())) >= Math.abs(distX)
-				&& Math.abs(getYPosition() - road.getYPosition()) >= Math.abs(distY)) {
+		if (Math.abs((int)((getXPosition() - road.getXPosition()))) > Math.abs((int)distX)
+				|| Math.abs((int)(getYPosition() - road.getYPosition())) > Math.abs((int)distY)) {
 			
 			
 			EntityRoad nextRoad = road.getNextRoad(Math.random() > 0.5 ? true : false);
 			if (nextRoad == null) {
 				instanceDestroy();
 			} else {
+		
+
 				setRoad(nextRoad);
+
 			}
 		}
 		
-		
+		move(hSpeed, vSpeed);
+
 
 	}
 

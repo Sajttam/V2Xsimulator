@@ -67,6 +67,9 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	 */
 	public Controller(GuiPanel guiPanel) {
 		this.guiPanel = guiPanel;
+		
+		SharedValues.getInstance().setBicycleCounter(8);
+		SharedValues.getInstance().setCarCounter(8);
 		instances = new ArrayList<Entity>();
 		createInstances = new ArrayList<Entity>();
 		deleteInstances = new ArrayList<Entity>();
@@ -75,8 +78,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		gridSize = 21;
 		height = 189;
 		
-		SharedValues.getInstance().setBicycleCounter(8);
-		SharedValues.getInstance().setCarCounter(8);
+		
 
 		initializeGame("resources/map2.txt");
 		guiPanel.setDrawInstaces(instances);

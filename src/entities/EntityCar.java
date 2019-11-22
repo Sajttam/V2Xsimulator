@@ -16,7 +16,7 @@ public class EntityCar extends EntityVehicle{
 	
 	public EntityCar(EntityRoad road,PropertyChangeListener listener) {
 		super(road,listener);
-		
+		 
 		setParameters(road, listener);
 	
 	}
