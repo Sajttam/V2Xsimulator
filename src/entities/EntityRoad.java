@@ -2,11 +2,7 @@ package entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 
-import entities.EntityNode.Direction;
 
 public class EntityRoad extends Entity{
 	public enum RoadType {CAR, BICYCLE;}

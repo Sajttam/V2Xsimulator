@@ -14,11 +14,19 @@ public class EntityCar extends EntityVehicle{
 	
 	public EntityCar(EntityRoad road,PropertyChangeListener listener) {
 		super(road,listener);
+		
+		setParameters(road, listener);
+	
+	}
+	private synchronized void setParameters(EntityRoad road,PropertyChangeListener listener) {
+		
 		setSpeed(1.25);
 		setCollisionBounds(16, 16);
 		setCollisionBounds(getCollisionBounds(), -8, -8);
 		smartVehicle = Math.random() > 0.8 ? true : false;	
 		super.castPropertyChange("CAR CREATED");
+		
+		
 	}
 	
 	@Override

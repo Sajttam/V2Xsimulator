@@ -2,12 +2,11 @@ package entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+
 
 import entities.EntityRoad.RoadType;
 
@@ -146,8 +145,7 @@ public class EntityNode extends Entity {
 						
 						
 						
-						//EntityRoad newRoad = new EntityRoad(this, this, r.getRoadType(),false, false, false); // False due to it should only be able to spawn on exit from node						
-						//newRoad.setPosition(x1, y1, x2, y2);
+
 
 						//EntityRoad newRoad = new EntityRoad(this, this, r.getRoadType(),false); // False due to it should only be able to spawn on exit from node
 						EntityCurvedRoad newRoad = new EntityCurvedRoad(this, this, r.getRoadType(),r.getAngle(),otherRoad.getAngle()); // False due to it should only be able to spawn on exit from node

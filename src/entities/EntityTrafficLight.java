@@ -13,10 +13,10 @@ public class EntityTrafficLight extends Entity{
 	private int offsetY = -4;
 	
 	public EntityTrafficLight (int x, int y) {
-		super(8,8);
+		super(1,1);
 		setXPosition(x);
 		setYPosition(y);
-		setCollisionBounds(8, 8, offsetX, offsetY);
+		setCollisionBounds(1, 1, offsetX, offsetY);
 		setLightCycle(LightCycle.STOP);
 	}
 	
@@ -26,9 +26,13 @@ public class EntityTrafficLight extends Entity{
 
 	public void setLightCycle(LightCycle lightCycle) {
 		this.lightCycle = lightCycle;
+		
 		switch (lightCycle) {
 		case STOP:
-			setCollisionBounds(8, 8, offsetX, offsetY);
+	
+				setCollisionBounds(1, 1, offsetX, offsetY);
+	
+			
 			break;
 		case DRIVE:
 			setCollisionBounds(0, 0, 0, 0);
