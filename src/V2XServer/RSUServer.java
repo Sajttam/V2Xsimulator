@@ -32,12 +32,12 @@ public class RSUServer extends Thread {
 			server = new ServerSocket(port);
 
 			System.out.println("Server started");
-
-			System.out.println("Waiting for a client ...");
+			System.out.println("Waiting for a client...");
 
 			while (true) {
 				socket = server.accept();
-				System.out.println("Client accepted");
+				FunctionHandler.getInstance().addCar(socket);
+				// System.out.println("Client accepted");
 
 				// Starts a new thread in which the server and client can communicate
 				new Messaging(socket);
@@ -53,10 +53,12 @@ class Messaging extends Thread {
 
 	Socket clientSocket;
 	FileOutputStream f;
+	V2XMessage carInfo;
 	boolean running = true;
 
-	ObjectInputStream oIn;
 	ObjectOutputStream oOut;
+	ObjectInputStream oIn;
+	InputStream in;
 	OutputStream out;
 
 	public Messaging(Socket socket) {
@@ -69,34 +71,43 @@ class Messaging extends Thread {
 	@Override
 	public void run() {
 
-		System.out.println("Car connected " + clientSocket.toString());
-
-		InputStream in;
+		// System.out.println("Car connected " + clientSocket.toString());
 
 		try {
-			in = clientSocket.getInputStream();
+
 			out = clientSocket.getOutputStream();
+			in = clientSocket.getInputStream();
 
-			oIn = new ObjectInputStream(in);
 			oOut = new ObjectOutputStream(out);
+			oIn = new ObjectInputStream(in);
 
-			while (clientSocket.isConnected()) {
+			while (!clientSocket.isClosed()) {// loop to keep checking for new messages
 				Object message = oIn.readObject();
 
-				if (message instanceof V2XMessage) {
+				if (message instanceof V2XMessage) {// information message from car
 
-					System.out.println("Client " + clientSocket.getPort() + " " + message.toString());
+					carInfo = (V2XMessage) message;
+					FunctionHandler.getInstance().logCarInfo(clientSocket, (V2XMessage) message);
 
-				} else if (message.equals("Over")) {
+					// System.out.println("Client " + clientSocket.getPort() + " " +
+					// message.toString());
+//					oOut.writeObject("Recieved");
+//					oOut.flush();
+
+				} else if (message.equals("Stop")) {// Exit command to kill thread
+
+					FunctionHandler.getInstance().removeCar(clientSocket);
 
 					in.close();
 					out.close();
 					oOut.close();
 					oIn.close();
 					clientSocket.close();
+					this.interrupt();
 
 				}
-				if (message.equals("Ping")) {
+
+				if (message.equals("Ping")) {// Echoes a ping from a client
 
 					System.out.println("Ping received " + clientSocket.toString());
 
@@ -116,6 +127,12 @@ class Messaging extends Thread {
 			}
 
 		}
+
+	}
+
+	public V2XMessage getCarInfo() {
+
+		return carInfo;
 
 	}
 

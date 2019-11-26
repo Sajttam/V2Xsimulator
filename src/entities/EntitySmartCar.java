@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -20,6 +21,7 @@ public class EntitySmartCar extends EntityCar {
 
 	Socket socket;
 	ObjectOutputStream outToServer;
+	ObjectInputStream inFromServer;
 	static int serverInterval = 60;
 	int tempWait = serverInterval;
 
@@ -36,6 +38,8 @@ public class EntitySmartCar extends EntityCar {
 
 		try {
 			outToServer = new ObjectOutputStream(socket.getOutputStream());
+			inFromServer = new ObjectInputStream(socket.getInputStream());
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -76,9 +80,14 @@ public class EntitySmartCar extends EntityCar {
 
 				V2XMessage message = new V2XMessage(getSpeed(), getAngle(),
 						new Point2D.Double(getXPosition(), getYPosition()));
+
 				outToServer.writeObject(message);
-				tempWait = serverInterval;
 				outToServer.flush();
+
+//				Object temp = inFromServer.readObject();
+//				System.out.println(temp.toString());
+
+				tempWait = serverInterval;
 
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -90,6 +99,22 @@ public class EntitySmartCar extends EntityCar {
 			tempWait--;
 
 		}
+	}
+
+	@Override
+	public void collision(Entity other) {
+
+		super.collision(other);
+
+		try {
+			outToServer.writeObject("Stop");
+			outToServer.flush();
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+
 	}
 
 	/*

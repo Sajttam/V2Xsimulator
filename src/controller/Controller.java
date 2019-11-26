@@ -62,7 +62,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		this.guiPanel = guiPanel;
 
 		SharedValues.getInstance().setBicycleCounter(8);
-		SharedValues.getInstance().setCarCounter(8);
+		SharedValues.getInstance().setCarCounter(14);
 		SharedValues.getInstance().setPort(1000);
 		instances = new ArrayList<Entity>();
 		createInstances = new ArrayList<Entity>();
