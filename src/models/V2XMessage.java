@@ -1,24 +1,24 @@
 package models;
 
-import com.sun.javafx.scene.paint.GradientUtils.Point;
+import java.awt.geom.Point2D;
+import java.io.Serializable;
 
-public class V2XMessage {
+@SuppressWarnings("serial")
+public class V2XMessage implements Serializable {
 
-
-	private int speed;
+	private double speed;
 	private double direction;
-	private Point position;
-	
-	public V2XMessage(int speed, double direction, Point position) {
-		
+	private Point2D position;
+
+	public V2XMessage(double speed, double direction, Point2D position) {
+
 		this.speed = speed;
 		this.direction = direction;
 		this.position = position;
-		
-		
+
 	}
-	
-	public int getSpeed() {
+
+	public double getSpeed() {
 		return speed;
 	}
 
@@ -34,13 +34,20 @@ public class V2XMessage {
 		this.direction = direction;
 	}
 
-	public Point getPosition() {
+	public Point2D getPosition() {
 		return position;
 	}
 
-	public void setPosition(Point position) {
+	public void setPosition(Point2D position) {
 		this.position = position;
 	}
-	
+
+	@Override
+	public String toString() {
+
+		return "{speed: " + getSpeed() + ", direction: " + Math.round(Math.toDegrees(getDirection())) + ", position: "
+				+ "[" + Math.round(getPosition().getX()) + ", " + Math.round(getPosition().getY()) + "]}";
+
+	}
 
 }

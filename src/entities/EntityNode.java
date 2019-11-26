@@ -106,11 +106,11 @@ public class EntityNode extends Entity {
 			count++;
 		if (roadsSouth.isEmpty())
 			count++;
-		
+
 		boolean starightRoads = !(count == 2);
-		
+
 		if (starightRoads)
-		g.setColor(Color.WHITE);
+			g.setColor(Color.WHITE);
 		else
 			g.setColor(Color.BLUE);
 		g.drawRect((int) getXPosition(), (int) getYPosition(), getWidth(), getHeight());
@@ -149,11 +149,11 @@ public class EntityNode extends Entity {
 			count++;
 		if (roadsSouth.isEmpty())
 			count++;
-		
+
 		boolean starightRoads = !(count == 2);
-		
-		if (starightRoads) System.out.println("YES");
-		
+
+		// if (starightRoads) System.out.println("YES");
+
 		for (EntityRoad r : roads) {
 			if (equals(r.getExitNode())) {
 				// roadConnections.put(r, new RoadPair(null, null));
@@ -171,7 +171,7 @@ public class EntityNode extends Entity {
 						double y2 = otherRoad.getYPosition();
 
 						double difAngle = Math.toDegrees(getAngleBetweenPoints(x1, y1, x2, y2));
-						//System.out.print("Angle: " + difAngle);
+						// System.out.print("Angle: " + difAngle);
 
 						// EntityRoad newRoad = new EntityRoad(this, this, r.getRoadType(),false); //
 						// False due to it should only be able to spawn on exit from node
@@ -181,22 +181,20 @@ public class EntityNode extends Entity {
 							if (difAngle > -90 && difAngle < 0 || difAngle > 90 && difAngle < 180) {
 								newRoad.straight = false;
 								newRoad.leftCurve = true;
-								//System.out.println(" left");
+								// System.out.println(" left");
 							} else if (difAngle > -180 && difAngle < -90 || difAngle > 0 && difAngle < 90) {
 								newRoad.straight = false;
 								newRoad.leftCurve = false;
-								//System.out.println(" right");
+								// System.out.println(" right");
 							} else {
 								newRoad.straight = true;
 								newRoad.leftCurve = false;
-								//System.out.println(" straight");
+								// System.out.println(" straight");
 							}
-						}
-						else {
+						} else {
 							newRoad.straight = true;
 							newRoad.leftCurve = false;
 						}
-							
 
 						newRoad.setPosition(r.x2, r.y2, otherRoad.getXPosition(), otherRoad.getYPosition());
 
@@ -232,7 +230,7 @@ public class EntityNode extends Entity {
 	public void addRoad(EntityRoad road, Direction direction) {
 		ArrayList<EntityRoad> roads = null;
 		int roadOffset = (int) (getHeight() * 0.15);
-		int seperation = (int) ((getHeight() - (2 * roadOffset)));
+		int seperation = ((getHeight() - (2 * roadOffset)));
 		switch (direction) {
 		case WEST:
 			roads = roadsWest;
@@ -275,10 +273,12 @@ public class EntityNode extends Entity {
 		return equals(road.getExitNode());
 	}
 
+	@Override
 	public int getWidth() {
 		return 96;
 	}
 
+	@Override
 	public int getHeight() {
 		return 96;
 	}

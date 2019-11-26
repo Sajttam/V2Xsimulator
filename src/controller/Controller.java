@@ -8,28 +8,21 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
-import entities.*;
-import entities.EntityRoad.RoadType;
-import mapModels.SimulationMap;
-import mapModels.mapAlpha;
+import V2XServer.RSUServer;
+import entities.Collidable;
+import entities.Entity;
+import entities.EntityMouseListener;
+import entities.EntityTrafficLight;
 import mapModels.mapBeta;
 import models.SharedValues;
-import view.*;
+import view.GuiPanel;
 
 /**
  * The class Controller handles the game logic. Controller extends Thread and
@@ -58,7 +51,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	private KeyEvent keypressed;
 	private KeyEvent keyReleased;
 	private MouseEvent mouseEvent;
-	private int temp=0;
+	private int temp = 0;
 
 	/**
 	 * Initializes a new controller with a given GUI.
@@ -67,9 +60,10 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	 */
 	public Controller(GuiPanel guiPanel) {
 		this.guiPanel = guiPanel;
-		
+
 		SharedValues.getInstance().setBicycleCounter(8);
 		SharedValues.getInstance().setCarCounter(8);
+		SharedValues.getInstance().setPort(1000);
 		instances = new ArrayList<Entity>();
 		createInstances = new ArrayList<Entity>();
 		deleteInstances = new ArrayList<Entity>();
@@ -77,12 +71,14 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		guiPanel.addMouseListener(new MAdapater());
 		gridSize = 21;
 		height = 189;
-		
-		
 
 		initializeGame("resources/map2.txt");
 		guiPanel.setDrawInstaces(instances);
 		start();
+
+		RSUServer server = new RSUServer(SharedValues.getInstance().getPort());
+		server.start();
+
 	}
 
 	/**
@@ -92,7 +88,6 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	@Override
 	public void run() {
 		while (true) {
-			
 
 			long startTime = System.nanoTime();
 			actionPerformed(null);
@@ -128,12 +123,9 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	 */
 	public synchronized void createInstance(Entity entity) {
 
-	
-				
-				createInstances.add(entity);
-				entity.setController(this);
-				entity.addObserver(this);
-
+		createInstances.add(entity);
+		entity.setController(this);
+		entity.addObserver(this);
 
 	}
 
@@ -152,18 +144,21 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 				Rectangle otherBounds = other.getCollisionBounds();
 				if (entityBounds.intersects(otherBounds)) {
 					if (entity instanceof Collidable) {
-						
-						if(!(entity instanceof EntityTrafficLight || other instanceof EntityTrafficLight ) ) { //avoid collision handling with traffic light
-						
+
+						if (!(entity instanceof EntityTrafficLight || other instanceof EntityTrafficLight)) { // avoid
+																												// collision
+																												// handling
+																												// with
+																												// traffic
+																												// light
+
 							((Collidable) entity).collision(other);
-							
-							//System.out.println(entity.getClass() + " " + entity.toString() + " collided with " + other.getClass() + " " + other.toString());
-							
-			
-						
+
+							// System.out.println(entity.getClass() + " " + entity.toString() + " collided
+							// with " + other.getClass() + " " + other.toString());
+
 						}
 
-						
 					}
 				}
 			}
@@ -340,6 +335,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	}
 
 	private class MAdapater extends MouseAdapter {
+		@Override
 		public void mouseClicked(MouseEvent e) {
 			mouseEvent = e;
 		}

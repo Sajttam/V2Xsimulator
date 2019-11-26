@@ -1,20 +1,28 @@
 package models;
 
 public class SharedValues {
-	
+
+	public int getPort() {
+		return port;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
+	}
+
 	private static SharedValues sharedValues = new SharedValues();
-	
+
 	private int carCounter;
 	private int bicycleCounter;
-	
-	
-	
-	private SharedValues() {}
-	
-	public static SharedValues getInstance(){
-		
+	private int port;
+
+	private SharedValues() {
+	}
+
+	public static SharedValues getInstance() {
+
 		return sharedValues;
-		
+
 	}
 
 	public int getCarCounter() {
@@ -32,33 +40,29 @@ public class SharedValues {
 	public void setBicycleCounter(int bicycleCounter) {
 		this.bicycleCounter = bicycleCounter;
 	}
-	
+
 	public void decrementCarCounter() {
-		
+
 		carCounter--;
-		
+
 	}
-	
+
 	public void decrementBicycleCounter() {
-		
+
 		bicycleCounter--;
-		
+
 	}
-	
+
 	public void incrementCarCounter() {
-		
+
 		carCounter++;
-		
+
 	}
-	
+
 	public void incrementBicycleCounter() {
-		
+
 		bicycleCounter++;
-		
+
 	}
-	
-	
-	
-	
 
 }
