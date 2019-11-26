@@ -16,13 +16,13 @@ public class FunctionHandler extends Thread {
 
 	}
 
+	private void blindspotChecker() {
+
+	}
+
 	private void runFunctions() {
 
 		blindspotChecker();
-	}
-
-	private void blindspotChecker() {
-
 	}
 
 	public static FunctionHandler getInstance() {
