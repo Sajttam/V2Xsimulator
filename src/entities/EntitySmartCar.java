@@ -30,8 +30,8 @@ public class EntitySmartCar extends EntityCar {
 	 * @param road     the road
 	 * @param listener the listener
 	 */
-	public EntitySmartCar(EntityRoad road, PropertyChangeListener listener) {
-		super(road, listener);
+	public EntitySmartCar(EntityRoad road, PropertyChangeListener listener, String entitytype) {
+		super(road, listener, entitytype);
 		try {
 			connectToRSU();
 		} catch (UnknownHostException | SocketException e) {
@@ -40,6 +40,9 @@ public class EntitySmartCar extends EntityCar {
 		}
 	}
 
+	
+	
+	
 	/**
 	 * Connects this car to the RSU.
 	 * 

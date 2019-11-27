@@ -9,12 +9,12 @@ import models.SharedValues;
 
 public class EntityBicycle extends EntityVehicle {
 	
-	public EntityBicycle(EntityRoad road, PropertyChangeListener listener) {
+	public EntityBicycle(EntityRoad road, PropertyChangeListener listener, String entitytype) {
 		super(road,listener);
 		setSpeed(0.75);
 		setCollisionBounds(12, 12);
 		setCollisionBounds(getCollisionBounds(), -6, -6);
-		super.castPropertyChange("BICYCLE CREATED");
+		super.castPropertyChange(entitytype);
 
 	}
 	

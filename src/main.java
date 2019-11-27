@@ -29,7 +29,7 @@ public class main {
 			gui = new GuiPanel(231*scaling, 189*scaling, scaling);
 			stats = new JFrame("Statistics");
 			StatsController statscontroller = new StatsController(stats);
-			stats.setSize(500, 500);
+			stats.setSize(700, 500);
 			Controller controller = new Controller(gui);
 			gui.makeMenu(controller);
 		/*} catch (IOException e) {

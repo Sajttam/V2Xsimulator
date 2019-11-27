@@ -64,7 +64,7 @@ public class EntityRoad extends Entity {
 			if (wait == 0) {
 				if (roadType == RoadType.BICYCLE) {
 					if (SharedValues.getInstance().getBicycleCounter() > 0) {
-						instanceCreate(new EntityBicycle(this, StatisticsObserver.getInstance()));
+						instanceCreate(new EntityBicycle(this, StatisticsObserver.getInstance(),"Bicycle"));
 						SharedValues.getInstance().decrementBicycleCounter();
 					}
 
@@ -73,10 +73,10 @@ public class EntityRoad extends Entity {
 						boolean smartVehicle = Math.random() > 0.7 ? true : false;
 
 						if (smartVehicle) {
-							instanceCreate(new EntitySmartCar(this, StatisticsObserver.getInstance()));
+							instanceCreate(new EntitySmartCar(this, StatisticsObserver.getInstance(),"Smartcar"));
 						} else {
 
-							instanceCreate(new EntityCar(this, StatisticsObserver.getInstance()));
+							instanceCreate(new EntityCar(this, StatisticsObserver.getInstance(),"Car"));
 
 						}
 

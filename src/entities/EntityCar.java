@@ -8,19 +8,19 @@ import models.SharedValues;
 
 public class EntityCar extends EntityVehicle {
 
-	public EntityCar(EntityRoad road, PropertyChangeListener listener) {
+	public EntityCar(EntityRoad road, PropertyChangeListener listener,String entitytype) {
 		super(road, listener);
 
-		setParameters(road, listener);
+		setParameters(road, listener, entitytype);
 
 	}
 
-	private synchronized void setParameters(EntityRoad road, PropertyChangeListener listener) {
+	private synchronized void setParameters(EntityRoad road, PropertyChangeListener listener, String entity) {
 
 		setSpeed(1.25);
 		setCollisionBounds(16, 16);
 		setCollisionBounds(getCollisionBounds(), -8, -8);
-		super.castPropertyChange("CAR CREATED");
+		super.castPropertyChange(entity);
 
 	}
 
