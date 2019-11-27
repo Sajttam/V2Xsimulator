@@ -9,9 +9,11 @@ public class V2XMessage implements Serializable {
 	private double speed;
 	private double direction;
 	private Point2D position;
+	private int id;
 
-	public V2XMessage(double speed, double direction, Point2D position) {
+	public V2XMessage(int id, double speed, double direction, Point2D position) {
 
+		this.id = id;
 		this.speed = speed;
 		this.direction = direction;
 		this.position = position;
@@ -45,8 +47,9 @@ public class V2XMessage implements Serializable {
 	@Override
 	public String toString() {
 
-		return "{speed: " + getSpeed() + ", direction: " + Math.round(Math.toDegrees(getDirection())) + ", position: "
-				+ "[" + Math.round(getPosition().getX()) + ", " + Math.round(getPosition().getY()) + "]}";
+		return "{id: " + id + ", speed: " + getSpeed() + ", direction: " + Math.round(Math.toDegrees(getDirection()))
+				+ ", position: " + "[" + Math.round(getPosition().getX()) + ", " + Math.round(getPosition().getY())
+				+ "]}";
 
 	}
 
