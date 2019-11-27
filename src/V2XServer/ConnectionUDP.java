@@ -1,5 +1,8 @@
 package V2XServer;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -10,6 +13,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+import models.SharedValues;
 import models.V2XMessage;
 
 public class ConnectionUDP {
@@ -45,5 +49,41 @@ public class ConnectionUDP {
 		V2XMessage message = (V2XMessage) iStream.readObject();
 		iStream.close();
 		return message;
+	}
+	
+	public void broadcast(String broadcastMessage, InetAddress address) throws IOException {
+		DatagramSocket broadcastSocket = new DatagramSocket();
+		broadcastSocket.setBroadcast(true);
+		byte[] buffer = broadcastMessage.getBytes();
+		DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address,
+				SharedValues.getInstance().getBroadcastPort());
+		broadcastSocket.send(packet);
+		broadcastSocket.close();
+	}
+	
+	public class BroadcastReceiver extends Thread {
+		byte[] receiveData = new byte[1024];
+		int port;
+		//private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport();
+		
+		public BroadcastReceiver(PropertyChangeListener ps) {
+			port = SharedValues.getInstance().getBroadcastPort();
+			//this.ps = ps;
+			this.start();
+		}
+		@Override
+		public void run() {
+			try {
+				DatagramSocket serverSocket = new DatagramSocket(port);
+				byte[] receiveData = new byte[8];
+				DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+				while (true) {
+					serverSocket.receive(receivePacket);
+				}
+			} catch (IOException e) {
+				System.out.println(e);
+			}
+			// should close serverSocket in finally block
+		}
 	}
 }

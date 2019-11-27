@@ -12,6 +12,7 @@ import javax.swing.*;
 import controller.Controller;
 import controller.StatsController;
 import entities.*;
+import models.SharedValues;
 
 /**
  * The GUI panel keeps track of a list of entities and calls those entities draw
@@ -122,6 +123,12 @@ public class GuiPanel extends JPanel {
 		frame.pack();
 		frame.setVisible(true);
 	}
+	
+	public void changeSpeed() {
+		String txtValue = JOptionPane.showInputDialog(frame, "Set simulation speed");
+		double value = Double.parseDouble(txtValue);
+		SharedValues.getInstance().setTimeOutValue(value);
+	}
 
 	/**
 	 * Adds a menu to the game
@@ -141,6 +148,7 @@ public class GuiPanel extends JPanel {
 		JMenu menuOptions = new JMenu("Options");
 		JMenuItem itemFullscreen = new JMenuItem("Fullscreen");
 		JMenuItem itemSpeed = new JMenuItem("Simulation Speed");
+		itemSpeed.addActionListener(e -> changeSpeed());
 
 		JMenu menuDebug = new JMenu("Debug");
 		JMenuItem itemServer = new JMenuItem("Connect to server");

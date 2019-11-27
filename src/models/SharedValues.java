@@ -75,4 +75,9 @@ public class SharedValues {
 		this.timeOutValue = timeOutValue;
 	}
 
+	public int getBroadcastPort() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

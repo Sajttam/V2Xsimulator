@@ -3,6 +3,9 @@ package V2XServer;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+
+import models.SharedValues;
 import models.V2XMessage;
 
 public class RSUServerUDP extends ConnectionUDP implements Runnable {
@@ -33,7 +36,7 @@ public class RSUServerUDP extends ConnectionUDP implements Runnable {
 				System.out.println("Waiting for a package ...");
 				
 				socket.receive(packet); // Wait for package
-
+				
 				V2XMessage message = reciveMessage(packet);
 				
 				System.out.println("Client " + packet.getPort() + " " + message.toString());
@@ -43,4 +46,7 @@ public class RSUServerUDP extends ConnectionUDP implements Runnable {
 			e.printStackTrace();
 		}
 	}
+	
+	
 }
+
