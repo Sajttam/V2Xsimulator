@@ -4,9 +4,13 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -33,16 +37,6 @@ public class EntitySmartCar extends EntityCar {
 	 */
 	public EntitySmartCar(EntityRoad road, PropertyChangeListener listener) {
 		super(road, listener);
-
-		connectToRSU();
-
-		try {
-			outToServer = new ObjectOutputStream(socket.getOutputStream());
-			inFromServer = new ObjectInputStream(socket.getInputStream());
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
 	}
 
@@ -78,14 +72,20 @@ public class EntitySmartCar extends EntityCar {
 		if (tempWait <= 0) {
 			try {
 
+				DatagramSocket clientSocket = new DatagramSocket();
+				InetAddress IPAddress = InetAddress.getByName("localhost");
+				byte[] sendData = new byte[1024];
 				V2XMessage message = new V2XMessage(getSpeed(), getAngle(),
 						new Point2D.Double(getXPosition(), getYPosition()));
 
-				outToServer.writeObject(message);
-				outToServer.flush();
-
-//				Object temp = inFromServer.readObject();
-//				System.out.println(temp.toString());
+				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+				ObjectOutputStream os = new ObjectOutputStream(outputStream);
+				os.writeObject(message);
+				byte[] data = outputStream.toByteArray();
+				DatagramPacket sendPacket = new DatagramPacket(data, data.length, IPAddress,
+						SharedValues.getInstance().getPort());
+				clientSocket.send(sendPacket);
+				clientSocket.close();
 
 				tempWait = serverInterval;
 
@@ -105,15 +105,15 @@ public class EntitySmartCar extends EntityCar {
 	public void collision(Entity other) {
 
 		super.collision(other);
-
-		try {
-			outToServer.writeObject("Stop");
-			outToServer.flush();
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
+//
+//		try {
+//			outToServer.writeObject("Stop");
+//			outToServer.flush();
+//
+//		} catch (IOException e) {
+//
+//			e.printStackTrace();
+//		}
 
 	}
 
