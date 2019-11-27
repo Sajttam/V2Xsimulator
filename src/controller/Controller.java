@@ -15,7 +15,6 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import V2XServer.RSUServer;
 import V2XServer.RSUServerUDP;
 import entities.Collidable;
 import entities.Entity;
