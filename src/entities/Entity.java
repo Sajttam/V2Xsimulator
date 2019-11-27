@@ -1,16 +1,16 @@
 package entities;
 
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Polygon;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
-import java.util.Observable;
 
-import javax.swing.JComponent;
-
-import controller.*;
-import view.*;
+import controller.Controller;
+import view.Animation;
 
 /**
  * Abstract superclass for all Entities. Used by all all Entities, and have
@@ -37,7 +37,7 @@ public abstract class Entity {
 	public Entity() {
 		setCollisionBounds();
 	}
-	
+
 	public Entity(int width, int height) {
 		setCollisionBounds(width, height);
 	}
@@ -79,22 +79,24 @@ public abstract class Entity {
 			propertyChangeSupport = new PropertyChangeSupport(this);
 		propertyChangeSupport.addPropertyChangeListener(listener);
 	}
-	
+
 	public void draw(Graphics g) {
-		
+
 	}
-	
+
 	public void setController(Controller controller) {
 		this.controller = controller;
 	}
-	
+
 	public Entity getEntityAtPosition(int x, int y) {
-		if (controller == null) return null;
+		if (controller == null)
+			return null;
 		return controller.getEntityAtPosition(x, y);
 	}
-	
+
 	public List<Entity> getEntitiesInsideArea(Polygon area) {
-		if (controller == null) return null;
+		if (controller == null)
+			return null;
 		return controller.getEntitiesInsideArea(area);
 	}
 
@@ -109,7 +111,7 @@ public abstract class Entity {
 		yPosition += y;
 		setCollisionBoundsLocation();
 	}
-	
+
 	/**
 	 * Draws the image given a Graphics2D object and an image to draw. Image to be
 	 * used is gotten from the Entity
@@ -143,7 +145,7 @@ public abstract class Entity {
 	public void instanceDestroy() {
 		propertyChangeSupport.firePropertyChange("INSTANCE DESTROY", this, null);
 	}
-	
+
 	public void instanceCreate(Entity entity) {
 		propertyChangeSupport.firePropertyChange("INSTANCE CREATE", null, entity);
 	}
@@ -244,24 +246,24 @@ public abstract class Entity {
 			width = getSprite().getWidth();
 			height = getSprite().getHeight();
 		}
-		setCollisionBounds(new Rectangle((int)getXPosition(), (int)getYPosition(), width, height), 0, 0);
+		setCollisionBounds(new Rectangle((int) getXPosition(), (int) getYPosition(), width, height), 0, 0);
 	}
-	
+
 	public void setCollisionBounds(int width, int height, int xOffset, int yOffset) {
 		setCollisionBounds(width, height);
 		setCollisionBounds(getCollisionBounds(), xOffset, yOffset);
 	}
-	
+
 	public void setCollisionBounds(int width, int height) {
 		collisionBoundsXOffset = 0;
 		collisionBoundsYOffset = 0;
-		setCollisionBounds(new Rectangle((int)getXPosition(), (int)getYPosition(), width, height), 0, 0);
+		setCollisionBounds(new Rectangle((int) getXPosition(), (int) getYPosition(), width, height), 0, 0);
 	}
 
 	/**
 	 * setCollisionBounds with parameters for offset and base collisionBounds
 	 *
-	 * @param collisionBounds, used to set a new collisionBounds using the old 
+	 * @param collisionBounds, used to set a new collisionBounds using the old
 	 * @param xOffset, offset in x-Axis
 	 * @param yOffset, offset in y-Axis
 	 */
@@ -279,7 +281,8 @@ public abstract class Entity {
 	 */
 	public void setCollisionBoundsLocation() {
 		if (collisionBounds != null) {
-			collisionBounds.setLocation((int)getXPosition() + collisionBoundsXOffset, (int)getYPosition() + collisionBoundsYOffset);
+			collisionBounds.setLocation((int) getXPosition() + collisionBoundsXOffset,
+					(int) getYPosition() + collisionBoundsYOffset);
 		}
 	}
 
@@ -291,7 +294,7 @@ public abstract class Entity {
 	public Rectangle getCollisionBounds() {
 		return collisionBounds;
 	}
-	
+
 	public double getAngleBetweenPoints(double x1, double y1, double x2, double y2) {
 		double delta_x = x2 - x1;
 		double delta_y = y2 - y1;
@@ -307,7 +310,7 @@ public abstract class Entity {
 	 * @param image, the BufferedImage sprite to be drawn.
 	 */
 	public void drawFlippedImage(Graphics2D g2d, BufferedImage image) {
-		g2d.drawImage(image, (int)(getXPosition() + image.getWidth()), (int)getYPosition(), -image.getWidth(), image.getHeight(),
-				null);
+		g2d.drawImage(image, (int) (getXPosition() + image.getWidth()), (int) getYPosition(), -image.getWidth(),
+				image.getHeight(), null);
 	}
 }

@@ -4,20 +4,13 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import V2XServer.ConnectionUDP;
-import models.SharedValues;
 import models.V2XMessage;
 
 // TODO: Auto-generated Javadoc
@@ -56,10 +49,10 @@ public class EntitySmartCar extends EntityCar {
 	private void connectToRSU() throws UnknownHostException, SocketException {
 		connectionUDP = new ConnectionUDP();
 		socket = new DatagramSocket();
-		socket.connect(InetAddress.getByName("localhost"),1000); //Connection should probably come from RSU somehow
+		socket.connect(InetAddress.getByName("localhost"), 1000); // Connection should probably come from RSU somehow
 		System.out.println(socket);
 	}
-	
+
 	/*
 	 * Overrides the step function to also update the server with the smartCars
 	 * information. The additional wait period is there to extend the update
@@ -70,8 +63,8 @@ public class EntitySmartCar extends EntityCar {
 		super.step();
 		if (tempWait <= 0) {
 			try {
-				V2XMessage message = new V2XMessage(getSpeed(), getAngle(),
-						new Point2D.Double(getXPosition(), getYPosition()));				
+				V2XMessage message = new V2XMessage(this.hashCode(), this.getSpeed(), getAngle(),
+						new Point2D.Double(getXPosition(), getYPosition()));
 				connectionUDP.sendMessage(socket, message);
 				tempWait = serverInterval;
 			} catch (IOException e) {
