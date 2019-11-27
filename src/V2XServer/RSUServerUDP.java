@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 import models.SharedValues;
+import models.V2XCommand.Commands;
 import models.V2XMessage;
 
 public class RSUServerUDP extends ConnectionUDP implements Runnable {
@@ -14,9 +15,16 @@ public class RSUServerUDP extends ConnectionUDP implements Runnable {
 	private boolean running;
 	private byte[] buf = new byte[256];
 	private int port;
+	private FunctionHandler functionHandler = null;
 
 	public RSUServerUDP(int port) {
 		this.port = port;
+		functionHandler = new FunctionHandler();
+	}
+	
+	public void sendCommand(DatagramSocket socket, Commands command) throws IOException {
+		DatagramPacket packet = objectToDatagaram(socket, command);		
+		socket.send(packet);
 	}
 	
 	/**
@@ -39,7 +47,7 @@ public class RSUServerUDP extends ConnectionUDP implements Runnable {
 				
 				V2XMessage message = reciveMessage(packet);
 				
-				System.out.println("Client " + packet.getPort() + " " + message.toString());
+				functionHandler.logCarInfo(packet.getPort(), message);
 			}
 			socket.close();
 		} catch (IOException | ClassNotFoundException e) {

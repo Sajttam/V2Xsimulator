@@ -27,13 +27,16 @@ public class ConnectionUDP {
 	 * @throws IOException
 	 */
 	public void sendMessage(DatagramSocket socket, V2XMessage msg) throws IOException {
+		socket.send(objectToDatagaram(socket, msg));
+	}
+	
+	public DatagramPacket objectToDatagaram(DatagramSocket socket, Object object) throws IOException {
 		ByteArrayOutputStream bStream = new ByteArrayOutputStream();
 		ObjectOutput oo = new ObjectOutputStream(bStream);
-		oo.writeObject(msg);
+		oo.writeObject(object);
 		oo.close();
 		buf = bStream.toByteArray();
-		DatagramPacket packet = new DatagramPacket(buf, buf.length, socket.getInetAddress(), socket.getPort());
-		socket.send(packet);
+		return new DatagramPacket(buf, buf.length, socket.getInetAddress(), socket.getPort());		
 	}
 	
 	/**

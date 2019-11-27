@@ -101,6 +101,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			GLOBAL.incStepsEpic();
 		}
 	}
 

@@ -70,7 +70,7 @@ public class EntityRoad extends Entity {
 
 				} else {
 					if (SharedValues.getInstance().getCarCounter() > 0) {
-						boolean smartVehicle = Math.random() > 0.7 ? true : false;
+						boolean smartVehicle = Math.random() > 0.1 ? true : false;
 
 						if (smartVehicle) {
 							instanceCreate(new EntitySmartCar(this, StatisticsObserver.getInstance()));

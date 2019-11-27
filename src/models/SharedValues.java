@@ -16,6 +16,7 @@ public class SharedValues {
 	private int bicycleCounter;
 	private int port;
 	private double timeOutValue;
+	private volatile long stepsEpic = 0;
 
 	private SharedValues() {
 	}
@@ -80,4 +81,13 @@ public class SharedValues {
 		return 0;
 	}
 
+	public long getTimeStamp() {
+		return stepsEpic;
+	}
+
+	public void incStepsEpic() {
+		this.stepsEpic++;
+		if (stepsEpic == Long.MAX_VALUE)
+			stepsEpic = 0;
+	}
 }
