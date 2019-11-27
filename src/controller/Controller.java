@@ -16,6 +16,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import V2XServer.RSUServer;
+import V2XServer.RSUServerUDP;
 import entities.Collidable;
 import entities.Entity;
 import entities.EntityMouseListener;
@@ -76,8 +77,8 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		guiPanel.setDrawInstaces(instances);
 		start();
 
-		RSUServer server = new RSUServer(SharedValues.getInstance().getPort());
-		server.start();
+		RSUServerUDP server = new RSUServerUDP(SharedValues.getInstance().getPort());
+		(new Thread(server)).start();
 
 	}
 

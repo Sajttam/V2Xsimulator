@@ -4,11 +4,19 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import V2XServer.ConnectionUDP;
 import models.SharedValues;
 import models.V2XMessage;
 
@@ -18,10 +26,10 @@ import models.V2XMessage;
  */
 public class EntitySmartCar extends EntityCar {
 
-	Socket socket;
-	ObjectOutputStream outToServer;
+	DatagramSocket socket;
 	static int serverInterval = 60;
 	int tempWait = serverInterval;
+	private ConnectionUDP connectionUDP;
 
 	/**
 	 * Instantiates a new entity smart car.
@@ -31,37 +39,27 @@ public class EntitySmartCar extends EntityCar {
 	 */
 	public EntitySmartCar(EntityRoad road, PropertyChangeListener listener) {
 		super(road, listener);
-
-		connectToRSU();
-
 		try {
-			outToServer = new ObjectOutputStream(socket.getOutputStream());
-		} catch (IOException e) {
+			connectToRSU();
+		} catch (UnknownHostException | SocketException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
 	 * Connects this car to the RSU.
+	 * 
+	 * @throws UnknownHostException
+	 * @throws SocketException
 	 */
-	private void connectToRSU() {
-
-		try {
-			socket = new Socket("127.0.0.1", SharedValues.getInstance().getPort());
-			System.out.println("Connected");
-
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Retrying...");
-			connectToRSU();
-
-		}
-
+	private void connectToRSU() throws UnknownHostException, SocketException {
+		connectionUDP = new ConnectionUDP();
+		socket = new DatagramSocket();
+		socket.connect(InetAddress.getByName("localhost"),1000); //Connection should probably come from RSU somehow
+		System.out.println(socket);
 	}
-
+	
 	/*
 	 * Overrides the step function to also update the server with the smartCars
 	 * information. The additional wait period is there to extend the update
@@ -70,25 +68,17 @@ public class EntitySmartCar extends EntityCar {
 	@Override
 	public void step() {
 		super.step();
-
 		if (tempWait <= 0) {
 			try {
-
 				V2XMessage message = new V2XMessage(getSpeed(), getAngle(),
-						new Point2D.Double(getXPosition(), getYPosition()));
-				outToServer.writeObject(message);
-				tempWait = serverInterval;
-				outToServer.flush();
-
+						new Point2D.Double(getXPosition(), getYPosition()));				
+				connectionUDP.sendMessage(socket, message);
 			} catch (IOException e) {
 				e.printStackTrace();
-
 			}
 
 		} else {
-
 			tempWait--;
-
 		}
 	}
 
@@ -99,7 +89,6 @@ public class EntitySmartCar extends EntityCar {
 	public void draw(Graphics g) {
 		super.draw(g);
 		g.setColor(Color.BLUE);
-
 		g.fillOval((int) getXPosition() - 8, (int) getYPosition() - 8, 16, 16);
 
 	}
