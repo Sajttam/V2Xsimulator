@@ -3,18 +3,19 @@ package models;
 public class SharedValues {
 
 	public int getPort() {
-		return port;
+		return serverPort;
 	}
 
 	public void setPort(int port) {
-		this.port = port;
+		this.serverPort = port;
 	}
 
 	private static SharedValues sharedValues = new SharedValues();
 
 	private int carCounter;
 	private int bicycleCounter;
-	private int port;
+	private int serverPort;
+	private int broadcastPort;
 
 	private SharedValues() {
 	}
@@ -23,6 +24,22 @@ public class SharedValues {
 
 		return sharedValues;
 
+	}
+
+	public int getBroadcastPort() {
+		return broadcastPort;
+	}
+
+	public void setBroadcastPort(int broadcastPort) {
+		this.broadcastPort = broadcastPort;
+	}
+
+	public int getServerPort() {
+		return serverPort;
+	}
+
+	public void setServerPort(int serverPort) {
+		this.serverPort = serverPort;
 	}
 
 	public int getCarCounter() {

@@ -8,11 +8,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import models.SharedValues;
 import models.V2XMessage;
@@ -21,8 +21,12 @@ import models.V2XMessage;
 /**
  * The Class EntitySmartCar.
  */
-public class EntitySmartCar extends EntityCar {
+public class EntitySmartCar extends EntityCar implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Socket socket;
 	ObjectOutputStream outToServer;
 	ObjectInputStream inFromServer;
@@ -37,26 +41,7 @@ public class EntitySmartCar extends EntityCar {
 	 */
 	public EntitySmartCar(EntityRoad road, PropertyChangeListener listener) {
 		super(road, listener);
-
-	}
-
-	/**
-	 * Connects this car to the RSU.
-	 */
-	private void connectToRSU() {
-
-		try {
-			socket = new Socket("127.0.0.1", SharedValues.getInstance().getPort());
-			System.out.println("Connected");
-
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Retrying...");
-			connectToRSU();
-
-		}
+		BroadcastReceiver broadcastReceiver = new BroadcastReceiver();
 
 	}
 
@@ -74,8 +59,7 @@ public class EntitySmartCar extends EntityCar {
 
 				DatagramSocket clientSocket = new DatagramSocket();
 				InetAddress IPAddress = InetAddress.getByName("localhost");
-				byte[] sendData = new byte[1024];
-				V2XMessage message = new V2XMessage(getSpeed(), getAngle(),
+				V2XMessage message = new V2XMessage(this.hashCode(), getSpeed(), getAngle(),
 						new Point2D.Double(getXPosition(), getYPosition()));
 
 				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -105,15 +89,6 @@ public class EntitySmartCar extends EntityCar {
 	public void collision(Entity other) {
 
 		super.collision(other);
-//
-//		try {
-//			outToServer.writeObject("Stop");
-//			outToServer.flush();
-//
-//		} catch (IOException e) {
-//
-//			e.printStackTrace();
-//		}
 
 	}
 
@@ -127,6 +102,35 @@ public class EntitySmartCar extends EntityCar {
 
 		g.fillOval((int) getXPosition() - 8, (int) getYPosition() - 8, 16, 16);
 
+	}
+
+	private class BroadcastReceiver extends Thread {
+		byte[] receiveData = new byte[1024];
+		int port;
+
+		public BroadcastReceiver() {
+
+			port = SharedValues.getInstance().getBroadcastPort();
+			this.start();
+
+		}
+
+		@Override
+		public void run() {
+			try {
+				DatagramSocket serverSocket = new DatagramSocket(port);
+				byte[] receiveData = new byte[8];
+				DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+
+				while (true) {
+					serverSocket.receive(receivePacket);
+
+				}
+			} catch (IOException e) {
+				System.out.println(e);
+			}
+			// should close serverSocket in finally block
+		}
 	}
 
 }

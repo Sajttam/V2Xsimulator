@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 
@@ -12,11 +13,6 @@ import models.SharedValues;
 import models.V2XMessage;
 
 public class RSUServer extends Thread {
-
-//	private Socket socket = null;
-//	private ServerSocket server = null;
-//	private DataInputStream in = null;
-//	private int port;
 
 	DatagramSocket serverSocket;
 	byte[] receiveData = new byte[1024];
@@ -61,7 +57,7 @@ public class RSUServer extends Thread {
 
 						carInfo = (V2XMessage) message;
 						// FunctionHandler.getInstance().logCarInfo(clientSocket, (V2XMessage) message);
-						System.out.println(receivePacket.getPort() + " " + carInfo);
+						System.out.println(carInfo);
 
 					} else if (message.equals("Stop")) {// Exit command to kill thread
 
@@ -75,6 +71,8 @@ public class RSUServer extends Thread {
 
 					}
 
+					broadcast("Hello", InetAddress.getByName("255.255.255.255"));
+
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -83,5 +81,18 @@ public class RSUServer extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void broadcast(String broadcastMessage, InetAddress address) throws IOException {
+		DatagramSocket broadcastSocket = new DatagramSocket();
+
+		broadcastSocket.setBroadcast(true);
+
+		byte[] buffer = broadcastMessage.getBytes();
+
+		DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address,
+				SharedValues.getInstance().getBroadcastPort());
+		broadcastSocket.send(packet);
+		broadcastSocket.close();
 	}
 }

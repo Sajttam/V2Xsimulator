@@ -63,7 +63,8 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 
 		SharedValues.getInstance().setBicycleCounter(8);
 		SharedValues.getInstance().setCarCounter(14);
-		SharedValues.getInstance().setPort(1000);
+		SharedValues.getInstance().setServerPort(1000);
+		SharedValues.getInstance().setBroadcastPort(4445);
 		instances = new ArrayList<Entity>();
 		createInstances = new ArrayList<Entity>();
 		deleteInstances = new ArrayList<Entity>();
