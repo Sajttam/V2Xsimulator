@@ -73,6 +73,7 @@ public class EntitySmartCar extends EntityCar {
 				V2XMessage message = new V2XMessage(getSpeed(), getAngle(),
 						new Point2D.Double(getXPosition(), getYPosition()));				
 				connectionUDP.sendMessage(socket, message);
+				tempWait = serverInterval;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

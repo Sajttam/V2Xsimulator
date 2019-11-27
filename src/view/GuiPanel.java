@@ -140,7 +140,7 @@ public class GuiPanel extends JPanel {
 
 		JMenu menuOptions = new JMenu("Options");
 		JMenuItem itemFullscreen = new JMenuItem("Fullscreen");
-		JMenuItem itemHighscore = new JMenuItem("Highscore");
+		JMenuItem itemSpeed = new JMenuItem("Simulation Speed");
 
 		JMenu menuDebug = new JMenu("Debug");
 		JMenuItem itemServer = new JMenuItem("Connect to server");
@@ -167,7 +167,7 @@ public class GuiPanel extends JPanel {
 		menuFile.add(itemExit);
 
 		menuBar.add(menuOptions);
-		//menuOptions.add(itemFullscreen);
+		menuOptions.add(itemSpeed);
 		//menuOptions.add(itemHighscore);
 
 		menuBar.add(menuDebug);

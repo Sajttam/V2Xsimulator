@@ -15,6 +15,7 @@ public class SharedValues {
 	private int carCounter;
 	private int bicycleCounter;
 	private int port;
+	private double timeOutValue;
 
 	private SharedValues() {
 	}
@@ -63,6 +64,15 @@ public class SharedValues {
 
 		bicycleCounter++;
 
+	}
+
+	public double getTimeOutValue() {
+		return timeOutValue;
+	}
+
+	public void setTimeOutValue(double timeOutValue) {
+		//if (timeOutValue < 0) throw new Exception("");
+		this.timeOutValue = timeOutValue;
 	}
 
 }

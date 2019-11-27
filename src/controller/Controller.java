@@ -53,6 +53,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	private KeyEvent keyReleased;
 	private MouseEvent mouseEvent;
 	private int temp = 0;
+	public static final SharedValues GLOBAL = SharedValues.getInstance();
 
 	/**
 	 * Initializes a new controller with a given GUI.
@@ -62,9 +63,10 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	public Controller(GuiPanel guiPanel) {
 		this.guiPanel = guiPanel;
 
-		SharedValues.getInstance().setBicycleCounter(8);
-		SharedValues.getInstance().setCarCounter(8);
-		SharedValues.getInstance().setPort(1000);
+		GLOBAL.setBicycleCounter(8);
+		GLOBAL.setCarCounter(8);
+		GLOBAL.setPort(1000);
+		GLOBAL.setTimeOutValue(16.6667);
 		instances = new ArrayList<Entity>();
 		createInstances = new ArrayList<Entity>();
 		deleteInstances = new ArrayList<Entity>();
@@ -94,7 +96,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 			actionPerformed(null);
 			long endTime = System.nanoTime();
 			try {
-				int timeOutValue = ((int) (16.6667 - (endTime - startTime) * 0.000001));
+				int timeOutValue = ((int) (GLOBAL.getTimeOutValue() - (endTime - startTime) * 0.000001));
 				if (timeOutValue >= 0)
 					sleep(timeOutValue);
 			} catch (InterruptedException e) {
