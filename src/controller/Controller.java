@@ -64,7 +64,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 
 		GLOBAL.setBicycleCounter(8);
 		GLOBAL.setCarCounter(8);
-		GLOBAL.setPort(1000);
+		GLOBAL.setServerPort(1000);
 		GLOBAL.setTimeOutValue(16.6667);
 		instances = new ArrayList<Entity>();
 		createInstances = new ArrayList<Entity>();
@@ -78,7 +78,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		guiPanel.setDrawInstaces(instances);
 		start();
 
-		RSUServerUDP server = new RSUServerUDP(SharedValues.getInstance().getPort());
+		RSUServerUDP server = new RSUServerUDP(SharedValues.getInstance().getServerPort());
 		(new Thread(server)).start();
 
 	}
