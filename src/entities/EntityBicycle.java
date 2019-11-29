@@ -30,7 +30,6 @@ public class EntityBicycle extends EntityVehicle {
 	@Override
 	public void collision(Entity other) {
 		super.collision(other);
-
 		SharedValues.getInstance().incrementBicycleCounter();
 	}
 }

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import controller.Controller;
+import controller.StatsController;
 import models.SharedValues;
 
 public class EntityRoad extends Entity {
@@ -66,26 +67,19 @@ public class EntityRoad extends Entity {
 			if (wait == 0) {
 				if (roadType == RoadType.BICYCLE) {
 					if (SharedValues.getInstance().getBicycleCounter() > 0) {
-						instanceCreate(new EntityBicycle(this, StatisticsObserver.getInstance(),"Bicycle"));
+						instanceCreate(new EntityBicycle(this, StatsController.getInstance(),"Bicycle"));
 						SharedValues.getInstance().decrementBicycleCounter();
 					}
-
 				} else {
 					if (SharedValues.getInstance().getCarCounter() > 0) {
 
 						boolean smartVehicle = Math.random() > Controller.GLOBAL.getSMARTCAR_CHANCE() ? true : false;
-
-
 						if (smartVehicle) {
-							instanceCreate(new EntitySmartCar(this, StatisticsObserver.getInstance(),"Smartcar"));
+							instanceCreate(new EntitySmartCar(this, StatsController.getInstance(),"Smartcar"));
 						} else {
-
-							instanceCreate(new EntityCar(this, StatisticsObserver.getInstance(),"Car"));
-
+							instanceCreate(new EntityCar(this, StatsController.getInstance(),"Car"));
 						}
-
 						SharedValues.getInstance().decrementCarCounter();
-
 					}
 				}
 				wait = (int) (50 + (Math.random() * 400));
