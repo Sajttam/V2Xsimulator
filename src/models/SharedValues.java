@@ -1,24 +1,20 @@
 package models;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class SharedValues {
-
-	public int getPort() {
-		return port;
-	}
-
-	public void setPort(int port) {
-		this.port = port;
-	}
 
 	private static SharedValues sharedValues = new SharedValues();
 
 	private int carCounter;
 	private int bicycleCounter;
-	private int port;
+	private int serverPort;
 	private double timeOutValue;
 	private double SMARTCAR_CHANCE;
+	private volatile long stepsEpic = 0;
+	private ArrayList<Integer> carPortNumbers = new ArrayList<Integer>();
 
-	
 
 	private SharedValues() {
 	}
@@ -26,6 +22,31 @@ public class SharedValues {
 	public static SharedValues getInstance() {
 
 		return sharedValues;
+
+	}
+
+	public int getPortNumber() {
+
+		Random rand = new Random();
+
+		int portNo = (rand.nextInt(64534) + 1001); // returns an integer between 1001 and 65535
+
+		if (!carPortNumbers.contains(portNo)) {
+
+			carPortNumbers.add(portNo);
+			return portNo;
+
+		} else {
+
+			return getPortNumber();
+
+		}
+
+	}
+
+	public void removePortNumber(int portNo) {
+
+		carPortNumbers.remove(carPortNumbers.indexOf(portNo));
 
 	}
 
@@ -74,7 +95,7 @@ public class SharedValues {
 	}
 
 	public void setTimeOutValue(double timeOutValue) {
-		//if (timeOutValue < 0) throw new Exception("");
+		// if (timeOutValue < 0) throw new Exception("");
 		this.timeOutValue = timeOutValue;
 	}
 	
@@ -91,4 +112,21 @@ public class SharedValues {
 		return 0;
 	}
 
+	public long getTimeStamp() {
+		return stepsEpic;
+	}
+
+	public void incStepsEpic() {
+		this.stepsEpic++;
+		if (stepsEpic == Long.MAX_VALUE)
+			stepsEpic = 0;
+	}
+
+	public int getServerPort() {
+		return serverPort;
+	}
+
+	public void setServerPort(int port) {
+		this.serverPort = port;
+	}
 }

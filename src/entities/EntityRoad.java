@@ -72,7 +72,9 @@ public class EntityRoad extends Entity {
 
 				} else {
 					if (SharedValues.getInstance().getCarCounter() > 0) {
+
 						boolean smartVehicle = Math.random() > Controller.GLOBAL.getSMARTCAR_CHANCE() ? true : false;
+
 
 						if (smartVehicle) {
 							instanceCreate(new EntitySmartCar(this, StatisticsObserver.getInstance(),"Smartcar"));
@@ -110,7 +112,7 @@ public class EntityRoad extends Entity {
 		g.drawLine((int) getXPosition(), (int) getYPosition(), (int) x2, (int) y2);
 		// g.fillRect(x2,y2-4,8,8);
 		g.setColor(Color.WHITE);
-		// g.drawString((angle*(180.0/Math.PI)) + "°", (int)(getXPosition()+(distX/2)),
+		// g.drawString((angle*(180.0/Math.PI)) + "ï¿½", (int)(getXPosition()+(distX/2)),
 		// (int)(getYPosition()+distY/2));
 
 	}
