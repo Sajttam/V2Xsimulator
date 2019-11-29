@@ -66,6 +66,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		GLOBAL.setCarCounter(8);
 		GLOBAL.setPort(1000);
 		GLOBAL.setTimeOutValue(16.6667);
+		GLOBAL.setSMARTCAR_CHANCE(0.5);
 		instances = new ArrayList<Entity>();
 		createInstances = new ArrayList<Entity>();
 		deleteInstances = new ArrayList<Entity>();

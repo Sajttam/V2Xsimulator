@@ -3,6 +3,7 @@ package entities;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import controller.Controller;
 import models.SharedValues;
 
 public class EntityRoad extends Entity {
@@ -19,7 +20,7 @@ public class EntityRoad extends Entity {
 	private double distX = 0;
 	private double distY = 0;
 	private Boolean spawning;
-	private static double SMARTCAR_CHANCE = 0.5;
+	
 
 	public boolean straight = true;
 	public boolean leftCurve = false;
@@ -71,7 +72,7 @@ public class EntityRoad extends Entity {
 
 				} else {
 					if (SharedValues.getInstance().getCarCounter() > 0) {
-						boolean smartVehicle = Math.random() > SMARTCAR_CHANCE ? true : false;
+						boolean smartVehicle = Math.random() > Controller.GLOBAL.getSMARTCAR_CHANCE() ? true : false;
 
 						if (smartVehicle) {
 							instanceCreate(new EntitySmartCar(this, StatisticsObserver.getInstance(),"Smartcar"));
