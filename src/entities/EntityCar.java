@@ -8,7 +8,7 @@ import models.SharedValues;
 
 public class EntityCar extends EntityVehicle {
 
-	public EntityCar(EntityRoad road, PropertyChangeListener listener,String entitytype) {
+	public EntityCar(EntityRoad road, PropertyChangeListener listener, String entitytype) {
 		super(road, listener);
 
 		setParameters(road, listener, entitytype);
@@ -37,7 +37,9 @@ public class EntityCar extends EntityVehicle {
 	public void collision(Entity other) {
 		super.collision(other);
 
-		SharedValues.getInstance().incrementCarCounter();
+		if (other instanceof EntityCar || other instanceof EntityBicycle)
+			SharedValues.getInstance().incrementCarCounter();
+
 	}
 
 }

@@ -14,7 +14,10 @@ public class SharedValues {
 	private double SMARTCAR_CHANCE;
 	private volatile long stepsEpic = 0;
 	private ArrayList<Integer> carPortNumbers = new ArrayList<Integer>();
-
+	private int nodeHeight = 150;
+	private int nodeWidth = 150;
+	private int rsuHeight = nodeHeight * 2;
+	private int rsuWidth = nodeWidth * 2;
 
 	private SharedValues() {
 	}
@@ -46,7 +49,8 @@ public class SharedValues {
 
 	public void removePortNumber(int portNo) {
 
-		carPortNumbers.remove(carPortNumbers.indexOf(portNo));
+		if (carPortNumbers.contains(portNo))
+			carPortNumbers.remove(carPortNumbers.indexOf(portNo));
 
 	}
 
@@ -98,7 +102,7 @@ public class SharedValues {
 		// if (timeOutValue < 0) throw new Exception("");
 		this.timeOutValue = timeOutValue;
 	}
-	
+
 	public double getSMARTCAR_CHANCE() {
 		return SMARTCAR_CHANCE;
 	}
@@ -128,5 +132,37 @@ public class SharedValues {
 
 	public void setServerPort(int port) {
 		this.serverPort = port;
+	}
+
+	public int getNodeHeight() {
+		return nodeHeight;
+	}
+
+	public void setNodeHeight(int nodeHeight) {
+		this.nodeHeight = nodeHeight;
+	}
+
+	public int getNodeWidth() {
+		return nodeWidth;
+	}
+
+	public void setNodeWidth(int nodeWidth) {
+		this.nodeWidth = nodeWidth;
+	}
+
+	public int getRsuHeight() {
+		return rsuHeight;
+	}
+
+	public void setRsuHeight(int rsuHeight) {
+		this.rsuHeight = rsuHeight;
+	}
+
+	public int getRsuWidth() {
+		return rsuWidth;
+	}
+
+	public void setRsuWidth(int rsuWidth) {
+		this.rsuWidth = rsuWidth;
 	}
 }

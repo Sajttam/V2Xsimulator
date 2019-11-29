@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import entities.EntityRoad.RoadType;
+import models.SharedValues;
 
 public class EntityNode extends Entity {
 
@@ -275,12 +276,12 @@ public class EntityNode extends Entity {
 
 	@Override
 	public int getWidth() {
-		return 96;
+		return SharedValues.getInstance().getNodeWidth();
 	}
 
 	@Override
 	public int getHeight() {
-		return 96;
+		return SharedValues.getInstance().getNodeHeight();
 	}
 
 }

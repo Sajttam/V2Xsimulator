@@ -30,6 +30,7 @@ public class EntitySmartCar extends EntityCar {
 	private boolean stop;
 	byte[] receiveData = new byte[1024];
 	private int listenerPort;
+	private boolean connected;
 
 	/**
 	 * Instantiates a new entity smart car.
@@ -39,9 +40,8 @@ public class EntitySmartCar extends EntityCar {
 	 */
 
 	public EntitySmartCar(EntityRoad road, PropertyChangeListener listener, String entitytype) {
+
 		super(road, listener, entitytype);
-
-
 		startListener();
 
 		try {
@@ -86,9 +86,6 @@ public class EntitySmartCar extends EntityCar {
 
 	}
 
-	
-	
-	
 	/**
 	 * Connects this car to the RSU.
 	 * 
@@ -130,6 +127,8 @@ public class EntitySmartCar extends EntityCar {
 			this.setSpeed(0);
 
 		}
+
+		connected = false;
 	}
 
 	/*
@@ -149,6 +148,8 @@ public class EntitySmartCar extends EntityCar {
 		Controller.GLOBAL.removePortNumber(listenerPort);
 		listenerSocket.close();
 		super.collision(other);
+
+		connected = true;
 
 	}
 

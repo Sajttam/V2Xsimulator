@@ -6,17 +6,17 @@ public class V2XCommand implements Serializable {
 	public enum Commands {
 		STOP, DRIVE;
 	}
-	
+
 	private Commands command;
-	
-	public V2XCommand () {
+
+	public V2XCommand() {
 		setCommand(Commands.STOP);
 	}
-	
-	public V2XCommand (Commands command) {
+
+	public V2XCommand(Commands command) {
 		setCommand(command);
 	}
-	
+
 	public Commands getCommand() {
 		return command;
 	}
