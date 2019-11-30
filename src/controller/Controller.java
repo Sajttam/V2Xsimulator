@@ -18,6 +18,7 @@ import javax.swing.JOptionPane;
 import entities.Collidable;
 import entities.Entity;
 import entities.EntityMouseListener;
+import entities.EntityRSUBoundaries;
 import entities.EntityTrafficLight;
 import mapModels.mapBeta;
 import models.SharedValues;
@@ -145,12 +146,13 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 				if (entityBounds.intersects(otherBounds)) {
 					if (entity instanceof Collidable) {
 
-						if (!(entity instanceof EntityTrafficLight || other instanceof EntityTrafficLight)) { // avoid
-																												// collision
-																												// handling
-																												// with
-																												// traffic
-																												// light
+						if (!(entity instanceof EntityTrafficLight || other instanceof EntityTrafficLight
+								|| entity instanceof EntityRSUBoundaries || other instanceof EntityRSUBoundaries)) { // avoid
+							// collision
+							// handling
+							// with
+							// traffic
+							// light
 
 							((Collidable) entity).collision(other);
 

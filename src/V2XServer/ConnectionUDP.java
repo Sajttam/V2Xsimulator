@@ -48,7 +48,7 @@ public class ConnectionUDP {
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
-	public V2XMessage recieveMessage(DatagramPacket p) throws IOException, ClassNotFoundException {
+	public V2XMessage receiveMessage(DatagramPacket p) throws IOException, ClassNotFoundException {
 		buf = p.getData();
 		ObjectInputStream iStream = new ObjectInputStream(new ByteArrayInputStream(buf));
 		V2XMessage message = (V2XMessage) iStream.readObject();
@@ -56,7 +56,7 @@ public class ConnectionUDP {
 		return message;
 	}
 
-	public V2XCommand recieveCommand(DatagramPacket p) throws IOException, ClassNotFoundException {
+	public V2XCommand receiveCommand(DatagramPacket p) throws IOException, ClassNotFoundException {
 		buf = p.getData();
 		ObjectInputStream iStream = new ObjectInputStream(new ByteArrayInputStream(buf));
 		V2XCommand message = (V2XCommand) iStream.readObject();

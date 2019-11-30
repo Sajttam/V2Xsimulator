@@ -30,7 +30,7 @@ public class EntitySmartCar extends EntityCar {
 	int tempWait = serverInterval;
 	private ConnectionUDP connectionUDP;
 	private boolean stop;
-	byte[] receiveData = new byte[1024];
+	private byte[] buf = new byte[256];
 	private int listenerPort;
 	private boolean connected;
 
@@ -52,34 +52,30 @@ public class EntitySmartCar extends EntityCar {
 
 		listenerPort = Controller.GLOBAL.getPortNumber();
 
-		try {
-			listenerSocket = new DatagramSocket(listenerPort);
-		} catch (SocketException e1) {
-			e1.printStackTrace();
-		}
-
 		(new Thread() {
 			@Override
 			public void run() {
-				DatagramPacket recievePacket = new DatagramPacket(receiveData, receiveData.length);
 
 				try {
+					listenerSocket = new DatagramSocket(listenerPort);
 
-					System.out.println(listenerSocket.isClosed());
+					DatagramPacket receivePacket = new DatagramPacket(buf, buf.length);
 
-					listenerSocket.receive(recievePacket);
+					listenerSocket.receive(receivePacket);
 
-					V2XCommand command = connectionUDP.recieveCommand(recievePacket);
+					V2XCommand command = connectionUDP.receiveCommand(receivePacket);
 
 					if (command.getCommand().equals(V2XCommand.Commands.STOP)) {
 
 						stop = true;
 					}
+
 				} catch (IOException | ClassNotFoundException e) {
 					e.printStackTrace();
 				} // Wait for package
 
 			}
+
 		}).start();
 
 	}
@@ -154,11 +150,10 @@ public class EntitySmartCar extends EntityCar {
 	@Override
 	public void collision(Entity other) {
 
-		Controller.GLOBAL.removePortNumber(listenerPort);
-		listenerSocket.close();
 		super.collision(other);
 
-		connected = true;
+		Controller.GLOBAL.removePortNumber(listenerPort);
+		listenerSocket.close();
 
 	}
 
