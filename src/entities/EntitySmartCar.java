@@ -12,7 +12,9 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import V2XServer.ConnectionUDP;
+import V2XServer.RSUServerUDP;
 import controller.Controller;
+import models.SharedValues;
 import models.V2XCommand;
 import models.V2XMessage;
 
@@ -44,18 +46,12 @@ public class EntitySmartCar extends EntityCar {
 		super(road, listener, entitytype);
 		startListener();
 
-		try {
-			connectToRSU();
-		} catch (UnknownHostException | SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 	}
 
 	private void startListener() {
 
 		listenerPort = Controller.GLOBAL.getPortNumber();
+
 		try {
 			listenerSocket = new DatagramSocket(listenerPort);
 		} catch (SocketException e1) {
@@ -68,6 +64,8 @@ public class EntitySmartCar extends EntityCar {
 				DatagramPacket recievePacket = new DatagramPacket(receiveData, receiveData.length);
 
 				try {
+
+					System.out.println(listenerSocket.isClosed());
 
 					listenerSocket.receive(recievePacket);
 
@@ -92,11 +90,11 @@ public class EntitySmartCar extends EntityCar {
 	 * @throws UnknownHostException
 	 * @throws SocketException
 	 */
-	private void connectToRSU() throws UnknownHostException, SocketException {
+	private void connectToRSU(int serverPort) throws UnknownHostException, SocketException {
 		connectionUDP = new ConnectionUDP();
 		senderSocket = new DatagramSocket();
-		senderSocket.connect(InetAddress.getByName("localhost"), Controller.GLOBAL.getServerPort()); // Connection
-																										// should
+		senderSocket.connect(InetAddress.getByName("localhost"), serverPort); // Connection
+																				// should
 
 	}
 
@@ -108,12 +106,24 @@ public class EntitySmartCar extends EntityCar {
 	@Override
 	public void step() {
 		super.step();
+
 		if (tempWait <= 0) {
 			try {
-				V2XMessage message = new V2XMessage(this.hashCode(), this.getSpeed(), getAngle(),
-						new Point2D.Double(getXPosition(), getYPosition()), listenerPort);
-				connectionUDP.sendMessage(senderSocket, message);
+
+				for (RSUServerUDP i : SharedValues.getInstance().getConnectionAreas()) {
+
+					if (i.getRSUBoundaries().tryConnect(this)) {
+
+						V2XMessage message = new V2XMessage(this.hashCode(), this.getSpeed(), getAngle(),
+								new Point2D.Double(getXPosition(), getYPosition()), listenerPort);
+
+						connectToRSU(i.getServerPort());
+						connectionUDP.sendMessage(senderSocket, message);
+
+					}
+				}
 				tempWait = serverInterval;
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -128,7 +138,6 @@ public class EntitySmartCar extends EntityCar {
 
 		}
 
-		connected = false;
 	}
 
 	/*

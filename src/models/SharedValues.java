@@ -1,7 +1,10 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+
+import V2XServer.RSUServerUDP;
 
 public class SharedValues {
 
@@ -14,10 +17,13 @@ public class SharedValues {
 	private double SMARTCAR_CHANCE;
 	private volatile long stepsEpic = 0;
 	private ArrayList<Integer> carPortNumbers = new ArrayList<Integer>();
+	private ArrayList<Integer> serverPortNumbers = new ArrayList<Integer>();
+
 	private int nodeHeight = 150;
 	private int nodeWidth = 150;
 	private int rsuHeight = nodeHeight * 2;
 	private int rsuWidth = nodeWidth * 2;
+	private List<RSUServerUDP> availableRSUs = new ArrayList<RSUServerUDP>();
 
 	private SharedValues() {
 	}
@@ -32,7 +38,7 @@ public class SharedValues {
 
 		Random rand = new Random();
 
-		int portNo = (rand.nextInt(64534) + 1001); // returns an integer between 1001 and 65535
+		int portNo = (rand.nextInt(63534) + 2001); // returns an integer between 2001 and 65535
 
 		if (!carPortNumbers.contains(portNo)) {
 
@@ -45,6 +51,32 @@ public class SharedValues {
 
 		}
 
+	}
+
+	public int getServerPortNumber() {
+
+		Random rand = new Random();
+
+		int portNo = (rand.nextInt(1000) + 1000); // returns an integer between 1000 and 2000
+
+		if (!serverPortNumbers.contains(portNo)) {
+
+			serverPortNumbers.add(portNo);
+			return portNo;
+
+		} else {
+
+			return getServerPortNumber();
+		}
+
+	}
+
+	public List<RSUServerUDP> getConnectionAreas() {
+		return availableRSUs;
+	}
+
+	public void addRSU(RSUServerUDP entity) {
+		this.availableRSUs.add(entity);
 	}
 
 	public void removePortNumber(int portNo) {

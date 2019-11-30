@@ -3,10 +3,10 @@ package mapModels;
 import java.util.ArrayList;
 import java.util.List;
 
+import V2XServer.RSUServerUDP;
 import controller.Controller;
 import entities.Entity;
 import entities.EntityNode;
-import entities.EntityRSUBoundaries;
 import entities.EntityRoad.RoadType;
 import entities.EntityTrafficLightNode;
 import models.SharedValues;
@@ -27,11 +27,13 @@ public class mapBeta implements SimulationMap {
 		int rsuXOffset = (SharedValues.getInstance().getRsuWidth() - SharedValues.getInstance().getNodeWidth()) / 2;
 		int rsuYOffset = (SharedValues.getInstance().getRsuHeight() - SharedValues.getInstance().getNodeHeight()) / 2;
 
-		EntityRSUBoundaries rsu1 = new EntityRSUBoundaries((int) nodeNorth.getXPosition() - rsuXOffset,
-				(int) nodeNorth.getYPosition() - rsuYOffset);
+		RSUServerUDP serverNorth = new RSUServerUDP(SharedValues.getInstance().getServerPortNumber(),
+				(int) nodeNorth.getXPosition() - rsuXOffset, (int) nodeNorth.getYPosition() - rsuYOffset);
+		(new Thread(serverNorth)).start();
 
-		EntityRSUBoundaries rsu2 = new EntityRSUBoundaries((int) nodeCenter.getXPosition() - rsuXOffset,
-				(int) nodeCenter.getYPosition() - rsuYOffset);
+		RSUServerUDP serverCenter = new RSUServerUDP(SharedValues.getInstance().getServerPortNumber(),
+				(int) nodeCenter.getXPosition() - rsuXOffset, (int) nodeCenter.getYPosition() - rsuYOffset);
+		(new Thread(serverCenter)).start();
 
 		// Create simulation instances
 		controller.createInstance(nodeWest);
@@ -40,8 +42,11 @@ public class mapBeta implements SimulationMap {
 		controller.createInstance(nodeCenter);
 		controller.createInstance(nodeNorthWest);
 		controller.createInstance(nodeNorthEast);
-		controller.createInstance(rsu1);
-		controller.createInstance(rsu2);
+		controller.createInstance(serverNorth.getRSUBoundaries());
+		controller.createInstance(serverCenter.getRSUBoundaries());
+
+		SharedValues.getInstance().addRSU(serverNorth);
+		SharedValues.getInstance().addRSU(serverCenter);
 
 		nodeWest.setSpawning(true);
 

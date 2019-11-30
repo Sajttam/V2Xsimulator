@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
+import entities.EntityRSUBoundaries;
 import models.V2XCommand;
 import models.V2XMessage;
 
@@ -12,12 +13,14 @@ public class RSUServerUDP extends ConnectionUDP implements Runnable {
 	private DatagramSocket socket;
 	private boolean running;
 	private byte[] buf = new byte[256];
-	private int port;
+	private int serverPort;
 	private FunctionHandler functionHandler = null;
+	private EntityRSUBoundaries rsuBoundaries;
 
-	public RSUServerUDP(int port) {
-		this.port = port;
+	public RSUServerUDP(int serverPort, int xPos, int yPos) {
+		this.serverPort = serverPort;
 		functionHandler = new FunctionHandler(this);
+		rsuBoundaries = new EntityRSUBoundaries(xPos, yPos);
 	}
 
 	public void sendCommand(DatagramSocket socket, V2XCommand command) throws IOException {
@@ -25,6 +28,17 @@ public class RSUServerUDP extends ConnectionUDP implements Runnable {
 
 		socket.send(packet);
 
+	}
+
+	public int getServerPort() {
+
+		return serverPort;
+
+	}
+
+	public EntityRSUBoundaries getRSUBoundaries() {
+
+		return rsuBoundaries;
 	}
 
 	/**
@@ -36,7 +50,7 @@ public class RSUServerUDP extends ConnectionUDP implements Runnable {
 		try {
 			running = true;
 
-			socket = new DatagramSocket(port);
+			socket = new DatagramSocket(serverPort);
 
 			System.out.println("Server started");
 			System.out.println("Waiting for a package ...");
@@ -47,7 +61,7 @@ public class RSUServerUDP extends ConnectionUDP implements Runnable {
 				socket.receive(packet); // Wait for package
 
 				V2XMessage message = recieveMessage(packet);
-				System.out.println(message);
+				System.out.println("Server: " + serverPort + " " + message);
 
 				functionHandler.logCarInfo(message.getListenerPort(), message);
 			}

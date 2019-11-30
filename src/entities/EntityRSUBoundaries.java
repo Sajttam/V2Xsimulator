@@ -2,6 +2,7 @@ package entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 import models.SharedValues;
 
@@ -26,6 +27,20 @@ public class EntityRSUBoundaries extends Entity {
 		g.setColor(new Color(255, 255, 255, 100));
 
 		g.fillRect(xPos, yPos, height, width);
+	}
+
+	public boolean tryConnect(Entity vehicle) {
+
+		Rectangle vehicleBounds = vehicle.getCollisionBounds();
+
+		if (this.getCollisionBounds().intersects(vehicleBounds)) {
+			return true;
+		} else {
+
+			return false;
+
+		}
+
 	}
 
 }

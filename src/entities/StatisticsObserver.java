@@ -4,64 +4,68 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class StatisticsObserver extends Entity implements PropertyChangeListener  {
-	
+public class StatisticsObserver extends Entity implements PropertyChangeListener {
+
 	private PropertyChangeSupport propertyChangeSupportCounter;
-	private StatisticsObserver() {}
-	private static final StatisticsObserver collisionobserver = new StatisticsObserver();
-	private int car,smartcar,bike,car2Bicycle,smartcar2Bicycle,smartcar2Car,smartcar2Smartcar,car2Car;
-	
-	public static StatisticsObserver getInstance() {
-		return collisionobserver;
+
+	private StatisticsObserver() {
 	}
-	
+
+	private static final StatisticsObserver collisionObserver = new StatisticsObserver();
+	private int car, smartCar, bike, car2Bicycle, smartcar2Bicycle, smartcar2Car, smartcar2Smartcar, car2Car;
+
+	public static StatisticsObserver getInstance() {
+		return collisionObserver;
+	}
+
+	@Override
 	public void addObserver(PropertyChangeListener listener) {
 		if (propertyChangeSupportCounter == null)
 			propertyChangeSupportCounter = new PropertyChangeSupport(this);
 		propertyChangeSupportCounter.addPropertyChangeListener(listener);
 	}
-	
+
 	public void castPropertyChange(String eventname, int change) {
 		propertyChangeSupportCounter.firePropertyChange(eventname, null, change);
 	}
-	
+
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		String eventname = event.getPropertyName();
-		switch(eventname) {
+		String eventName = event.getPropertyName();
+		switch (eventName) {
 		case "Car":
-			car ++;
-			castPropertyChange(eventname, car);
+			car++;
+			castPropertyChange(eventName, car);
 			break;
 		case "Smartcar":
-			smartcar ++;
-			castPropertyChange(eventname, smartcar);
+			smartCar++;
+			castPropertyChange(eventName, smartCar);
 			break;
 		case "Bicycle":
-			bike ++;
-			castPropertyChange(eventname, bike);
+			bike++;
+			castPropertyChange(eventName, bike);
 			break;
 		case "Smartcar2Bicycle":
-			smartcar2Bicycle ++;
-			castPropertyChange(eventname, smartcar2Bicycle);
+			smartcar2Bicycle++;
+			castPropertyChange(eventName, smartcar2Bicycle);
 			break;
 		case "Car2Bicycle":
 			car2Bicycle++;
-			castPropertyChange(eventname, car2Bicycle);
+			castPropertyChange(eventName, car2Bicycle);
 			break;
 		case "Smartcar2Car":
-			smartcar2Car ++;
-			castPropertyChange(eventname, smartcar2Car);
+			smartcar2Car++;
+			castPropertyChange(eventName, smartcar2Car);
 			break;
 		case "Smartcar2Smartcar":
-			smartcar2Smartcar ++;
-			castPropertyChange(eventname, smartcar2Smartcar);
+			smartcar2Smartcar++;
+			castPropertyChange(eventName, smartcar2Smartcar);
 			break;
 		case "Car2Car":
-			car2Car ++;
-			castPropertyChange(eventname, car2Car);
+			car2Car++;
+			castPropertyChange(eventName, car2Car);
 			break;
 		}
 	}
-	
+
 }
