@@ -32,7 +32,9 @@ public class EntitySmartCar extends EntityCar {
 	private boolean stop;
 	private byte[] buf = new byte[256];
 	private int listenerPort;
+	private Thread listenerThread;
 	private boolean connected;
+	private DatagramPacket receivePacket;
 
 	/**
 	 * Instantiates a new entity smart car.
@@ -52,14 +54,14 @@ public class EntitySmartCar extends EntityCar {
 
 		listenerPort = Controller.GLOBAL.getPortNumber();
 
-		(new Thread() {
+		listenerThread = new Thread() {
 			@Override
 			public void run() {
 
 				try {
 					listenerSocket = new DatagramSocket(listenerPort);
 
-					DatagramPacket receivePacket = new DatagramPacket(buf, buf.length);
+					receivePacket = new DatagramPacket(buf, buf.length);
 
 					listenerSocket.receive(receivePacket);
 
@@ -71,12 +73,16 @@ public class EntitySmartCar extends EntityCar {
 					}
 
 				} catch (IOException | ClassNotFoundException e) {
-					e.printStackTrace();
+
+					if (!(e.getClass().toString().equals("class java.net.SocketException")))
+						e.printStackTrace();
 				} // Wait for package
 
 			}
 
-		}).start();
+		};
+
+		listenerThread.start();
 
 	}
 
@@ -150,10 +156,11 @@ public class EntitySmartCar extends EntityCar {
 	@Override
 	public void collision(Entity other) {
 
-		super.collision(other);
-
-		Controller.GLOBAL.removePortNumber(listenerPort);
 		listenerSocket.close();
+		listenerThread.interrupt();
+		Controller.GLOBAL.removePortNumber(listenerPort);
+
+		super.collision(other);
 
 	}
 

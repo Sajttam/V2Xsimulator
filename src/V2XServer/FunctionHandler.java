@@ -57,6 +57,8 @@ public class FunctionHandler extends Thread {
 	 */
 	private void runFunctions() {
 		eraseOld();
+
+		System.out.print(server.getServerPort() + " " + carLogs);
 		// blindspotChecker();
 	}
 
