@@ -12,12 +12,14 @@ public class EntityRSUBoundaries extends Entity {
 	private int width = SharedValues.getInstance().getRsuWidth();
 	private int xPos;
 	private int yPos;
+	int rsuXOffset = (SharedValues.getInstance().getRsuWidth() - SharedValues.getInstance().getNodeWidth()) / 2;
+	int rsuYOffset = (SharedValues.getInstance().getRsuHeight() - SharedValues.getInstance().getNodeHeight()) / 2;
 
 	public EntityRSUBoundaries(int xPos, int yPos) {
-		this.xPos = xPos;
-		this.yPos = yPos;
-		setCollisionBounds(height, width);
-		setCollisionBounds(getCollisionBounds(), xPos, yPos);
+		this.xPos = xPos - rsuXOffset;
+		this.yPos = yPos - rsuYOffset;
+		setCollisionBounds(width, height);
+		setCollisionBounds(getCollisionBounds(), this.xPos, this.yPos);
 
 	}
 
@@ -26,7 +28,7 @@ public class EntityRSUBoundaries extends Entity {
 
 		g.setColor(new Color(255, 255, 255, 100));
 
-		g.fillRect(xPos, yPos, height, width);
+		g.fillRect(xPos, yPos, width, height);
 	}
 
 	public boolean tryConnect(Entity vehicle) {

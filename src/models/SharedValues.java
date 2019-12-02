@@ -19,8 +19,8 @@ public class SharedValues {
 	private ArrayList<Integer> carPortNumbers = new ArrayList<Integer>();
 	private ArrayList<Integer> serverPortNumbers = new ArrayList<Integer>();
 
-	private int nodeHeight = 150;
-	private int nodeWidth = 150;
+	private int nodeHeight = 100;
+	private int nodeWidth = 200;
 	private int rsuHeight = nodeHeight * 2;
 	private int rsuWidth = nodeWidth * 2;
 	private List<RSUServerUDP> availableRSUs = new ArrayList<RSUServerUDP>();

@@ -5,11 +5,11 @@ import java.util.List;
 
 import entities.EntityTrafficLight.LightCycle;
 
-public class EntityTrafficLightNode extends EntityNode  {
+public class EntityTrafficLightNode extends EntityNode {
 
 	private List<EntityTrafficLight> trafficLights;
 	private Thread t = null;
-	
+
 	private List<EntityTrafficLight> setVertical = new ArrayList();
 	private List<EntityTrafficLight> setHorizontal = new ArrayList();
 
@@ -24,12 +24,12 @@ public class EntityTrafficLightNode extends EntityNode  {
 		for (EntityRoad r : getAllRoads()) {
 
 			if (equals(r.getExitNode())) {
-				EntityTrafficLight l = new EntityTrafficLight((int)(r.x2 + 8 * Math.cos(r.getAngle()+Math.PI)), (int)(r.y2 + 8 * Math.sin(r.getAngle()+Math.PI)));
+				EntityTrafficLight l = new EntityTrafficLight((int) (r.x2 + 8 * Math.cos(r.getAngle() + Math.PI)),
+						(int) (r.y2 + 8 * Math.sin(r.getAngle() + Math.PI)));
 				if (r.x2 == (int) getXPosition() || r.x2 == (int) getXPosition() + getWidth()) {
-					
+
 					setHorizontal.add(l);
-				}
-				else {
+				} else {
 					l.setLightCycle(LightCycle.DRIVE);
 					setVertical.add(l);
 				}
@@ -38,30 +38,29 @@ public class EntityTrafficLightNode extends EntityNode  {
 			}
 		}
 
-		//t = new Thread(this);
-		//t.start();
+		// t = new Thread(this);
+		// t.start();
 	}
-	
+
 	public void toggleSignal(List<EntityTrafficLight> list) {
 		for (EntityTrafficLight tl : list) {
 			if (tl.getLightCycle() == LightCycle.STOP) {
 				tl.setLightCycle(LightCycle.DRIVE);
-			}
-			else {
+			} else {
 				tl.setLightCycle(LightCycle.STOP);
 			}
 		}
 	}
-	
+
 	public void toggleSignal(List<EntityTrafficLight> list, LightCycle l) {
 		for (EntityTrafficLight tl : list) {
 			tl.setLightCycle(l);
 		}
 	}
-	
-	
+
 	int wait = 0;
 	int caseTest = 0;
+
 	@Override
 	public void step() {
 		if (wait == 0) {
@@ -86,38 +85,14 @@ public class EntityTrafficLightNode extends EntityNode  {
 				wait = 300;
 				caseTest = 0;
 				break;
-			}			
-		}
-		else wait--;
+			}
+		} else
+			wait--;
 	}
 
-	/*@Override
-	public void run() {
-		try {
-			while (true) {
-				t.sleep(5000);				
-				
-				toggleSignal(setVertical, LightCycle.STOP);	
-				
-				t.sleep(2000);
-				
-				toggleSignal(setHorizontal, LightCycle.DRIVE);
-				
-				t.sleep(5000);
-				
-				toggleSignal(setHorizontal, LightCycle.STOP);
-				
-				t.sleep(2000);
-				
-				toggleSignal(setVertical, LightCycle.DRIVE);
-				
-				
-			}
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}*/
-	
-	
+//	@Override
+//	public int getWidth() {
+//		return (int) (SharedValues.getInstance().getNodeWidth() * 1.5);
+//	}
+
 }

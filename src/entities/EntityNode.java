@@ -66,27 +66,6 @@ public class EntityNode extends Entity {
 
 	int wait = (int) (20 + (Math.random() * 400));
 
-//	@Override
-//	public void step() {
-//		if (spawning) {
-//			for (EntityRoad r : getAllRoads()) {
-//				if (wait == 0) {
-//					if (equals(r.getEntryNode()))
-//						if (r.getRoadType() == RoadType.BICYCLE) {
-//						instanceCreate(new EntityBicycle(r, StatisticsObserver.getInstance()));
-//						}
-//						else {
-//							instanceCreate(new EntityCar(r, StatisticsObserver.getInstance()));
-//						}
-//						
-//					wait = (int) (40 + (Math.random() * 400));
-//				} else
-//					wait--;
-//				
-//			}
-//		}
-//	}
-
 	public List<EntityRoad> getAllRoads() {
 		List<EntityRoad> allRoads = new ArrayList<EntityRoad>(roadsWest);
 		allRoads.addAll(roadsWest);
@@ -230,8 +209,11 @@ public class EntityNode extends Entity {
 
 	public void addRoad(EntityRoad road, Direction direction) {
 		ArrayList<EntityRoad> roads = null;
-		int roadOffset = (int) (getHeight() * 0.15);
-		int seperation = ((getHeight() - (2 * roadOffset)));
+		int roadXOffset = (int) (getWidth() * 0.15);
+		int roadYOffset = (int) (getHeight() * 0.15);
+		int ySeparation = ((getHeight() - (2 * roadYOffset)));
+		int xSeparation = ((getWidth() - (2 * roadXOffset)));
+
 		switch (direction) {
 		case WEST:
 			roads = roadsWest;
@@ -239,7 +221,7 @@ public class EntityNode extends Entity {
 			if (roads.size() > 1)
 				for (int i = 0; i < roads.size(); i++)
 					roads.get(i).setPosition(this, (int) getXPosition(),
-							(int) getYPosition() + i * (seperation / (roads.size() - 1)) + roadOffset);
+							(int) getYPosition() + i * (ySeparation / (roads.size() - 1)) + roadYOffset);
 			break;
 		case EAST:
 			roads = roadsEast;
@@ -247,7 +229,7 @@ public class EntityNode extends Entity {
 			if (roads.size() > 1)
 				for (int i = 0; i < roads.size(); i++)
 					roads.get(i).setPosition(this, (int) getXPosition() + getWidth(),
-							(int) getYPosition() + i * (seperation / (roads.size() - 1)) + roadOffset);
+							(int) getYPosition() + i * (ySeparation / (roads.size() - 1)) + roadYOffset);
 			break;
 		case NORTH:
 			roads = roadsNorth;
@@ -255,7 +237,7 @@ public class EntityNode extends Entity {
 			if (roads.size() > 1)
 				for (int i = 0; i < roads.size(); i++)
 					roads.get(i).setPosition(this,
-							(int) getXPosition() + i * (seperation / (roads.size() - 1)) + roadOffset,
+							(int) getXPosition() + i * (xSeparation / (roads.size() - 1)) + roadXOffset,
 							(int) getYPosition());
 			break;
 		case SOUTH:
@@ -264,7 +246,7 @@ public class EntityNode extends Entity {
 			if (roads.size() > 1)
 				for (int i = 0; i < roads.size(); i++)
 					roads.get(i).setPosition(this,
-							(int) getXPosition() + i * (seperation / (roads.size() - 1)) + roadOffset,
+							(int) getXPosition() + i * (xSeparation / (roads.size() - 1)) + roadXOffset,
 							(int) getYPosition() + getHeight());
 			break;
 		}

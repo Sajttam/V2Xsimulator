@@ -24,15 +24,12 @@ public class mapBeta implements SimulationMap {
 		EntityTrafficLightNode nodeNorth = new EntityTrafficLightNode(406, 128);
 		EntityTrafficLightNode nodeCenter = new EntityTrafficLightNode(406, 472);
 
-		int rsuXOffset = (SharedValues.getInstance().getRsuWidth() - SharedValues.getInstance().getNodeWidth()) / 2;
-		int rsuYOffset = (SharedValues.getInstance().getRsuHeight() - SharedValues.getInstance().getNodeHeight()) / 2;
-
 		RSUServerUDP serverNorth = new RSUServerUDP(SharedValues.getInstance().getServerPortNumber(),
-				(int) nodeNorth.getXPosition() - rsuXOffset, (int) nodeNorth.getYPosition() - rsuYOffset);
+				(int) nodeNorth.getXPosition(), (int) nodeNorth.getYPosition());
 		(new Thread(serverNorth)).start();
 
 		RSUServerUDP serverCenter = new RSUServerUDP(SharedValues.getInstance().getServerPortNumber(),
-				(int) nodeCenter.getXPosition() - rsuXOffset, (int) nodeCenter.getYPosition() - rsuYOffset);
+				(int) nodeCenter.getXPosition(), (int) nodeCenter.getYPosition());
 		(new Thread(serverCenter)).start();
 
 		// Create simulation instances
