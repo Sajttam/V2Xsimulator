@@ -153,8 +153,8 @@ public class EntitySmartCar extends EntityCar {
 	@Override
 	public void draw(Graphics g) {
 		super.draw(g);
-		g.setColor(Color.BLUE);
-		g.fillOval((int) getXPosition() - 8, (int) getYPosition() - 8, 16, 16);
+		drawCar(Color.blue, g);
+//		g.fillOval((int) getXPosition() - 8, (int) getYPosition() - 8, 16, 16);
 
 	}
 
