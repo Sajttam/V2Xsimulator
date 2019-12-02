@@ -1,17 +1,28 @@
 package view;
 
-import java.awt.*;
-import java.util.List;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import controller.Controller;
 import controller.StatsController;
-import entities.*;
+import entities.Entity;
 import models.SharedValues;
 
 /**
@@ -23,9 +34,9 @@ import models.SharedValues;
  * @version 2019-03-10
  */
 public class GuiPanel extends JPanel {
-	public static final String  PROJECT_TITLE = "V2X Simulator";
-	
-	private List<Entity> entityList;
+	public static final String PROJECT_TITLE = "V2X Simulator";
+
+	private CopyOnWriteArrayList<Entity> entityList;
 	private BufferedImage background;
 	private int width;
 	private int height;
@@ -49,14 +60,14 @@ public class GuiPanel extends JPanel {
 	 * @throws IOException thrown if the game can't load the background image
 	 */
 	public GuiPanel(int width, int height, int scaling) throws IOException {
-		entityList = new ArrayList<Entity>();
+		entityList = new CopyOnWriteArrayList<Entity>();
 		this.scaling = scaling;
 		this.width = width; // 231;
 		this.height = height; // 189;
 		setLayout(null);
-		setBackground(Color.BLACK); 
+		setBackground(Color.BLACK);
 		makeFrame();
-		//background = loadBackground();
+		// background = loadBackground();
 		repaint();
 	}
 
@@ -99,7 +110,7 @@ public class GuiPanel extends JPanel {
 	 * 
 	 * @param l the list of Entities that will be drawn on the screen
 	 */
-	public void setDrawInstaces(List<Entity> l) {
+	public void setDrawInstaces(CopyOnWriteArrayList<Entity> l) {
 		entityList = l;
 	}
 
@@ -114,16 +125,16 @@ public class GuiPanel extends JPanel {
 		frame.setTitle(PROJECT_TITLE);
 		frame.setIconImage(TileSet.getTile(19, 3));
 
-		setPreferredSize(new Dimension((int) (width * scaling*4), (int) (height * scaling*4)));
+		setPreferredSize(new Dimension(width * scaling * 4, height * scaling * 4));
 		setDoubleBuffered(true);
 		Container contentPane = frame.getContentPane();
-		
+
 		contentPane.add(this, BorderLayout.CENTER);
 
 		frame.pack();
 		frame.setVisible(true);
 	}
-	
+
 	public void changeSpeed() {
 		String txtValue = JOptionPane.showInputDialog(frame, "Set simulation speed");
 		double value = Double.parseDouble(txtValue);
@@ -141,7 +152,7 @@ public class GuiPanel extends JPanel {
 		JMenu menuFile = new JMenu("File");
 		// JMenuItem itemSave = new JMenuItem("Save");
 		JMenuItem itemLoad = new JMenuItem("Load");
-		//itemLoad.addActionListener(e -> controller.loadLevel());
+		// itemLoad.addActionListener(e -> controller.loadLevel());
 		JMenuItem itemExit = new JMenuItem("Exit");
 		itemExit.addActionListener(e -> System.exit(0));
 
@@ -157,7 +168,7 @@ public class GuiPanel extends JPanel {
 		JMenuItem itemPerformance = new JMenuItem("Performance");
 		itemCollisionBoxes.addActionListener(e -> showCollisionBoxes());
 		itemPerformance.addActionListener(e -> controller.addPerformanceMonitor());
-		
+
 		JMenu menuView = new JMenu("View");
 		JMenuItem itemStatisticsView = new JMenuItem("Statistics");
 		itemStatisticsView.addActionListener(e -> new StatsController(new JFrame("Statistics")));
@@ -166,27 +177,26 @@ public class GuiPanel extends JPanel {
 		JMenu menuHelp = new JMenu("Help");
 		JMenuItem itemObjectives = new JMenuItem("Objectives");
 		JMenuItem itemAbout = new JMenuItem("About");
-		itemAbout.addActionListener(e -> JOptionPane.showMessageDialog(frame,
-				"HELLO"));
+		itemAbout.addActionListener(e -> JOptionPane.showMessageDialog(frame, "HELLO"));
 
 		menuBar.add(menuFile);
 		// menuFile.add(itemSave);
-		//menuFile.add(itemLoad);
+		// menuFile.add(itemLoad);
 		menuFile.add(itemExit);
 
 		menuBar.add(menuOptions);
 		menuOptions.add(itemSpeed);
-		//menuOptions.add(itemHighscore);
+		// menuOptions.add(itemHighscore);
 
 		menuBar.add(menuDebug);
 		// menuDebug.add(itemServer);
 		// menuDebug.add(itemGetFromServer);
 		menuDebug.add(itemCollisionBoxes);
 		menuDebug.add(itemPerformance);
-		
+
 		menuBar.add(menuView);
 		menuView.add(itemStatisticsView);
-		
+
 		menuBar.add(menuHelp);
 		// menuHelp.add(itemObjectives);
 		menuHelp.add(itemAbout);
@@ -230,16 +240,17 @@ public class GuiPanel extends JPanel {
 		super.paintComponent(g);
 		for (int i = 0; i < 20; i++)
 			g2d.drawImage(background, null, (int) (231 * i + paintXOffset * 0.1), 0);
-		
-		//System.out.println(getComponent(0).toString());
-		//((Entity) getComponent(0)).paint(g);
-		//paintAll(g);
+
+		// System.out.println(getComponent(0).toString());
+		// ((Entity) getComponent(0)).paint(g);
+		// paintAll(g);
 		for (Entity e : entityList) {
-			//if (e.getXPosition() > (-21 - paintXOffset) && e.getXPosition() < (231 - paintXOffset)) {
-				e.draw(g2d);
-				if (showCollisionBoxes)
-					e.drawCollisionBounds(g2d);
-			//}
+			// if (e.getXPosition() > (-21 - paintXOffset) && e.getXPosition() < (231 -
+			// paintXOffset)) {
+			e.draw(g2d);
+			if (showCollisionBoxes)
+				e.drawCollisionBounds(g2d);
+			// }
 		}
 
 		g2d.dispose();

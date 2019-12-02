@@ -52,14 +52,19 @@ public class EntitySmartCar extends EntityCar {
 
 	private void startListener() {
 
-		listenerPort = Controller.GLOBAL.getPortNumber();
+		try {
+			listenerSocket = new DatagramSocket();
+			listenerPort = listenerSocket.getLocalPort();
+		} catch (SocketException e1) {
+
+			e1.printStackTrace();
+		}
 
 		listenerThread = new Thread() {
 			@Override
 			public void run() {
 
 				try {
-					listenerSocket = new DatagramSocket(listenerPort);
 
 					receivePacket = new DatagramPacket(buf, buf.length);
 
@@ -156,10 +161,9 @@ public class EntitySmartCar extends EntityCar {
 	@Override
 	public void collision(Entity other) {
 
+		Controller.GLOBAL.removePortNumber(listenerPort);
 		listenerSocket.close();
 		listenerThread.interrupt();
-		Controller.GLOBAL.removePortNumber(listenerPort);
-
 		super.collision(other);
 
 	}
