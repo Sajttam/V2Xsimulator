@@ -17,7 +17,7 @@ public class EntityCar extends EntityVehicle {
 
 	private synchronized void setParameters(EntityRoad road, PropertyChangeListener listener, String entity) {
 
-		setSpeed(1.25);
+		setSpeed(SharedValues.getInstance().getMaxSpeed(this));
 		setCollisionBounds(16, 16);
 		setCollisionBounds(getCollisionBounds(), -8, -8);
 		super.castPropertyChange(entity);

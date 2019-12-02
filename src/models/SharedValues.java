@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Random;
 
 import V2XServer.RSUServerUDP;
+import entities.Entity;
+import entities.EntityBicycle;
 
 public class SharedValues {
 
@@ -18,6 +20,8 @@ public class SharedValues {
 	private volatile long stepsEpic = 0;
 	private ArrayList<Integer> carPortNumbers = new ArrayList<Integer>();
 	private ArrayList<Integer> serverPortNumbers = new ArrayList<Integer>();
+	private double carMaxSpeed = 1.25;
+	private double bicycleMaxSpeed = 0.75;
 
 	private int nodeHeight = 100;
 	private int nodeWidth = 200;
@@ -197,4 +201,14 @@ public class SharedValues {
 	public void setRsuWidth(int rsuWidth) {
 		this.rsuWidth = rsuWidth;
 	}
+
+	public double getMaxSpeed(Entity entity) {
+
+		if (entity instanceof EntityBicycle)
+			return bicycleMaxSpeed;
+		else {
+			return carMaxSpeed;
+		}
+	}
+
 }
