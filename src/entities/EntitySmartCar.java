@@ -13,7 +13,6 @@ import java.net.UnknownHostException;
 
 import V2XServer.ConnectionUDP;
 import V2XServer.RSUServerUDP;
-import controller.Controller;
 import models.SharedValues;
 import models.V2XCommand;
 import models.V2XMessage;
@@ -161,7 +160,6 @@ public class EntitySmartCar extends EntityCar {
 	@Override
 	public void collision(Entity other) {
 
-		Controller.GLOBAL.removePortNumber(listenerPort);
 		listenerSocket.close();
 		listenerThread.interrupt();
 		super.collision(other);
