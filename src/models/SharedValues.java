@@ -18,11 +18,10 @@ public class SharedValues {
 	private double timeOutValue;
 	private double SMARTCAR_CHANCE;
 	private volatile long stepsEpic = 0;
-	private ArrayList<Integer> carPortNumbers = new ArrayList<Integer>();
+
 	private ArrayList<Integer> serverPortNumbers = new ArrayList<Integer>();
 	private double carMaxSpeed = 2.0;
 	private double bicycleMaxSpeed = 0.75;
-
 	private int nodeHeight = 100;
 	private int nodeWidth = 200;
 	private int rsuHeight = nodeHeight * 2;
@@ -30,25 +29,11 @@ public class SharedValues {
 	private List<RSUServerUDP> availableRSUs = new ArrayList<RSUServerUDP>();
 
 	private SharedValues() {
-		
+
 	}
 
 	public static SharedValues getInstance() {
 		return sharedValues;
-	}
-
-	public int getPortNumber() {
-
-		Random rand = new Random();
-
-		int portNo = (rand.nextInt(63534) + 2001); // returns an integer between 2001 and 65535
-
-		if (!carPortNumbers.contains(portNo)) {
-			carPortNumbers.add(portNo);
-			return portNo;
-		} else {
-			return getPortNumber();
-		}
 	}
 
 	public int getServerPortNumber() {
@@ -75,11 +60,6 @@ public class SharedValues {
 
 	public void addRSU(RSUServerUDP entity) {
 		this.availableRSUs.add(entity);
-	}
-
-	public void removePortNumber(int portNo) {
-		if (carPortNumbers.contains(portNo))
-			carPortNumbers.remove(carPortNumbers.indexOf(portNo));
 	}
 
 	public int getCarCounter() {
