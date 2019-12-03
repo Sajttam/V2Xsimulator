@@ -27,7 +27,7 @@ public class main {
 		// try {
 		// TileSet.loadTileSet();
 		int scaling = 1;
-		gui = new GuiPanel(350 * scaling, 250 * scaling, scaling);
+		gui = new GuiPanel(300 * scaling, 200 * scaling, scaling);
 		stats = new JFrame("Statistics");
 		StatsController statscontroller = new StatsController(stats);
 		stats.setSize(700, 500);
