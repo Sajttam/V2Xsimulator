@@ -122,27 +122,27 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		entitiesInSight = getEntitiesInsideArea(visionArea);
 		entitiesInSight.remove(this);
 		
-		accelerate(SharedValues.getInstance().getMaxSpeed(this));
-		
+		if(road.straight) {			
+			modifySpeed(SharedValues.getInstance().getMaxSpeed(this));
+		}else {modifySpeed((SharedValues.getInstance().getMaxSpeed(this))/2);
+		}
 		//setSpeed(SharedValues.getInstance().getMaxSpeed(this));
-
+		
 		for (Entity e : entitiesInSight) {
 			if (e instanceof EntityVehicle) {
 				int v = entityRelation(e);
 				if ((!road.straight && e instanceof EntityBicycle) || (!road.straight && v == 1) || road.leftCurve
 						|| (road.straight && v == 0)) {
-					deceleration();
+					stopping();
 					//setSpeed(0);
 				}
 			}
 			if (e instanceof EntityTrafficLight) {
 				EntityTrafficLight trafficLight = (EntityTrafficLight) e;
 				if (entityRelation(trafficLight) == 0) {
-					deceleration();
+					stopping();
 					//setSpeed(0);
-
 				}
-
 			}
 		}
 
@@ -165,20 +165,31 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		move(hSpeed, vSpeed);
 
 	}
-	// accelerate up to targetspeed defined in sharedvalue
-	private void accelerate (double target) {	
+	// accelerate up to targetspeed
+	private void modifySpeed (double target) {	
 		if(this.speed < target) {
-			setSpeed(this.speed += 0.02);	
+			setSpeed(this.speed += 0.015);
+			if(this.speed > target) {setSpeed(target);}
+		}else if(this.speed > target) {
+			setSpeed(this.speed -= 0.06);
+			if(this.speed < target) {setSpeed(target);}
 		}
 	}
-	// deceleration until complete stop or no obstacle is present
-	private void deceleration() {
+	// break until complete stop or no obstacle is present
+	private void stopping() {
 		if(this.speed > 0) {
 			setSpeed(this.speed -= 0.08);
 			if(this.speed < 0) {setSpeed(0);}
 		}
 	}
-	
+	//decelerate until targetspeed i reached
+	private void decelerate(double target) {
+		if(this.speed > target) {
+			setSpeed(this.speed -= 0.06);
+			if(this.speed < 0) {setSpeed(0);}
+		}
+	}
+		
 	public void castPropertyChange(String eventname) {
 		propertyChangeSupportCounter.firePropertyChange(eventname, null, 1);
 	}

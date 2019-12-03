@@ -20,8 +20,7 @@ public class EntityRoad extends Entity {
 	protected double angle = 0;
 	private double distX = 0;
 	private double distY = 0;
-	private Boolean spawning;
-	
+	private Boolean spawning;	
 
 	public boolean straight = true;
 	public boolean leftCurve = false;
