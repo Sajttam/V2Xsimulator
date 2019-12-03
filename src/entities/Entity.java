@@ -22,7 +22,7 @@ import view.Animation;
  * @version 2.0
  */
 
-public abstract class Entity {
+public abstract class Entity implements Comparable<Object> {
 
 	private double xPosition;
 	private double yPosition;
@@ -33,12 +33,19 @@ public abstract class Entity {
 	private int collisionBoundsYOffset;
 	private PropertyChangeSupport propertyChangeSupport;
 	private Controller controller;
+	private int depth = 0;
 
 	public Entity() {
 		setCollisionBounds();
 	}
 
 	public Entity(int width, int height) {
+		setCollisionBounds(width, height);
+	}
+	
+	public Entity(double xPosition, double yPosition, int width, int height) {
+		this.xPosition = xPosition;
+		this.yPosition = yPosition;
 		setCollisionBounds(width, height);
 	}
 
@@ -312,5 +319,18 @@ public abstract class Entity {
 	public void drawFlippedImage(Graphics2D g2d, BufferedImage image) {
 		g2d.drawImage(image, (int) (getXPosition() + image.getWidth()), (int) getYPosition(), -image.getWidth(),
 				image.getHeight(), null);
+	}
+	
+	public int getDepth() {
+		return depth;
+	}
+	
+	@Override
+	public int compareTo(Object arg0) {
+		if (!(arg0 instanceof Entity)) return 0;
+		Entity other = (Entity) arg0;
+		if (getDepth() > other.getDepth()) return 1;
+		else if (getDepth() < other.getDepth()) return -1; 
+		else return 0;
 	}
 }

@@ -68,11 +68,11 @@ public class EntitySmartCar extends EntityCar {
 					receivePacket = new DatagramPacket(buf, buf.length);
 
 					listenerSocket.receive(receivePacket);
-
+					System.out.println("Recived");
 					V2XCommand command = connectionUDP.receiveCommand(receivePacket);
 
 					if (command.getCommand().equals(V2XCommand.Commands.STOP)) {
-
+						
 						stop = true;
 					}
 
@@ -159,11 +159,8 @@ public class EntitySmartCar extends EntityCar {
 
 	@Override
 	public void collision(Entity other) {
-
 		listenerSocket.close();
 		listenerThread.interrupt();
 		super.collision(other);
-
 	}
-
 }

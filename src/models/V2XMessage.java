@@ -22,6 +22,10 @@ public class V2XMessage implements Serializable {
 		this.position = position;
 		this.listenerPort = listenerPort;
 	}
+	
+	public int getId() {
+		return id;
+	}
 
 	public int getListenerPort() {
 		return listenerPort;
