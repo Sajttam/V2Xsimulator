@@ -2,13 +2,19 @@ package entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
 
 import controller.StatsController.EventType;
+import models.SIScaling;
 import models.SharedValues;
 
 public class EntityVehicle extends Entity implements Collidable, EntityMouseListener {
@@ -22,6 +28,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	private double vSpeed = 0;
 	private PropertyChangeSupport propertyChangeSupportCounter;
 	private Polygon visionArea;
+	protected SIScaling scaling = new SIScaling();
 
 	private boolean turningLeft;
 	private boolean turningRight;
@@ -134,7 +141,10 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			}
 			if (e instanceof EntityTrafficLight) {
 				EntityTrafficLight trafficLight = (EntityTrafficLight) e;
-				if (entityRelation(trafficLight) == 0) {
+				Rectangle tLightBounds = trafficLight.getCollisionBounds();
+				Rectangle thisBounds = this.getCollisionBounds();
+
+				if (entityRelation(trafficLight) == 0 && road.straight && !(tLightBounds.intersects(thisBounds))) {
 					setSpeed(0);
 
 				}
@@ -257,6 +267,31 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			// instanceDestroy();
 			System.out.println(entitiesInSight + ": " + road.straight);
 		}
+	}
+
+	protected void drawVehicle(Color color, Graphics g, double width, double length) {
+
+		Graphics2D g2d = (Graphics2D) g.create();
+
+		Rectangle2D rNormal;
+		Shape rRotated;
+
+		double x = (int) getXPosition();
+		double y = (int) getYPosition();
+
+		int pointX = (int) (x + ((width / 2) * Math.sin(getAngle())) - (length / 2) * Math.cos(getAngle()));
+		int pointY = (int) (y - ((width / 2) * Math.cos(getAngle())) - (length / 2) * Math.sin(getAngle()));
+
+		rNormal = new Rectangle2D.Double(pointX, pointY, length, width);
+		AffineTransform at = new AffineTransform();
+
+		at.rotate(getAngle(), pointX, pointY);
+		rRotated = at.createTransformedShape(rNormal);
+
+		g2d.setColor(color);
+		g2d.draw(rRotated);
+		g2d.fill(rRotated);
+
 	}
 
 }

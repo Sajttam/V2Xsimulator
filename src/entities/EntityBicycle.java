@@ -2,6 +2,7 @@ package entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.beans.PropertyChangeListener;
 
 import models.SharedValues;
@@ -12,7 +13,7 @@ public class EntityBicycle extends EntityVehicle {
 		super(road, listener);
 		setSpeed(SharedValues.getInstance().getMaxSpeed(this));
 		setCollisionBounds(12, 12);
-		setCollisionBounds(getCollisionBounds(), -6, -6);
+		setCollisionBounds(((Rectangle) getCollisionBounds()), -6, -6);
 		super.castPropertyChange(entitytype);
 
 	}
@@ -20,8 +21,8 @@ public class EntityBicycle extends EntityVehicle {
 	@Override
 	public void draw(Graphics g) {
 		super.draw(g);
-		g.setColor(Color.ORANGE);
-		g.fillOval((int) getXPosition() - 6, (int) getYPosition() - 6, 12, 12);
+		drawVehicle(Color.ORANGE, g, scaling.getPixelsFromMeter(0.5), scaling.getPixelsFromMeter(2));
+
 	}
 
 	@Override
