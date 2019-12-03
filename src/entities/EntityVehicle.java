@@ -121,21 +121,25 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		// (int)(24*Math.sin(angle)+getYPosition()));
 		entitiesInSight = getEntitiesInsideArea(visionArea);
 		entitiesInSight.remove(this);
-
-		setSpeed(SharedValues.getInstance().getMaxSpeed(this));
+		
+		accelerate(SharedValues.getInstance().getMaxSpeed(this));
+		
+		//setSpeed(SharedValues.getInstance().getMaxSpeed(this));
 
 		for (Entity e : entitiesInSight) {
 			if (e instanceof EntityVehicle) {
 				int v = entityRelation(e);
 				if ((!road.straight && e instanceof EntityBicycle) || (!road.straight && v == 1) || road.leftCurve
 						|| (road.straight && v == 0)) {
-					setSpeed(0);
+					deceleration();
+					//setSpeed(0);
 				}
 			}
 			if (e instanceof EntityTrafficLight) {
 				EntityTrafficLight trafficLight = (EntityTrafficLight) e;
 				if (entityRelation(trafficLight) == 0) {
-					setSpeed(0);
+					deceleration();
+					//setSpeed(0);
 
 				}
 
@@ -161,11 +165,24 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		move(hSpeed, vSpeed);
 
 	}
-
+	// accelerate up to targetspeed defined in sharedvalue
+	private void accelerate (double target) {	
+		if(this.speed < target) {
+			setSpeed(this.speed += 0.02);	
+		}
+	}
+	// deceleration until complete stop or no obstacle is present
+	private void deceleration() {
+		if(this.speed > 0) {
+			setSpeed(this.speed -= 0.08);
+			if(this.speed < 0) {setSpeed(0);}
+		}
+	}
+	
 	public void castPropertyChange(String eventname) {
 		propertyChangeSupportCounter.firePropertyChange(eventname, null, 1);
 	}
-
+	
 	@Override
 	public void draw(Graphics g) {
 		// g.setColor(Color.YELLOW);
