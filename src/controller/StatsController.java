@@ -40,21 +40,23 @@ public class StatsController implements PropertyChangeListener {
 	}
 	
 	public enum EventType {
-		CAR("Car", "Car"),
-		BICYCLE("Bicycle", "Bicycle"),
-		SMARTCAR("Smartcar", "Smartcar"),
-		SMARTCAR2BICYCLE("Smartcar2Bicycle", "Smartcar & Bicycle"),
-		CAR2BYCYCLE("Car2Bicycle", "Car & Bicycle"),
-		SMARTCAR2CAR("Smartcar2Car", "Smartcar & Car"),
-		SMARTCAR2SMARTCAR("Smartcar2Smartcar", "Smartcar & Smartcar"),
-		CAR2CAR("Car2Car", "Car & Car");
+		CAR("Car", "Car", "Spawn"),
+		BICYCLE("Bicycle", "Bicycle", "Spawn"),
+		SMARTCAR("Smartcar", "Smartcar", "Spawn"),
+		SMARTCAR2BICYCLE("Smartcar2Bicycle", "Smartcar & Bicycle", "Collision"),
+		CAR2BYCYCLE("Car2Bicycle", "Car & Bicycle", "Collision"),
+		SMARTCAR2CAR("Smartcar2Car", "Smartcar & Car", "Collision"),
+		SMARTCAR2SMARTCAR("Smartcar2Smartcar", "Smartcar & Smartcar", "Collision"),
+		CAR2CAR("Car2Car", "Car & Car", "Collision");
 		
 		private String eventType; // no spaces allowed in this string
 		private String displayName;
+		private String heading;
 		
-		EventType(String eventType, String displayName) {
+		EventType(String eventType, String displayName, String heading) {
 			this.eventType = eventType;
 			this.displayName = displayName;
+			this.heading = heading;
 		}
 
 		public String getEventType() {
@@ -64,13 +66,17 @@ public class StatsController implements PropertyChangeListener {
 		public String getDisplayName() {
 			return displayName;
 		}
-
+		
+		public String getHeading() {
+			return heading;
+		}
 	}
 	
 	private JFrame jframe;
 	private JPanel jpanel;
 	
-	private Map<String, StatsHolder> labelsWithValues;
+	private Map<String, StatsHolder> labelsCollsions;
+	private Map<String, StatsHolder> labelsSpawns;
 	
 	private static int TEXT_SIZE = 30;
 	private static int HEADING_SIZE = 40;
@@ -82,12 +88,14 @@ public class StatsController implements PropertyChangeListener {
 	private StatsController(JFrame jframe){	
 		this.jframe = jframe;
 		
-		labelsWithValues = new TreeMap<String, StatsHolder>();
+		labelsCollsions = new TreeMap<String, StatsHolder>();
+		labelsSpawns = new TreeMap<String, StatsHolder>();
+		
 		createLabels(); //Creates labels and adds them to labelsWithValues
 		
 		jpanel = new JPanel();
 		
-		GridLayout gridLayout = new GridLayout(labelsWithValues.size(), 2);
+		GridLayout gridLayout = new GridLayout(labelsCollsions.size() + labelsSpawns.size() + 2, 2);
 		
 		jpanel.setLayout(gridLayout);
 		
@@ -102,7 +110,14 @@ public class StatsController implements PropertyChangeListener {
 	
 	private static StatsController statsController;
 	public static void initialize(JFrame jFrame) {
-		statsController = new StatsController(jFrame);
+		if (statsController == null)
+			statsController = new StatsController(jFrame);
+		else {			
+			jFrame.add(getInstance().jpanel);
+			jFrame.setVisible(true);			
+			jFrame.pack();
+		}
+			
 	}
 	
 	public static StatsController getInstance() {
@@ -113,7 +128,10 @@ public class StatsController implements PropertyChangeListener {
 	public void propertyChange(PropertyChangeEvent event) {		
 		String eventname = event.getPropertyName();
 		
-		StatsHolder sh = labelsWithValues.get(eventname);
+		TreeMap<String, StatsHolder> labels = new TreeMap<String, StatsHolder>(labelsCollsions);
+		labels.putAll(labelsSpawns);
+		
+		StatsHolder sh = labels.get(eventname);
 		JLabel l = sh.getValue();
 		sh.incValue();
 	}
@@ -121,22 +139,46 @@ public class StatsController implements PropertyChangeListener {
 	private void createLabels() {
 		for (EventType e : EventType.values()) {
 			StatsHolder sh = new StatsHolder(e.getDisplayName(), 0);
-			labelsWithValues.put(e.getEventType(), sh);
+			if (e.getHeading().equals("Spawn"))
+				labelsCollsions.put(e.getEventType(), sh);
+			else
+				labelsSpawns.put(e.getEventType(), sh);
 		}
 	}
 	
-	private void addToPanel() {
-		for (StatsHolder sh : labelsWithValues.values()) {
+	private void addToPanel(Map<String, StatsHolder> map) {
+		for (StatsHolder sh : map.values()) {
 			jpanel.add(sh.getName());
 			jpanel.add(sh.getValue());
 		}
 	}
 	
-	private void setFont() {
+	private void addToPanel() {	
+		
+		
+		jpanel.add(new JLabel("Spawns"));
+		jpanel.add(new JLabel(""));
+		
+		addToPanel(labelsCollsions);
+		
+		jpanel.add(new JLabel("Collisions"));
+		jpanel.add(new JLabel(""));
+		
+		addToPanel(labelsSpawns);
+		
+				
+	}
+	
+	private void setFont(Map<String, StatsHolder> map) {
 		Font font = new Font("Serif", Font.PLAIN, HEADING_SIZE);
-		for (StatsHolder sh : labelsWithValues.values()) {
+		for (StatsHolder sh : map.values()) {
 			sh.getName().setFont(font);
 			sh.getValue().setFont(font);
 		}
+	}
+	
+	private void setFont() {
+		setFont(labelsSpawns);
+		setFont(labelsCollsions);
 	}
 }

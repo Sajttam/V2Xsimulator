@@ -193,11 +193,11 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			if (this instanceof EntitySmartCar && other instanceof EntityBicycle) {
 				castPropertyChange(EventType.SMARTCAR2BICYCLE.getEventType());
 			}
-			else if(this instanceof EntitySmartCar && other instanceof EntityCar) {
-				castPropertyChange(EventType.SMARTCAR2CAR.getEventType());
-			}
 			else if(this instanceof EntitySmartCar && other instanceof EntitySmartCar) {
 				castPropertyChange(EventType.SMARTCAR2SMARTCAR.getEventType());
+			}
+			else if(this instanceof EntitySmartCar && other instanceof EntityCar) {
+				castPropertyChange(EventType.SMARTCAR2CAR.getEventType());
 			}
 			else if(this instanceof EntityCar && other instanceof EntityCar) {
 				castPropertyChange(EventType.CAR2CAR.getEventType());
