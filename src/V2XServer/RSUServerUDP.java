@@ -61,7 +61,7 @@ public class RSUServerUDP extends ConnectionUDP implements Runnable {
 				socket.receive(packet); // Wait for package
 
 				V2XMessage message = receiveMessage(packet);
-				System.out.println("Server: " + serverPort + " " + message);
+				// System.out.println("Server: " + serverPort + " " + message);
 
 				functionHandler.logCarInfo(message.getListenerPort(), message);
 			}
