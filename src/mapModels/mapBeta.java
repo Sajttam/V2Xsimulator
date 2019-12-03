@@ -49,21 +49,21 @@ public class mapBeta implements SimulationMap {
 
 		// WEST - CENTER, W - NE
 
-		nodeWest.addConnectionTo(nodeCenter, EntityNode.Direction.EAST, RoadType.BICYCLE);
+		nodeCenter.addConnectionTo(nodeWest, EntityNode.Direction.WEST, RoadType.BICYCLE);
 
 		nodeCenter.addConnectionTo(nodeWest, EntityNode.Direction.WEST, RoadType.CAR);
 		nodeWest.addConnectionTo(nodeCenter, EntityNode.Direction.EAST, RoadType.CAR);
 
 		nodeNorthWest.addConnectionTo(nodeWest, EntityNode.Direction.SOUTH, RoadType.CAR);
 		nodeWest.addConnectionTo(nodeNorthWest, EntityNode.Direction.NORTH, RoadType.CAR);
-		nodeNorthWest.addConnectionTo(nodeWest, EntityNode.Direction.SOUTH, RoadType.BICYCLE);
+		nodeWest.addConnectionTo(nodeNorthWest, EntityNode.Direction.NORTH, RoadType.BICYCLE);
 
 		// EAST - CENTER, E-NE
-		nodeCenter.addConnectionTo(nodeEast, EntityNode.Direction.EAST, RoadType.BICYCLE);
+		nodeEast.addConnectionTo(nodeCenter, EntityNode.Direction.WEST, RoadType.BICYCLE);
 		nodeEast.addConnectionTo(nodeCenter, EntityNode.Direction.WEST, RoadType.CAR);
 		nodeCenter.addConnectionTo(nodeEast, EntityNode.Direction.EAST, RoadType.CAR);
 
-		nodeEast.addConnectionTo(nodeNorthEast, EntityNode.Direction.NORTH, RoadType.BICYCLE);
+		nodeNorthEast.addConnectionTo(nodeEast, EntityNode.Direction.SOUTH, RoadType.BICYCLE);
 		nodeNorthEast.addConnectionTo(nodeEast, EntityNode.Direction.SOUTH, RoadType.CAR);
 		nodeEast.addConnectionTo(nodeNorthEast, EntityNode.Direction.NORTH, RoadType.CAR);
 
@@ -77,11 +77,11 @@ public class mapBeta implements SimulationMap {
 		nodeNorthEast.addConnectionTo(nodeNorth, EntityNode.Direction.WEST, RoadType.CAR);
 		nodeNorth.addConnectionTo(nodeNorthEast, EntityNode.Direction.EAST, RoadType.CAR);
 
-		nodeNorthEast.addConnectionTo(nodeNorth, EntityNode.Direction.WEST, RoadType.BICYCLE);
+		nodeNorth.addConnectionTo(nodeNorthEast, EntityNode.Direction.EAST, RoadType.BICYCLE);
 
 		nodeNorth.addConnectionTo(nodeNorthWest, EntityNode.Direction.WEST, RoadType.CAR);
 		nodeNorthWest.addConnectionTo(nodeNorth, EntityNode.Direction.EAST, RoadType.CAR);
-		nodeNorth.addConnectionTo(nodeNorthWest, EntityNode.Direction.WEST, RoadType.BICYCLE);
+		nodeNorthWest.addConnectionTo(nodeNorth, EntityNode.Direction.EAST, RoadType.BICYCLE);
 
 		nodeWest.doInternalConnections();
 		nodeEast.doInternalConnections();
