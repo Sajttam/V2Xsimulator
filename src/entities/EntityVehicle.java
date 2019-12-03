@@ -127,7 +127,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		for (Entity e : entitiesInSight) {
 			if (e instanceof EntityVehicle) {
 				int v = entityRelation(e);
-				if ((!road.straight && e instanceof EntityBicycle) || (!road.straight && v == 1)
+				if ((!road.straight && e instanceof EntityBicycle) || (!road.straight && v == 1) || road.leftCurve
 						|| (road.straight && v == 0)) {
 					setSpeed(0);
 				}
