@@ -160,7 +160,7 @@ public class GuiPanel extends JPanel {
 		
 		JMenu menuView = new JMenu("View");
 		JMenuItem itemStatisticsView = new JMenuItem("Statistics");
-		itemStatisticsView.addActionListener(e -> new StatsController(new JFrame("Statistics")));
+		itemStatisticsView.addActionListener(e -> StatsController.initialize(new JFrame()));
 		itemPerformance.addActionListener(e -> controller.addPerformanceMonitor());
 
 		JMenu menuHelp = new JMenu("Help");

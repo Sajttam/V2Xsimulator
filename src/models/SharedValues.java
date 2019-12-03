@@ -20,12 +20,11 @@ public class SharedValues {
 	private int rsuWidth = nodeWidth * 2;
 
 	private SharedValues() {
+		
 	}
 
 	public static SharedValues getInstance() {
-
 		return sharedValues;
-
 	}
 
 	public int getPortNumber() {
@@ -35,23 +34,16 @@ public class SharedValues {
 		int portNo = (rand.nextInt(64534) + 1001); // returns an integer between 1001 and 65535
 
 		if (!carPortNumbers.contains(portNo)) {
-
 			carPortNumbers.add(portNo);
 			return portNo;
-
 		} else {
-
 			return getPortNumber();
-
 		}
-
 	}
 
 	public void removePortNumber(int portNo) {
-
 		if (carPortNumbers.contains(portNo))
 			carPortNumbers.remove(carPortNumbers.indexOf(portNo));
-
 	}
 
 	public int getCarCounter() {
@@ -71,27 +63,19 @@ public class SharedValues {
 	}
 
 	public void decrementCarCounter() {
-
 		carCounter--;
-
 	}
 
 	public void decrementBicycleCounter() {
-
 		bicycleCounter--;
-
 	}
 
 	public void incrementCarCounter() {
-
 		carCounter++;
-
 	}
 
 	public void incrementBicycleCounter() {
-
 		bicycleCounter++;
-
 	}
 
 	public double getTimeOutValue() {

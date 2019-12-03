@@ -38,8 +38,8 @@ public class RSUServerUDP extends ConnectionUDP implements Runnable {
 
 			socket = new DatagramSocket(port);
 
-			System.out.println("Server started");
-			System.out.println("Waiting for a package ...");
+			//System.out.println("Server started");
+			//System.out.println("Waiting for a package ...");
 
 			while (running) {
 				DatagramPacket packet = new DatagramPacket(buf, buf.length);
@@ -47,7 +47,7 @@ public class RSUServerUDP extends ConnectionUDP implements Runnable {
 				socket.receive(packet); // Wait for package
 
 				V2XMessage message = recieveMessage(packet);
-				System.out.println(message);
+				//System.out.println(message);
 
 				functionHandler.logCarInfo(message.getListenerPort(), message);
 			}

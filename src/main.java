@@ -28,7 +28,8 @@ public class main {
 			int scaling = 1;
 			gui = new GuiPanel(231*scaling, 189*scaling, scaling);
 			stats = new JFrame("Statistics");
-			StatsController statscontroller = new StatsController(stats);
+			//StatsController statscontroller = new StatsController(stats);
+			StatsController.initialize(stats);
 			stats.setSize(700, 500);
 			Controller controller = new Controller(gui);
 			gui.makeMenu(controller);
