@@ -30,12 +30,11 @@ public class SharedValues {
 	private List<RSUServerUDP> availableRSUs = new ArrayList<RSUServerUDP>();
 
 	private SharedValues() {
+		
 	}
 
 	public static SharedValues getInstance() {
-
 		return sharedValues;
-
 	}
 
 	public int getPortNumber() {
@@ -45,16 +44,11 @@ public class SharedValues {
 		int portNo = (rand.nextInt(63534) + 2001); // returns an integer between 2001 and 65535
 
 		if (!carPortNumbers.contains(portNo)) {
-
 			carPortNumbers.add(portNo);
 			return portNo;
-
 		} else {
-
 			return getPortNumber();
-
 		}
-
 	}
 
 	public int getServerPortNumber() {
@@ -84,10 +78,8 @@ public class SharedValues {
 	}
 
 	public void removePortNumber(int portNo) {
-
 		if (carPortNumbers.contains(portNo))
 			carPortNumbers.remove(carPortNumbers.indexOf(portNo));
-
 	}
 
 	public int getCarCounter() {
@@ -107,27 +99,19 @@ public class SharedValues {
 	}
 
 	public void decrementCarCounter() {
-
 		carCounter--;
-
 	}
 
 	public void decrementBicycleCounter() {
-
 		bicycleCounter--;
-
 	}
 
 	public void incrementCarCounter() {
-
 		carCounter++;
-
 	}
 
 	public void incrementBicycleCounter() {
-
 		bicycleCounter++;
-
 	}
 
 	public double getTimeOutValue() {

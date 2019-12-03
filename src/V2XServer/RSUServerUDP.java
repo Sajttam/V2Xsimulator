@@ -52,8 +52,8 @@ public class RSUServerUDP extends ConnectionUDP implements Runnable {
 
 			socket = new DatagramSocket(serverPort);
 
-			System.out.println("Server started");
-			System.out.println("Waiting for a package ...");
+			// System.out.println("Server started");
+			// System.out.println("Waiting for a package ...");
 
 			while (running) {
 				DatagramPacket packet = new DatagramPacket(buf, buf.length);

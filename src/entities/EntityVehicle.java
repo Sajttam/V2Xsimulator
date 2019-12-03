@@ -8,6 +8,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
 
+import controller.StatsController.EventType;
 import models.SharedValues;
 
 public class EntityVehicle extends Entity implements Collidable, EntityMouseListener {
@@ -180,18 +181,19 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	@Override
 	public void collision(Entity other) {
-		if (other instanceof EntityVehicle) {
 
+		if (other instanceof EntityVehicle) {
 			if (this instanceof EntitySmartCar && other instanceof EntityBicycle) {
-				castPropertyChange("Smartcar2Bicycle");
-			} else if (this instanceof EntitySmartCar && other instanceof EntityCar) {
-				castPropertyChange("Smartcar2Car");
+				castPropertyChange(EventType.SMARTCAR2BICYCLE.getEventType());
 			} else if (this instanceof EntitySmartCar && other instanceof EntitySmartCar) {
-				castPropertyChange("Smartcar2Smartcar");
+				castPropertyChange(EventType.SMARTCAR2SMARTCAR.getEventType());
+			} else if (this instanceof EntitySmartCar && other instanceof EntityCar) {
+				castPropertyChange(EventType.SMARTCAR2CAR.getEventType());
 			} else if (this instanceof EntityCar && other instanceof EntityCar) {
-				castPropertyChange("Car2Car");
+				castPropertyChange(EventType.CAR2CAR.getEventType());
 			} else if (this instanceof EntityCar && other instanceof EntityBicycle) {
-				castPropertyChange("Car2Bicycle");
+				castPropertyChange(EventType.CAR2BYCYCLE.getEventType());
+
 			}
 			instanceDestroy();
 		}

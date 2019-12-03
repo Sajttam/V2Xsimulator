@@ -24,12 +24,14 @@ public class main {
 	public static void main(String args[]) throws IOException {
 		GuiPanel gui;
 		JFrame stats;
+
 		// try {
 		// TileSet.loadTileSet();
 		int scaling = 1;
-		gui = new GuiPanel(300 * scaling, 200 * scaling, scaling);
+		gui = new GuiPanel(231 * scaling, 189 * scaling, scaling);
 		stats = new JFrame("Statistics");
-		StatsController statscontroller = new StatsController(stats);
+		// StatsController statscontroller = new StatsController(stats);
+		StatsController.initialize(stats);
 		stats.setSize(700, 500);
 		Controller controller = new Controller(gui);
 		gui.makeMenu(controller);
@@ -40,5 +42,6 @@ public class main {
 		 * e.getStackTrace(), "Failed to load game", JOptionPane.ERROR_MESSAGE);
 		 * System.out.println(e); System.exit(0); }
 		 */
+
 	}
 }
