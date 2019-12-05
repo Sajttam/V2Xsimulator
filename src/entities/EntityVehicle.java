@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -29,6 +30,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	private PropertyChangeSupport propertyChangeSupportCounter;
 	private Polygon visionArea;
 	protected SIScaling scaling = new SIScaling();
+	private Area vehicleBounds;
 
 	private boolean turningLeft;
 	private boolean turningRight;
@@ -288,9 +290,22 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		at.rotate(getAngle(), pointX, pointY);
 		rRotated = at.createTransformedShape(rNormal);
 
+		setVehicleBounds(rRotated);
+
 		g2d.setColor(color);
 		g2d.draw(rRotated);
 		g2d.fill(rRotated);
+
+	}
+
+	private void setVehicleBounds(Shape bounds) {
+
+		vehicleBounds = new Area(bounds);
+	}
+
+	public Area getVehicleBounds() {
+
+		return vehicleBounds;
 
 	}
 
