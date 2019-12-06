@@ -65,7 +65,5 @@ public class EntityCar extends EntityVehicle {
 		g2d.setColor(color);
 		g2d.draw(rRotated);
 		g2d.fill(rRotated);
-
 	}
-
 }

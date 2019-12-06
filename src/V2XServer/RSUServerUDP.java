@@ -53,7 +53,6 @@ public class RSUServerUDP extends ConnectionUDP implements Runnable {
 	public void run() {
 		try {
 			running = true;
-
 			socket = new DatagramSocket(serverPort);
 
 			// System.out.println("Server started");

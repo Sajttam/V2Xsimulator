@@ -62,23 +62,22 @@ public class EntitySmartCar extends EntityCar {
 		listenerThread = new Thread() {
 			@Override
 			public void run() {
-
 				try {
+					while (true) {
+						receivePacket = new DatagramPacket(buf, buf.length);
+						//System.out.println("TEST!");
+						listenerSocket.receive(receivePacket);
+						//System.out.println("Recived");
+						V2XCommand command = connectionUDP.receiveCommand(receivePacket);
 
-					receivePacket = new DatagramPacket(buf, buf.length);
-
-					listenerSocket.receive(receivePacket);
-					System.out.println("Recived");
-					V2XCommand command = connectionUDP.receiveCommand(receivePacket);
-
-					if (command.getCommand().equals(V2XCommand.Commands.STOP)) {
-						
-						stop = true;
+						if (command.getCommand().equals(V2XCommand.Commands.STOP)) {
+							System.out.println("STOP");
+							stop = true;
+						}
 					}
 
 				} catch (IOException | ClassNotFoundException e) {
-
-					if (!(e.getClass().toString().equals("class java.net.SocketException")))
+					//if (!(e.getClass().toString().equals("class java.net.SocketException")))
 						e.printStackTrace();
 				} // Wait for package
 
@@ -99,9 +98,7 @@ public class EntitySmartCar extends EntityCar {
 	private void connectToRSU(int serverPort) throws UnknownHostException, SocketException {
 		connectionUDP = new ConnectionUDP();
 		senderSocket = new DatagramSocket();
-		senderSocket.connect(InetAddress.getByName("localhost"), serverPort); // Connection
-																				// should
-
+		senderSocket.connect(InetAddress.getByName("localhost"), serverPort); // Connection should
 	}
 
 	/*
@@ -139,11 +136,8 @@ public class EntitySmartCar extends EntityCar {
 		}
 
 		if (stop) {
-
 			setSpeed(0);
-
 		}
-
 	}
 
 	/*
@@ -158,9 +152,11 @@ public class EntitySmartCar extends EntityCar {
 	}
 
 	@Override
-	public void collision(Entity other) {
-		listenerSocket.close();
-		listenerThread.interrupt();
-		super.collision(other);
+	public void collision(Entity other) {		
+		super.collision(other);		
+		if (other instanceof EntityVehicle) {
+			listenerSocket.close();
+			listenerThread.interrupt();
+		}
 	}
 }
