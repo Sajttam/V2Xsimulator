@@ -20,29 +20,17 @@ public class EntityRSUBoundaries extends Entity {
 		this.yPos = yPos - rsuYOffset;
 		setCollisionBounds(width, height);
 		setCollisionBounds(getCollisionBounds(), this.xPos, this.yPos);
-
 	}
 
 	@Override
 	public void draw(Graphics g) {
-
 		g.setColor(new Color(255, 255, 255, 100));
-
 		g.fillRect(xPos, yPos, width, height);
 	}
 
 	public boolean tryConnect(Entity vehicle) {
-
 		Rectangle vehicleBounds = vehicle.getCollisionBounds();
-
-		if (this.getCollisionBounds().intersects(vehicleBounds)) {
-			return true;
-		} else {
-
-			return false;
-
-		}
-
+		return this.getCollisionBounds().intersects(vehicleBounds);
 	}
 
 }

@@ -67,7 +67,8 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		GLOBAL.setCarCounter(6);
 		GLOBAL.setServerPort(1000);
 		GLOBAL.setTimeOutValue(16.6667);
-		GLOBAL.setSMARTCAR_CHANCE(0.5);
+		GLOBAL.setSMARTCAR_CHANCE(0);
+		
 		instances = new CopyOnWriteArrayList<Entity>();
 		createInstances = new ArrayList<Entity>();
 		deleteInstances = new ArrayList<Entity>();
@@ -141,27 +142,12 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	 */
 	public synchronized void collisionChecking(Entity entity) {
 		for (Entity other : instances) {
-			if (entity != other) {
+			if (entity != other && entity instanceof Collidable) {
 				Rectangle entityBounds = entity.getCollisionBounds();
 				Rectangle otherBounds = other.getCollisionBounds();
 				if (entityBounds.intersects(otherBounds)) {
-					if (entity instanceof Collidable) {
-
-						if (!(entity instanceof EntityTrafficLight || other instanceof EntityTrafficLight
-								|| entity instanceof EntityRSUBoundaries || other instanceof EntityRSUBoundaries)) { // avoid
-							// collision
-							// handling
-							// with
-							// traffic
-							// light
-
-							((Collidable) entity).collision(other);
-
-							// System.out.println(entity.getClass() + " " + entity.toString() + " collided
-							// with " + other.getClass() + " " + other.toString());
-
-						}
-
+					if (other instanceof Collidable) {
+						((Collidable) entity).collision(other);
 					}
 				}
 			}

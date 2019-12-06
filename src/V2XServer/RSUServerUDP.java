@@ -3,7 +3,10 @@ package V2XServer;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.util.Set;
+import java.util.TreeSet;
 
+import entities.EntityBikeDetector;
 import entities.EntityRSUBoundaries;
 import models.V2XCommand;
 import models.V2XMessage;
@@ -16,28 +19,29 @@ public class RSUServerUDP extends ConnectionUDP implements Runnable {
 	private int serverPort;
 	private FunctionHandler functionHandler = null;
 	private EntityRSUBoundaries rsuBoundaries;
+	private Set<EntityBikeDetector> bikeDetectors;
 
 	public RSUServerUDP(int serverPort, int xPos, int yPos) {
 		this.serverPort = serverPort;
 		functionHandler = new FunctionHandler(this);
 		rsuBoundaries = new EntityRSUBoundaries(xPos, yPos);
+		bikeDetectors = new TreeSet<EntityBikeDetector>();
 	}
 
 	public void sendCommand(DatagramSocket socket, V2XCommand command) throws IOException {
 		DatagramPacket packet = objectToDatagaram(socket, command);
-
 		socket.send(packet);
-
 	}
 
 	public int getServerPort() {
-
 		return serverPort;
-
+	}
+	
+	public boolean addBikeDetector(EntityBikeDetector bikeDetector) {
+		return bikeDetectors.add(bikeDetector);
 	}
 
 	public EntityRSUBoundaries getRSUBoundaries() {
-
 		return rsuBoundaries;
 	}
 
@@ -49,7 +53,6 @@ public class RSUServerUDP extends ConnectionUDP implements Runnable {
 	public void run() {
 		try {
 			running = true;
-
 			socket = new DatagramSocket(serverPort);
 
 			// System.out.println("Server started");
@@ -69,6 +72,10 @@ public class RSUServerUDP extends ConnectionUDP implements Runnable {
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Set<EntityBikeDetector> getBikeDetectors() {
+		return bikeDetectors;
 	}
 
 }

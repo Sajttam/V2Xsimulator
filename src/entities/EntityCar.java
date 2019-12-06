@@ -34,14 +34,11 @@ public class EntityCar extends EntityVehicle {
 		drawCar(Color.green, g);
 
 	}
-
+	
 	@Override
-	public void collision(Entity other) {
-		super.collision(other);
-
-		if (other instanceof EntityCar || other instanceof EntityBicycle)
-			SharedValues.getInstance().incrementCarCounter();
-
+	public void instanceDestroy() {
+		super.instanceDestroy();
+		SharedValues.getInstance().incrementCarCounter();
 	}
 
 	protected void drawCar(Color color, Graphics g) {
@@ -68,7 +65,5 @@ public class EntityCar extends EntityVehicle {
 		g2d.setColor(color);
 		g2d.draw(rRotated);
 		g2d.fill(rRotated);
-
 	}
-
 }

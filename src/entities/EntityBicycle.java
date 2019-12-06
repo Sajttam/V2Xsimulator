@@ -23,10 +23,10 @@ public class EntityBicycle extends EntityVehicle {
 		g.setColor(Color.ORANGE);
 		g.fillOval((int) getXPosition() - 6, (int) getYPosition() - 6, 12, 12);
 	}
-
+	
 	@Override
-	public void collision(Entity other) {
-		super.collision(other);
+	public void instanceDestroy() {
+		super.instanceDestroy();
 		SharedValues.getInstance().incrementBicycleCounter();
 	}
 }
