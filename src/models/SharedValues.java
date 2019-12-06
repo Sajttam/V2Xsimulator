@@ -12,6 +12,7 @@ public class SharedValues {
 
 	private static SharedValues sharedValues = new SharedValues();
 
+	private SIScaling scaler = new SIScaling();
 	private int carCounter;
 	private int bicycleCounter;
 	private int serverPort;
@@ -20,12 +21,12 @@ public class SharedValues {
 	private volatile long stepsEpic = 0;
 
 	private ArrayList<Integer> serverPortNumbers = new ArrayList<Integer>();
-	private double carMaxSpeed = 2.0;
-	private double bicycleMaxSpeed = 0.75;
-	private int nodeHeight = 100;
-	private int nodeWidth = 200;
-	private int rsuHeight = nodeHeight * 2;
-	private int rsuWidth = nodeWidth * 2;
+	private double carMaxSpeed = scaler.kphToPixelsPerStep(50);
+	private double bicycleMaxSpeed = scaler.kphToPixelsPerStep(20);
+	private double nodeHeight = scaler.getPixelsFromMeter(15.5);
+	private double nodeWidth = scaler.getPixelsFromMeter(15.5);
+	private double rsuHeight = nodeHeight * 2;
+	private double rsuWidth = nodeWidth * 2;
 	private List<RSUServerUDP> availableRSUs = new ArrayList<RSUServerUDP>();
 
 	private SharedValues() {
@@ -134,7 +135,7 @@ public class SharedValues {
 		this.serverPort = port;
 	}
 
-	public int getNodeHeight() {
+	public double getNodeHeight() {
 		return nodeHeight;
 	}
 
@@ -142,7 +143,7 @@ public class SharedValues {
 		this.nodeHeight = nodeHeight;
 	}
 
-	public int getNodeWidth() {
+	public double getNodeWidth() {
 		return nodeWidth;
 	}
 
@@ -150,7 +151,7 @@ public class SharedValues {
 		this.nodeWidth = nodeWidth;
 	}
 
-	public int getRsuHeight() {
+	public double getRsuHeight() {
 		return rsuHeight;
 	}
 
@@ -158,7 +159,7 @@ public class SharedValues {
 		this.rsuHeight = rsuHeight;
 	}
 
-	public int getRsuWidth() {
+	public double getRsuWidth() {
 		return rsuWidth;
 	}
 

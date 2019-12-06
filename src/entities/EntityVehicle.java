@@ -2,13 +2,20 @@ package entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
+import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
 
 import controller.StatsController.EventType;
+import models.SIScaling;
 import models.SharedValues;
 
 public class EntityVehicle extends Entity implements Collidable, EntityMouseListener {
@@ -22,6 +29,9 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	private double vSpeed = 0;
 	private PropertyChangeSupport propertyChangeSupportCounter;
 	private Polygon visionArea;
+	protected SIScaling scaling = new SIScaling();
+	private Area vehicleBounds;
+	private Shape vehicleShape;
 
 	private double crossing_velocity_modifier = 0.4; // fraction of max velocity when turning
 
@@ -123,6 +133,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		// (int)(24*Math.sin(angle)+getYPosition()));
 		entitiesInSight = getEntitiesInsideArea(visionArea);
 		entitiesInSight.remove(this);
+		double tempSpeed;
 
 		if (road.straight) {
 			modifySpeed(road.getSpeedLimit());
@@ -132,20 +143,32 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		
 		// setSpeed(SharedValues.getInstance().getMaxSpeed(this));
 
-		for (Entity e : entitiesInSight) {
-			if (e instanceof EntityVehicle) {
-				int v = entityRelation(e);
-				if ((!road.straight && e instanceof EntityBicycle) || (!road.straight && v == 1) || road.leftCurve
-						|| (road.straight && v == 0)) {
-					stopping();
-					// setSpeed(0);
+		for (Entity otherEntity : entitiesInSight) {
+
+			if (otherEntity instanceof EntityVehicle) {
+				int v;
+
+				Area otherBounds = ((EntityVehicle) otherEntity).getVehicleBounds();
+				Area vArea = new Area(visionArea);
+				otherBounds.intersect(vArea);
+				if (!otherBounds.isEmpty()) {
+					v = entityRelation(otherEntity);
+					if ((!road.straight && otherEntity instanceof EntityBicycle) || (!road.straight && v == 1)
+							|| (road.straight && v == 0)) {
+						stopping();
+
+					}
 				}
+
 			}
-			if (e instanceof EntityTrafficLight) {
-				EntityTrafficLight trafficLight = (EntityTrafficLight) e;
-				if (entityRelation(trafficLight) == 0) {
+
+			if (otherEntity instanceof EntityTrafficLight) {
+				EntityTrafficLight trafficLight = (EntityTrafficLight) otherEntity;
+				Rectangle tLightBounds = trafficLight.getCollisionBounds();
+				Rectangle thisBounds = this.getCollisionBounds();
+
+				if (entityRelation(trafficLight) == 0 && road.straight && !(tLightBounds.intersects(thisBounds))) {
 					stopping();
-					// setSpeed(0);
 				}
 			}
 		}
@@ -163,6 +186,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			}
 		}
 
+		
 		hSpeed = speed * Math.cos(angle);
 		vSpeed = speed * Math.sin(angle);
 
@@ -219,19 +243,28 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	@Override
 	public void collision(Entity other) {
 
-		if (other instanceof EntityVehicle) {
-			if (this instanceof EntitySmartCar && other instanceof EntityBicycle) {
-				castPropertyChange(EventType.SMARTCAR2BICYCLE.getEventType());
-			} else if (this instanceof EntitySmartCar && other instanceof EntitySmartCar) {
-				castPropertyChange(EventType.SMARTCAR2SMARTCAR.getEventType());
-			} else if (this instanceof EntitySmartCar && other instanceof EntityCar) {
-				castPropertyChange(EventType.SMARTCAR2CAR.getEventType());
-			} else if (this instanceof EntityCar && other instanceof EntityCar) {
-				castPropertyChange(EventType.CAR2CAR.getEventType());
-			} else if (this instanceof EntityCar && other instanceof EntityBicycle) {
-				castPropertyChange(EventType.CAR2BYCYCLE.getEventType());
+		Area otherBounds = ((EntityVehicle) other).getVehicleBounds();
+
+		// Checks if inner, more precise bounds intersect
+		otherBounds.intersect(this.getVehicleBounds());
+
+		if (!otherBounds.isEmpty()) {
+
+			if (other instanceof EntityVehicle) {
+				if (this instanceof EntitySmartCar && other instanceof EntityBicycle) {
+					castPropertyChange(EventType.SMARTCAR2BICYCLE.getEventType());
+				} else if (this instanceof EntitySmartCar && other instanceof EntitySmartCar) {
+					castPropertyChange(EventType.SMARTCAR2SMARTCAR.getEventType());
+				} else if (this instanceof EntitySmartCar && other instanceof EntityCar) {
+					castPropertyChange(EventType.SMARTCAR2CAR.getEventType());
+				} else if (this instanceof EntityCar && other instanceof EntityCar) {
+					castPropertyChange(EventType.CAR2CAR.getEventType());
+				} else if (this instanceof EntityCar && other instanceof EntityBicycle) {
+					castPropertyChange(EventType.CAR2BYCYCLE.getEventType());
+
+				}
+				instanceDestroy();
 			}
-			instanceDestroy();
 		}
 	}
 
@@ -293,6 +326,56 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			// instanceDestroy();
 			System.out.println(entitiesInSight + ": " + road.straight);
 		}
+	}
+
+	public Shape getVehicleShape() {
+		return vehicleShape;
+
+	}
+
+	protected void setVehicleShape(double width, double length) {
+
+		Rectangle2D rNormal;
+		Shape rRotated;
+
+		double x = (int) getXPosition();
+		double y = (int) getYPosition();
+
+		int pointX = (int) (x + ((width / 2) * Math.sin(getAngle())) - (length / 2) * Math.cos(getAngle()));
+		int pointY = (int) (y - ((width / 2) * Math.cos(getAngle())) - (length / 2) * Math.sin(getAngle()));
+
+		rNormal = new Rectangle2D.Double(pointX, pointY, length, width);
+		AffineTransform at = new AffineTransform();
+
+		at.rotate(getAngle(), pointX, pointY);
+		rRotated = at.createTransformedShape(rNormal);
+
+		setVehicleBounds(rRotated);
+		setCollisionBounds(rRotated.getBounds(), (int) -(rRotated.getBounds().getWidth() / 2),
+				(int) -rRotated.getBounds().getHeight() / 2);
+
+		vehicleShape = rRotated;
+
+	}
+
+	protected void drawVehicleShape(Graphics g, Color color) {
+		Graphics2D g2d = (Graphics2D) g.create();
+
+		g2d.setColor(color);
+		g2d.draw(getVehicleShape());
+		g2d.fill(getVehicleShape());
+
+	}
+
+	private void setVehicleBounds(Shape bounds) {
+
+		vehicleBounds = new Area(bounds);
+	}
+
+	public Area getVehicleBounds() {
+
+		return vehicleBounds;
+
 	}
 
 }

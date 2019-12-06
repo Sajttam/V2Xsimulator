@@ -1,5 +1,6 @@
 package entities;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
@@ -133,8 +134,13 @@ public abstract class Entity implements Comparable<Object> {
 	 * @param g2d, a Graphics2D object for animation and tileset.
 	 */
 	public void drawCollisionBounds(Graphics2D g2d) {
-		g2d.drawRect((int) getCollisionBounds().getX(), (int) getCollisionBounds().getY(),
-				(int) getCollisionBounds().getWidth(), (int) getCollisionBounds().getHeight());
+		if (this instanceof EntityVehicle) {
+			g2d.draw(((EntityVehicle) this).getVehicleBounds());
+			g2d.setColor(Color.ORANGE);
+		} else {
+			g2d.drawRect((int) getCollisionBounds().getX(), (int) getCollisionBounds().getY(),
+					(int) getCollisionBounds().getWidth(), (int) getCollisionBounds().getHeight());
+		}
 	}
 
 	/**

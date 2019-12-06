@@ -8,6 +8,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -19,8 +20,6 @@ import javax.swing.JOptionPane;
 import entities.Collidable;
 import entities.Entity;
 import entities.EntityMouseListener;
-import entities.EntityRSUBoundaries;
-import entities.EntityTrafficLight;
 import mapModels.mapBeta;
 import models.SharedValues;
 import view.GuiPanel;
@@ -63,8 +62,8 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	public Controller(GuiPanel guiPanel) {
 		this.guiPanel = guiPanel;
 
-		GLOBAL.setBicycleCounter(6);
-		GLOBAL.setCarCounter(6);
+		GLOBAL.setBicycleCounter(4);
+		GLOBAL.setCarCounter(16);
 		GLOBAL.setServerPort(1000);
 		GLOBAL.setTimeOutValue(16.6667);
 		GLOBAL.setSMARTCAR_CHANCE(0);
@@ -156,7 +155,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 
 	public Entity getEntityAtPosition(int x, int y) {
 		for (Entity entity : instances) {
-			Rectangle entityBounds = entity.getCollisionBounds();
+			Rectangle2D entityBounds = entity.getCollisionBounds();
 			if (entityBounds.contains(x, y))
 				return entity;
 		}
@@ -165,11 +164,9 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 
 	public List<Entity> getEntitiesInsideArea(Polygon area) {
 		List<Entity> entities = new ArrayList<Entity>();
-		Rectangle polygonBounds = area.getBounds();
-		// double ploygonDistOrigo = Math.sqrt(x*x+y*y);
 
 		for (Entity entity : instances) {
-			Rectangle entityBounds = entity.getCollisionBounds();
+			Rectangle2D entityBounds = entity.getCollisionBounds();
 
 			if (area.intersects(entityBounds)) {
 				entities.add(entity);

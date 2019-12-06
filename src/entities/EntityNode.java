@@ -258,12 +258,12 @@ public class EntityNode extends Entity {
 
 	@Override
 	public int getWidth() {
-		return SharedValues.getInstance().getNodeWidth();
+		return (int) SharedValues.getInstance().getNodeWidth();
 	}
 
 	@Override
 	public int getHeight() {
-		return SharedValues.getInstance().getNodeHeight();
+		return (int) SharedValues.getInstance().getNodeHeight();
 	}
 
 }

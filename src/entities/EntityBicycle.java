@@ -12,16 +12,25 @@ public class EntityBicycle extends EntityVehicle {
 		super(road, listener);
 		setSpeed(SharedValues.getInstance().getMaxSpeed(this));
 		setCollisionBounds(12, 12);
-		setCollisionBounds(getCollisionBounds(), -6, -6);
+		setCollisionBounds((getCollisionBounds()), -6, -6);
+		setVehicleShape(scaling.getPixelsFromMeter(0.5), scaling.getPixelsFromMeter(2));
 		super.castPropertyChange(entitytype);
+
+	}
+
+	@Override
+	public void step() {
+		super.step();
+
+		setVehicleShape(scaling.getPixelsFromMeter(0.5), scaling.getPixelsFromMeter(2));
 
 	}
 
 	@Override
 	public void draw(Graphics g) {
 		super.draw(g);
-		g.setColor(Color.ORANGE);
-		g.fillOval((int) getXPosition() - 6, (int) getYPosition() - 6, 12, 12);
+		drawVehicleShape(g, Color.ORANGE);
+
 	}
 	
 	@Override

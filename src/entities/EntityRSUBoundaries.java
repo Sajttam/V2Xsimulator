@@ -8,28 +8,31 @@ import models.SharedValues;
 
 public class EntityRSUBoundaries extends Entity {
 
-	private int height = SharedValues.getInstance().getRsuHeight();
-	private int width = SharedValues.getInstance().getRsuWidth();
-	private int xPos;
-	private int yPos;
-	int rsuXOffset = (SharedValues.getInstance().getRsuWidth() - SharedValues.getInstance().getNodeWidth()) / 2;
-	int rsuYOffset = (SharedValues.getInstance().getRsuHeight() - SharedValues.getInstance().getNodeHeight()) / 2;
+	private double height = SharedValues.getInstance().getRsuHeight();
+	private double width = SharedValues.getInstance().getRsuWidth();
+	private double xPos;
+	private double yPos;
+	double rsuXOffset = (SharedValues.getInstance().getRsuWidth() - SharedValues.getInstance().getNodeWidth()) / 2;
+	double rsuYOffset = (SharedValues.getInstance().getRsuHeight() - SharedValues.getInstance().getNodeHeight()) / 2;
 
 	public EntityRSUBoundaries(int xPos, int yPos) {
 		this.xPos = xPos - rsuXOffset;
 		this.yPos = yPos - rsuYOffset;
-		setCollisionBounds(width, height);
-		setCollisionBounds(getCollisionBounds(), this.xPos, this.yPos);
+
+		setCollisionBounds((int) width, (int) height);
+		setCollisionBounds(((Rectangle) getCollisionBounds()), (int) this.xPos, (int) this.yPos);
+
+
 	}
 
 	@Override
 	public void draw(Graphics g) {
 		g.setColor(new Color(255, 255, 255, 100));
-		g.fillRect(xPos, yPos, width, height);
+		g.fillRect((int)xPos,(int) yPos,(int) width,(int) height);
 	}
 
 	public boolean tryConnect(Entity vehicle) {
-		Rectangle vehicleBounds = vehicle.getCollisionBounds();
+		Rectangle vehicleBounds = (Rectangle) vehicle.getCollisionBounds();
 		return this.getCollisionBounds().intersects(vehicleBounds);
 	}
 
