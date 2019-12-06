@@ -46,7 +46,7 @@ public class FunctionHandler extends Thread {
 			socket = new DatagramSocket();
 			socket.connect(InetAddress.getByName("localhost"), port);
 
-			Point newPosition = k.getValue().getPositionAfterSteps(15); // position of the car in n number of steps
+			Point newPosition = k.getValue().getPositionAfterSteps(7); // position of the car in n number of steps
 			Set<EntityBikeDetector> bdSet = server.getBikeDetectors();
 			for (EntityBikeDetector bikeDetector : bdSet) {
 				

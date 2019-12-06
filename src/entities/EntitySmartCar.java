@@ -33,6 +33,9 @@ public class EntitySmartCar extends EntityCar {
 	private Thread listenerThread;
 	private boolean connected;
 	private DatagramPacket receivePacket;
+	private Color smartCarColor = Color.BLUE;
+	private static final int COLOR_CHANGE_WAIT_TIME = 120;
+	private int colorWaitCounter = 0;
 
 	/**
 	 * Instantiates a new entity smart car.
@@ -75,6 +78,7 @@ public class EntitySmartCar extends EntityCar {
 							break;
 						case STOP:
 							setSTOP(true);
+							colorWaitCounter = COLOR_CHANGE_WAIT_TIME;
 							break;
 						default:
 							setSTOP(false);
@@ -116,7 +120,7 @@ public class EntitySmartCar extends EntityCar {
 	 */
 	@Override
 	public void step() {
-
+        
 		if (tempWait <= 0) {
 			try {
 
@@ -144,6 +148,15 @@ public class EntitySmartCar extends EntityCar {
 		super.step();
 
 	}
+	
+	private Color getSmartCarColor() {
+		if(colorWaitCounter <= 0) {
+			return Color.BLUE;
+		}else {
+			colorWaitCounter--;
+			return Color.PINK;
+		}
+	}
 
 	/*
 	 * Sets the smart car to be blue.
@@ -151,7 +164,7 @@ public class EntitySmartCar extends EntityCar {
 	@Override
 	public void draw(Graphics g) {
 		super.draw(g);
-		drawVehicleShape(g, Color.blue);
+		drawVehicleShape(g, getSmartCarColor());
 
 	}
 
