@@ -22,9 +22,9 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	private double vSpeed = 0;
 	private PropertyChangeSupport propertyChangeSupportCounter;
 	private Polygon visionArea;
-	
-	private double crossing_velocity_modifier = 0.1; // fraction of max velocity when turning
-	
+
+	private double crossing_velocity_modifier = 0.4; // fraction of max velocity when turning
+
 	private boolean turningLeft;
 	private boolean turningRight;
 
@@ -123,27 +123,29 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		// (int)(24*Math.sin(angle)+getYPosition()));
 		entitiesInSight = getEntitiesInsideArea(visionArea);
 		entitiesInSight.remove(this);
-		
-		if(road.straight) {			
-			modifySpeed(SharedValues.getInstance().getMaxSpeed(this));
-		}else {modifySpeed((SharedValues.getInstance().getMaxSpeed(this))*crossing_velocity_modifier);
+
+		if (road.straight) {
+			modifySpeed(road.getSpeedLimit());
+		} else {
+			modifySpeed(road.getSpeedLimit() * crossing_velocity_modifier);
 		}
-		//setSpeed(SharedValues.getInstance().getMaxSpeed(this));
 		
+		// setSpeed(SharedValues.getInstance().getMaxSpeed(this));
+
 		for (Entity e : entitiesInSight) {
 			if (e instanceof EntityVehicle) {
 				int v = entityRelation(e);
 				if ((!road.straight && e instanceof EntityBicycle) || (!road.straight && v == 1) || road.leftCurve
 						|| (road.straight && v == 0)) {
 					stopping();
-					//setSpeed(0);
+					// setSpeed(0);
 				}
 			}
 			if (e instanceof EntityTrafficLight) {
 				EntityTrafficLight trafficLight = (EntityTrafficLight) e;
 				if (entityRelation(trafficLight) == 0) {
 					stopping();
-					//setSpeed(0);
+					// setSpeed(0);
 				}
 			}
 		}
@@ -167,35 +169,39 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		move(hSpeed, vSpeed);
 
 	}
+
 	// accelerate up to targetspeed
-	private void modifySpeed (double target) {	
-		if(this.speed < target) {
-			setSpeed(this.speed += 0.015);
-			if(this.speed > target) {setSpeed(target);}
-		}else if(this.speed > target) {
-			setSpeed(this.speed -= 0.06);
-			if(this.speed < target) {setSpeed(target);}
+	private void modifySpeed(double targetVelocity) {
+		double accelartion = 0.015;	
+		double decelartion = 0.06;	
+		
+		if (this.speed < targetVelocity) {
+			setSpeed(this.speed += accelartion);
+			if (this.speed > targetVelocity) {
+				setSpeed(targetVelocity);
+			}
+		} else if (this.speed > targetVelocity) {
+			setSpeed(this.speed -= decelartion);
+			if (this.speed < targetVelocity) {
+				setSpeed(targetVelocity);
+			}
 		}
 	}
+
 	// break until complete stop or no obstacle is present
 	private void stopping() {
-		if(this.speed > 0) {
+		if (this.speed > 0) {
 			setSpeed(this.speed -= 0.08);
-			if(this.speed < 0) {setSpeed(0);}
+			if (this.speed < 0) {
+				setSpeed(0);
+			}
 		}
 	}
-	//decelerate until targetspeed i reached
-	private void decelerate(double target) {
-		if(this.speed > target) {
-			setSpeed(this.speed -= 0.06);
-			if(this.speed < 0) {setSpeed(0);}
-		}
-	}
-		
+
 	public void castPropertyChange(String eventname) {
 		propertyChangeSupportCounter.firePropertyChange(eventname, null, 1);
 	}
-	
+
 	@Override
 	public void draw(Graphics g) {
 		// g.setColor(Color.YELLOW);

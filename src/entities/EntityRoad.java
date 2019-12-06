@@ -20,7 +20,8 @@ public class EntityRoad extends Entity {
 	protected double angle = 0;
 	private double distX = 0;
 	private double distY = 0;
-	private Boolean spawning;	
+	private Boolean spawning;
+	private double speedLimit = 2;
 
 	public boolean straight = true;
 	public boolean leftCurve = false;
@@ -30,6 +31,18 @@ public class EntityRoad extends Entity {
 		this.exitNode = exitNode;
 		this.roadType = roadType;
 		this.spawning = spawning;
+		
+		switch (roadType) {
+		case BICYCLE:
+			setSpeedLimit(0.75);
+			break;
+		case CAR:
+			setSpeedLimit(2);
+			break;
+		default:
+			setSpeedLimit(2);
+			break;
+		}
 	}
 
 	public void setPosition(double x1, double y1, double nextX2, double nextY2) {
@@ -150,5 +163,13 @@ public class EntityRoad extends Entity {
 		StringBuilder s = new StringBuilder();
 		s.append("EntityRoad: " + "x1:" + getXPosition() + " y1:" + getYPosition() + " x2:" + x2 + " y2:" + y2);
 		return s.toString();
+	}
+
+	public double getSpeedLimit() {
+		return speedLimit;
+	}
+
+	public void setSpeedLimit(double speedLimit) {
+		this.speedLimit = speedLimit;
 	}
 }
