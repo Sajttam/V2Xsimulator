@@ -22,7 +22,9 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	private double vSpeed = 0;
 	private PropertyChangeSupport propertyChangeSupportCounter;
 	private Polygon visionArea;
-
+	
+	private double crossing_velocity_modifier = 0.1; // fraction of max velocity when turning
+	
 	private boolean turningLeft;
 	private boolean turningRight;
 
@@ -124,7 +126,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		
 		if(road.straight) {			
 			modifySpeed(SharedValues.getInstance().getMaxSpeed(this));
-		}else {modifySpeed((SharedValues.getInstance().getMaxSpeed(this))/2);
+		}else {modifySpeed((SharedValues.getInstance().getMaxSpeed(this))*crossing_velocity_modifier);
 		}
 		//setSpeed(SharedValues.getInstance().getMaxSpeed(this));
 		
