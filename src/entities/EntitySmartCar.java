@@ -25,7 +25,7 @@ public class EntitySmartCar extends EntityCar {
 
 	DatagramSocket senderSocket;
 	DatagramSocket listenerSocket;
-	static int serverInterval = 60;
+	static int serverInterval = 10;
 	int tempWait = serverInterval;
 	private ConnectionUDP connectionUDP;
 	private byte[] buf = new byte[256];
@@ -64,12 +64,12 @@ public class EntitySmartCar extends EntityCar {
 				try {
 					while (true) {
 						receivePacket = new DatagramPacket(buf, buf.length);
-						//System.out.println("TEST!");
+						// System.out.println("TEST!");
 						listenerSocket.receive(receivePacket);
-						//System.out.println("Recived");
+						// System.out.println("Recived");
 						V2XCommand command = connectionUDP.receiveCommand(receivePacket);
 
-						switch(command.getCommand()) {
+						switch (command.getCommand()) {
 						case DRIVE:
 							setSTOP(false);
 							break;
@@ -79,13 +79,14 @@ public class EntitySmartCar extends EntityCar {
 						default:
 							setSTOP(false);
 							break;
-						
+
 						}
 					}
 
 				} catch (IOException | ClassNotFoundException e) {
-					if (!(e.getClass().toString().equals("class java.net.SocketException"))) // Hides socket closed exception, 																	
-						e.printStackTrace();												// due to closing a socket that is currently listening results in exception
+					if (!(e.getClass().toString().equals("class java.net.SocketException"))) // Hides socket closed
+																								// exception,
+						e.printStackTrace(); // due to closing a socket that is currently listening results in exception
 				} // Wait for package
 
 			}
@@ -115,7 +116,7 @@ public class EntitySmartCar extends EntityCar {
 	 */
 	@Override
 	public void step() {
-		
+
 		if (tempWait <= 0) {
 			try {
 
@@ -155,8 +156,8 @@ public class EntitySmartCar extends EntityCar {
 	}
 
 	@Override
-	public void collision(Entity other) {		
-		super.collision(other);		
+	public void collision(Entity other) {
+		super.collision(other);
 		if (other instanceof EntityVehicle) {
 			listenerSocket.close();
 			listenerThread.interrupt();

@@ -18,7 +18,7 @@ public class mapBeta implements SimulationMap {
 	@Override
 	public List<Entity> getMap(Controller controller) {
 		List<Entity> list = new ArrayList<Entity>();
-		
+
 		controller.createInstance(new MouseObserver());
 
 		EntityNode nodeWest = new EntityNode(64, 472);
@@ -31,14 +31,17 @@ public class mapBeta implements SimulationMap {
 		RSUServerUDP serverNorth = new RSUServerUDP(SharedValues.getInstance().getServerPortNumber(),
 				(int) nodeNorth.getXPosition(), (int) nodeNorth.getYPosition());
 		(new Thread(serverNorth)).start();
-		
-		EntityBikeDetector bikeDetectorCenterTopRight = new EntityBikeDetector(529, 471, 85, 30);
-		controller.createInstance(bikeDetectorCenterTopRight);
-		
+
 		RSUServerUDP serverCenter = new RSUServerUDP(SharedValues.getInstance().getServerPortNumber(),
 				(int) nodeCenter.getXPosition(), (int) nodeCenter.getYPosition());
 		(new Thread(serverCenter)).start();
-		
+
+		EntityBikeDetector bikeDetectorCenterTopRight = new EntityBikeDetector(450, 471, 75, 30);
+		controller.createInstance(bikeDetectorCenterTopRight);
+		EntityBikeDetector bikeDetectorCenterNorthBottomLeft = new EntityBikeDetector(370, 180, 75, 30);
+		controller.createInstance(bikeDetectorCenterNorthBottomLeft);
+
+		serverNorth.addBikeDetector(bikeDetectorCenterNorthBottomLeft);
 		serverCenter.addBikeDetector(bikeDetectorCenterTopRight);
 
 		// Create simulation instances
@@ -48,7 +51,7 @@ public class mapBeta implements SimulationMap {
 		controller.createInstance(nodeCenter);
 		controller.createInstance(nodeNorthWest);
 		controller.createInstance(nodeNorthEast);
-		
+
 		controller.createInstance(serverNorth.getRSUBoundaries());
 		controller.createInstance(serverCenter.getRSUBoundaries());
 

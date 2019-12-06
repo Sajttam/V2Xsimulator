@@ -48,7 +48,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 		int centerX = (int) (getXPosition());
 		int centerY = (int) (getYPosition());
-		double radius = 42;
+		double radius = scaling.getPixelsFromMeter(10);
 		double visionAngle = Math.PI / 180.0 * 55;
 		double angleLeft = getAngle() - visionAngle;
 		double angleRight = getAngle() + visionAngle;
