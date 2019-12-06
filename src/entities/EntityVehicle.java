@@ -172,16 +172,16 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	// accelerate up to targetspeed
 	private void modifySpeed(double targetVelocity) {
-		double accelartion = 0.015;	
-		double decelartion = 0.06;	
+		double acceleration = 0.015;	
+		double deceleration = 0.06;	
 		
 		if (this.speed < targetVelocity) {
-			setSpeed(this.speed += accelartion);
+			setSpeed(this.speed += acceleration);
 			if (this.speed > targetVelocity) {
 				setSpeed(targetVelocity);
 			}
 		} else if (this.speed > targetVelocity) {
-			setSpeed(this.speed -= decelartion);
+			setSpeed(this.speed -= deceleration);
 			if (this.speed < targetVelocity) {
 				setSpeed(targetVelocity);
 			}
@@ -190,8 +190,9 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	// break until complete stop or no obstacle is present
 	private void stopping() {
+		double deceleration = 0.08;
 		if (this.speed > 0) {
-			setSpeed(this.speed -= 0.08);
+			setSpeed(this.speed -= deceleration);
 			if (this.speed < 0) {
 				setSpeed(0);
 			}
