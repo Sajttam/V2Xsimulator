@@ -1,13 +1,13 @@
 package controller;
 
 import java.awt.Polygon;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -20,7 +20,6 @@ import javax.swing.JOptionPane;
 import entities.Collidable;
 import entities.Entity;
 import entities.EntityMouseListener;
-import entities.EntityVehicle;
 import mapModels.mapBeta;
 import models.SharedValues;
 import view.GuiPanel;
@@ -63,8 +62,8 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	public Controller(GuiPanel guiPanel) {
 		this.guiPanel = guiPanel;
 
-		GLOBAL.setBicycleCounter(8);
-		GLOBAL.setCarCounter(8);
+		GLOBAL.setBicycleCounter(0);
+		GLOBAL.setCarCounter(16);
 		GLOBAL.setServerPort(1000);
 		GLOBAL.setTimeOutValue(16.6667);
 		GLOBAL.setSMARTCAR_CHANCE(0.5);
@@ -140,23 +139,13 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	 * @param entity The Entity that collisions are tested for.
 	 */
 	public synchronized void collisionChecking(Entity entity) {
-		Area entityBounds = ((EntityVehicle) entity).getVehicleBounds();
-
 		for (Entity other : instances) {
-			if (entity != other && entity instanceof EntityVehicle && other instanceof EntityVehicle) {
-				Area otherBounds = ((EntityVehicle) other).getVehicleBounds();
-
-				if (entityBounds != null && otherBounds != null) {
-
-					if (otherBounds.getBounds().intersects(entityBounds.getBounds())) {
-
-						otherBounds.intersect(entityBounds);
-
-						if (!otherBounds.isEmpty()) {
-
-							((Collidable) entity).collision(other);
-
-						}
+			if (entity != other && entity instanceof Collidable) {
+				Rectangle entityBounds = entity.getCollisionBounds();
+				Rectangle otherBounds = other.getCollisionBounds();
+				if (entityBounds.intersects(otherBounds)) {
+					if (other instanceof Collidable) {
+						((Collidable) entity).collision(other);
 					}
 				}
 			}
@@ -174,8 +163,6 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 
 	public List<Entity> getEntitiesInsideArea(Polygon area) {
 		List<Entity> entities = new ArrayList<Entity>();
-		Rectangle2D polygonBounds = area.getBounds();
-		// double ploygonDistOrigo = Math.sqrt(x*x+y*y);
 
 		for (Entity entity : instances) {
 			Rectangle2D entityBounds = entity.getCollisionBounds();
