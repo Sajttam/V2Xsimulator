@@ -23,7 +23,16 @@ public class EntityCar extends EntityVehicle {
 		setSpeed(SharedValues.getInstance().getMaxSpeed(this));
 		setCollisionBounds(16, 16);
 		setCollisionBounds(getCollisionBounds(), -8, -8);
+		setVehicleShape(width, length);
 		super.castPropertyChange(entity);
+
+	}
+
+	@Override
+	public void step() {
+		super.step();
+
+		setVehicleShape(width, length);
 
 	}
 
@@ -31,7 +40,7 @@ public class EntityCar extends EntityVehicle {
 	public void draw(Graphics g) {
 		super.draw(g);
 
-		drawVehicle(Color.green, g, width, length);
+		drawVehicleShape(g, Color.green);
 
 	}
 

@@ -31,6 +31,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	private Polygon visionArea;
 	protected SIScaling scaling = new SIScaling();
 	private Area vehicleBounds;
+	private Shape vehicleShape;
 
 	private boolean turningLeft;
 	private boolean turningRight;
@@ -130,35 +131,25 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		// (int)(24*Math.sin(angle)+getYPosition()));
 		entitiesInSight = getEntitiesInsideArea(visionArea);
 		entitiesInSight.remove(this);
+		double tempSpeed;
 
-		setSpeed(SharedValues.getInstance().getMaxSpeed(this));
+		tempSpeed = SharedValues.getInstance().getMaxSpeed(this);
 
 		for (Entity otherEntity : entitiesInSight) {
 
 			if (otherEntity instanceof EntityVehicle) {
 				int v;
 
-				try {
-					Area otherBounds = ((EntityVehicle) otherEntity).getVehicleBounds();
-					Area vArea = new Area(visionArea);
-					otherBounds.intersect(vArea);
-					if (!otherBounds.isEmpty()) {
-						v = entityRelation(otherEntity);
-						if ((!road.straight && otherEntity instanceof EntityBicycle) || (!road.straight && v == 1)
-								|| (road.straight && v == 0)) {
-							setSpeed(0);
-
-						}
-					}
-
-				} catch (NullPointerException e) {
-					// Ignores when the more exact bounds aren't set yet
+				Area otherBounds = ((EntityVehicle) otherEntity).getVehicleBounds();
+				Area vArea = new Area(visionArea);
+				otherBounds.intersect(vArea);
+				if (!otherBounds.isEmpty()) {
 					v = entityRelation(otherEntity);
 					if ((!road.straight && otherEntity instanceof EntityBicycle) || (!road.straight && v == 1)
 							|| (road.straight && v == 0)) {
-						setSpeed(0);
-					}
+						tempSpeed = 0;
 
+					}
 				}
 
 			}
@@ -168,7 +159,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 				Rectangle thisBounds = this.getCollisionBounds();
 
 				if (entityRelation(trafficLight) == 0 && road.straight && !(tLightBounds.intersects(thisBounds))) {
-					setSpeed(0);
+					tempSpeed = 0;
 
 				}
 
@@ -187,6 +178,8 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 			}
 		}
+
+		setSpeed(tempSpeed);
 
 		hSpeed = speed * Math.cos(angle);
 		vSpeed = speed * Math.sin(angle);
@@ -301,13 +294,11 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	}
 
 	public Shape getVehicleShape() {
-		return vehicleBounds;
+		return vehicleShape;
 
 	}
 
-	protected void drawVehicle(Color color, Graphics g, double width, double length) {
-
-		Graphics2D g2d = (Graphics2D) g.create();
+	protected void setVehicleShape(double width, double length) {
 
 		Rectangle2D rNormal;
 		Shape rRotated;
@@ -324,15 +315,20 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		at.rotate(getAngle(), pointX, pointY);
 		rRotated = at.createTransformedShape(rNormal);
 
-		g2d.setColor(color);
-		g2d.draw(rRotated);
-		g2d.fill(rRotated);
-
 		setVehicleBounds(rRotated);
-		if (rRotated.getBounds() != null) {
-			setCollisionBounds(rRotated.getBounds(), (int) -(rRotated.getBounds().getWidth() / 2),
-					(int) -rRotated.getBounds().getHeight() / 2);
-		}
+		setCollisionBounds(rRotated.getBounds(), (int) -(rRotated.getBounds().getWidth() / 2),
+				(int) -rRotated.getBounds().getHeight() / 2);
+
+		vehicleShape = rRotated;
+
+	}
+
+	protected void drawVehicleShape(Graphics g, Color color) {
+		Graphics2D g2d = (Graphics2D) g.create();
+
+		g2d.setColor(color);
+		g2d.draw(getVehicleShape());
+		g2d.fill(getVehicleShape());
 
 	}
 
