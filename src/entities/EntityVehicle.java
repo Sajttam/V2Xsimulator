@@ -32,6 +32,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	protected SIScaling scaling = new SIScaling();
 	private Area vehicleBounds;
 	private Shape vehicleShape;
+	private boolean STOP = false;
 
 	private double crossing_velocity_modifier = 0.4; // fraction of max velocity when turning
 
@@ -127,13 +128,11 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	@Override
 	public void step() {
-
 		// Entity inSight =
 		// getEntityAtPosition((int)(24*Math.cos(angle)+getXPosition()),
 		// (int)(24*Math.sin(angle)+getYPosition()));
 		entitiesInSight = getEntitiesInsideArea(visionArea);
 		entitiesInSight.remove(this);
-		double tempSpeed;
 
 		if (road.straight) {
 			modifySpeed(road.getSpeedLimit());
@@ -184,6 +183,10 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 				setRoad(nextRoad);
 
 			}
+		}
+		
+		if(STOP) {
+			stopping();
 		}
 
 		
@@ -318,6 +321,14 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	public EntityRoad getRoad() {
 		return road;
+	}
+	
+	public boolean getSTOP() {
+		return STOP;
+	}
+	
+	public void setSTOP(boolean STOP) {
+		this.STOP = STOP;
 	}
 
 	@Override

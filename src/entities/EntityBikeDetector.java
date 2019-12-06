@@ -20,10 +20,7 @@ public class EntityBikeDetector extends Entity implements Collidable {
 	Set<EntityBicycle> remove = new TreeSet<EntityBicycle>();;
 	@Override
 	public void step() {
-		for (EntityBicycle b : bicycles) {
-			if (!b.getCollisionBounds().intersects(getCollisionBounds())) 
-				bicycles.remove(b);
-		}
+		bicycles.clear();
 	}
 	
 	public Set<EntityBicycle> getBicycles() {

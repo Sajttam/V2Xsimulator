@@ -15,11 +15,12 @@ import controller.Controller;
 import entities.EntityBikeDetector;
 import models.CarData;
 import models.V2XCommand;
+import models.V2XCommand.Commands;
 import models.V2XMessage;
 
 public class FunctionHandler extends Thread {
 
-	public static final int SAVING_STEPS = 2000;
+	public static final int SAVING_STEPS = 200;
 
 	private Map<Integer, CarData> carLogs = new ConcurrentHashMap<Integer, CarData>();
 	private RSUServerUDP server;
@@ -45,12 +46,17 @@ public class FunctionHandler extends Thread {
 			socket = new DatagramSocket();
 			socket.connect(InetAddress.getByName("localhost"), port);
 
-			Point newPosition = k.getValue().getPositionAfterSteps(5); // position of the car in n number of steps
+			Point newPosition = k.getValue().getPositionAfterSteps(15); // position of the car in n number of steps
 			Set<EntityBikeDetector> bdSet = server.getBikeDetectors();
 			for (EntityBikeDetector bikeDetector : bdSet) {
+				
 				if (bikeDetector.getCollisionBounds().contains(newPosition)) {
+					if(!bikeDetector.getBicycles().isEmpty()) {
 					System.out.println("HELLO!!! port:" + port + " " + k.getValue().getNewMessage().getListenerPort());
-					server.sendCommand(socket, new V2XCommand()); // Send stop message
+					server.sendCommand(socket, new V2XCommand(Commands.STOP));
+					}// Send stop message
+				}else {
+					server.sendCommand(socket, new V2XCommand(Commands.DRIVE));
 				}
 			}
 		}

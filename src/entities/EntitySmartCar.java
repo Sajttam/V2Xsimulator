@@ -28,7 +28,6 @@ public class EntitySmartCar extends EntityCar {
 	static int serverInterval = 60;
 	int tempWait = serverInterval;
 	private ConnectionUDP connectionUDP;
-	private boolean stop;
 	private byte[] buf = new byte[256];
 	private int listenerPort;
 	private Thread listenerThread;
@@ -70,15 +69,23 @@ public class EntitySmartCar extends EntityCar {
 						//System.out.println("Recived");
 						V2XCommand command = connectionUDP.receiveCommand(receivePacket);
 
-						if (command.getCommand().equals(V2XCommand.Commands.STOP)) {
-							System.out.println("STOP");
-							stop = true;
+						switch(command.getCommand()) {
+						case DRIVE:
+							setSTOP(false);
+							break;
+						case STOP:
+							setSTOP(true);
+							break;
+						default:
+							setSTOP(false);
+							break;
+						
 						}
 					}
 
 				} catch (IOException | ClassNotFoundException e) {
-					//if (!(e.getClass().toString().equals("class java.net.SocketException")))
-						e.printStackTrace();
+					if (!(e.getClass().toString().equals("class java.net.SocketException"))) // Hides socket closed exception, 																	
+						e.printStackTrace();												// due to closing a socket that is currently listening results in exception
 				} // Wait for package
 
 			}
@@ -108,8 +115,7 @@ public class EntitySmartCar extends EntityCar {
 	 */
 	@Override
 	public void step() {
-		super.step();
-
+		
 		if (tempWait <= 0) {
 			try {
 
@@ -134,10 +140,8 @@ public class EntitySmartCar extends EntityCar {
 		} else {
 			tempWait--;
 		}
+		super.step();
 
-		if (stop) {
-			setSpeed(0);
-		}
 	}
 
 	/*
