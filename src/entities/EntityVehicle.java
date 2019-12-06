@@ -16,7 +16,6 @@ import java.util.List;
 
 import controller.StatsController.EventType;
 import models.SIScaling;
-import models.SharedValues;
 
 public class EntityVehicle extends Entity implements Collidable, EntityMouseListener {
 
@@ -139,7 +138,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		} else {
 			modifySpeed(road.getSpeedLimit() * crossing_velocity_modifier);
 		}
-		
+
 		// setSpeed(SharedValues.getInstance().getMaxSpeed(this));
 
 		for (Entity otherEntity : entitiesInSight) {
@@ -184,12 +183,11 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 			}
 		}
-		
-		if(STOP) {
+
+		if (STOP) {
 			stopping();
 		}
 
-		
 		hSpeed = speed * Math.cos(angle);
 		vSpeed = speed * Math.sin(angle);
 
@@ -199,9 +197,9 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	// accelerate up to targetspeed
 	private void modifySpeed(double targetVelocity) {
-		double acceleration = 0.015;	
-		double deceleration = 0.06;	
-		
+		double acceleration = 0.015;
+		double deceleration = 0.06;
+
 		if (this.speed < targetVelocity) {
 			setSpeed(this.speed += acceleration);
 			if (this.speed > targetVelocity) {
@@ -246,14 +244,15 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	@Override
 	public void collision(Entity other) {
 
-		Area otherBounds = ((EntityVehicle) other).getVehicleBounds();
+		if (other instanceof EntityVehicle) {
 
-		// Checks if inner, more precise bounds intersect
-		otherBounds.intersect(this.getVehicleBounds());
+			Area otherBounds = ((EntityVehicle) other).getVehicleBounds();
 
-		if (!otherBounds.isEmpty()) {
+			// Checks if inner, more precise bounds intersect
+			otherBounds.intersect(this.getVehicleBounds());
 
-			if (other instanceof EntityVehicle) {
+			if (!otherBounds.isEmpty()) {
+
 				if (this instanceof EntitySmartCar && other instanceof EntityBicycle) {
 					castPropertyChange(EventType.SMARTCAR2BICYCLE.getEventType());
 				} else if (this instanceof EntitySmartCar && other instanceof EntitySmartCar) {
@@ -322,11 +321,11 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	public EntityRoad getRoad() {
 		return road;
 	}
-	
+
 	public boolean getSTOP() {
 		return STOP;
 	}
-	
+
 	public void setSTOP(boolean STOP) {
 		this.STOP = STOP;
 	}

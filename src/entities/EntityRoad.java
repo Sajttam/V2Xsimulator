@@ -5,6 +5,7 @@ import java.awt.Graphics;
 
 import controller.Controller;
 import controller.StatsController;
+import models.SIScaling;
 import models.SharedValues;
 
 public class EntityRoad extends Entity {
@@ -22,6 +23,7 @@ public class EntityRoad extends Entity {
 	private double distY = 0;
 	private Boolean spawning;
 	private double speedLimit = 2;
+	private SIScaling scaler = new SIScaling();
 
 	public boolean straight = true;
 	public boolean leftCurve = false;
@@ -31,16 +33,16 @@ public class EntityRoad extends Entity {
 		this.exitNode = exitNode;
 		this.roadType = roadType;
 		this.spawning = spawning;
-		
+
 		switch (roadType) {
 		case BICYCLE:
-			setSpeedLimit(0.75);
+			setSpeedLimit(scaler.kphToPixelsPerStep(20));
 			break;
 		case CAR:
-			setSpeedLimit(2);
+			setSpeedLimit(scaler.kphToPixelsPerStep(60));
 			break;
 		default:
-			setSpeedLimit(2);
+			setSpeedLimit(scaler.kphToPixelsPerStep(60));
 			break;
 		}
 	}
@@ -79,7 +81,7 @@ public class EntityRoad extends Entity {
 			if (wait == 0) {
 				if (roadType == RoadType.BICYCLE) {
 					if (SharedValues.getInstance().getBicycleCounter() > 0) {
-						instanceCreate(new EntityBicycle(this, StatsController.getInstance(),"Bicycle"));
+						instanceCreate(new EntityBicycle(this, StatsController.getInstance(), "Bicycle"));
 						SharedValues.getInstance().decrementBicycleCounter();
 					}
 				} else {
@@ -87,9 +89,9 @@ public class EntityRoad extends Entity {
 
 						boolean smartVehicle = Math.random() > Controller.GLOBAL.getSMARTCAR_CHANCE() ? true : false;
 						if (smartVehicle) {
-							instanceCreate(new EntitySmartCar(this, StatsController.getInstance(),"Smartcar"));
+							instanceCreate(new EntitySmartCar(this, StatsController.getInstance(), "Smartcar"));
 						} else {
-							instanceCreate(new EntityCar(this, StatsController.getInstance(),"Car"));
+							instanceCreate(new EntityCar(this, StatsController.getInstance(), "Car"));
 						}
 						SharedValues.getInstance().decrementCarCounter();
 					}
@@ -118,7 +120,8 @@ public class EntityRoad extends Entity {
 		g.drawLine((int) getXPosition(), (int) getYPosition(), (int) x2, (int) y2);
 		// g.fillRect(x2,y2-4,8,8);
 		g.setColor(Color.WHITE);
-		// g.drawString((angle*(180.0/Math.PI)) + "�", (int)(getXPosition()+(distX/2)),
+		// g.drawString((angle*(180.0/Math.PI)) + "�",
+		// (int)(getXPosition()+(distX/2)),
 		// (int)(getYPosition()+distY/2));
 
 	}
