@@ -22,6 +22,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	private double vSpeed = 0;
 	private PropertyChangeSupport propertyChangeSupportCounter;
 	private Polygon visionArea;
+	private boolean STOP = false;
 
 	private double crossing_velocity_modifier = 0.4; // fraction of max velocity when turning
 
@@ -117,7 +118,6 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	@Override
 	public void step() {
-
 		// Entity inSight =
 		// getEntityAtPosition((int)(24*Math.cos(angle)+getXPosition()),
 		// (int)(24*Math.sin(angle)+getYPosition()));
@@ -161,6 +161,10 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 				setRoad(nextRoad);
 
 			}
+		}
+		
+		if(STOP) {
+			stopping();
 		}
 
 		hSpeed = speed * Math.cos(angle);
@@ -284,6 +288,14 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	public EntityRoad getRoad() {
 		return road;
+	}
+	
+	public boolean getSTOP() {
+		return STOP;
+	}
+	
+	public void setSTOP(boolean STOP) {
+		this.STOP = STOP;
 	}
 
 	@Override
