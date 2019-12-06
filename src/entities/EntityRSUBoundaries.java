@@ -27,7 +27,7 @@ public class EntityRSUBoundaries extends Entity {
 
 	@Override
 	public void draw(Graphics g) {
-		g.setColor(new Color(255, 255, 255, 100));
+		g.setColor(new Color(255, 255, 255, 50));
 		g.fillRect((int)xPos,(int) yPos,(int) width,(int) height);
 	}
 

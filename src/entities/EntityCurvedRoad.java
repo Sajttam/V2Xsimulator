@@ -174,6 +174,7 @@ public class EntityCurvedRoad extends EntityRoad {
 			newRoad.straight = this.straight;
 			newRoad.leftCurve = this.leftCurve;
 			newRoad.first = this;
+			newRoad.setSpeedLimit(getSpeedLimit());
 
 			getEntryNode().instanceCreate(newRoad);
 

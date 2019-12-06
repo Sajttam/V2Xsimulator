@@ -46,11 +46,13 @@ public class FunctionHandler extends Thread {
 			socket = new DatagramSocket();
 			socket.connect(InetAddress.getByName("localhost"), port);
 
-			Point newPosition = k.getValue().getPositionAfterSteps(7); // position of the car in n number of steps
+			Point newPosition40 = k.getValue().getPositionAfterSteps(40); // position of the car in n number of steps
+			Point newPosition20 = k.getValue().getPositionAfterSteps(20); // position of the car in n number of steps
 			Set<EntityBikeDetector> bdSet = server.getBikeDetectors();
 			for (EntityBikeDetector bikeDetector : bdSet) {
-				
-				if (bikeDetector.getCollisionBounds().contains(newPosition)) {
+				bikeDetector.addCheckedPoint(newPosition40); // DEBUG
+				bikeDetector.addCheckedPoint(newPosition20); // DEBUG
+				if (bikeDetector.getCollisionBounds().contains(newPosition40) || bikeDetector.getCollisionBounds().contains(newPosition20) ) {
 					if(!bikeDetector.getBicycles().isEmpty()) {
 					System.out.println("HELLO!!! port:" + port + " " + k.getValue().getNewMessage().getListenerPort());
 					server.sendCommand(socket, new V2XCommand(Commands.STOP));

@@ -34,7 +34,7 @@ public class EntitySmartCar extends EntityCar {
 	private boolean connected;
 	private DatagramPacket receivePacket;
 	private Color smartCarColor = Color.BLUE;
-	private static final int COLOR_CHANGE_WAIT_TIME = 120;
+	private static final int COLOR_CHANGE_WAIT_TIME = 300;
 	private int colorWaitCounter = 0;
 
 	/**
@@ -74,14 +74,14 @@ public class EntitySmartCar extends EntityCar {
 
 						switch (command.getCommand()) {
 						case DRIVE:
-							setSTOP(false);
+							setRSUStopSignal(false);
 							break;
 						case STOP:
-							setSTOP(true);
+							setRSUStopSignal(true);
 							colorWaitCounter = COLOR_CHANGE_WAIT_TIME;
 							break;
 						default:
-							setSTOP(false);
+							setRSUStopSignal(false);
 							break;
 
 						}

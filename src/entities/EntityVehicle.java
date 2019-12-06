@@ -31,12 +31,9 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	protected SIScaling scaling = new SIScaling();
 	private Area vehicleBounds;
 	private Shape vehicleShape;
-	private boolean STOP = false;
+	private boolean rsuStopSignal = false;
 
-	private double crossing_velocity_modifier = 0.4; // fraction of max velocity when turning
-
-	private boolean turningLeft;
-	private boolean turningRight;
+	public static final double CROSSING_VELOCITY_MODIFIER = 0.6; // fraction of max velocity when turning
 
 	public EntityVehicle(EntityRoad road, PropertyChangeListener listener) {
 		setRoad(road);
@@ -133,11 +130,8 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		entitiesInSight = getEntitiesInsideArea(visionArea);
 		entitiesInSight.remove(this);
 
-		if (road.straight) {
-			modifySpeed(road.getSpeedLimit());
-		} else {
-			modifySpeed(road.getSpeedLimit() * crossing_velocity_modifier);
-		}
+
+		modifySpeed(road.getSpeedLimit());
 
 		// setSpeed(SharedValues.getInstance().getMaxSpeed(this));
 
@@ -184,7 +178,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			}
 		}
 
-		if (STOP) {
+		if (rsuStopSignal) {
 			stopping();
 		}
 
@@ -197,8 +191,8 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	// accelerate up to targetspeed
 	private void modifySpeed(double targetVelocity) {
-		double acceleration = 0.015;
-		double deceleration = 0.06;
+		double acceleration = 0.005;
+		double deceleration = 0.1;
 
 		if (this.speed < targetVelocity) {
 			setSpeed(this.speed += acceleration);
@@ -234,7 +228,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		// g.fillOval((int)(24*Math.cos(angle)+getXPosition())-2,
 		// (int)(24*Math.sin(angle)+getYPosition())-2, 4, 4);
 
-		int alpha = 127; // 50% transparent
+		int alpha = 60; // 50% transparent
 		Color hitBoxYellow = new Color(235, 229, 52, alpha);
 		g.setColor(hitBoxYellow);
 
@@ -322,12 +316,12 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		return road;
 	}
 
-	public boolean getSTOP() {
-		return STOP;
+	public boolean getRSUStopSignal() {
+		return rsuStopSignal;
 	}
 
-	public void setSTOP(boolean STOP) {
-		this.STOP = STOP;
+	public void setRSUStopSignal(boolean signal) {
+		this.rsuStopSignal = signal;
 	}
 
 	@Override

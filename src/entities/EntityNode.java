@@ -8,11 +8,14 @@ import java.util.List;
 import java.util.Map;
 
 import entities.EntityRoad.RoadType;
+import models.SIScaling;
 import models.SharedValues;
 
 public class EntityNode extends Entity {
 
 	private boolean spawning;
+	public static final int MAX_SPEED_CARS = 20;
+	public static final int MAX_SPEED_BIKE = 20;
 
 	public enum Direction {
 		WEST, EAST, NORTH, SOUTH;
@@ -175,9 +178,11 @@ public class EntityNode extends Entity {
 							newRoad.straight = true;
 							newRoad.leftCurve = false;
 						}
-
+						SIScaling scaler = new SIScaling();
+						if (starightRoads)
+							newRoad.setSpeedLimit(scaler.kphToPixelsPerStep(MAX_SPEED_CARS));
 						newRoad.setPosition(r.x2, r.y2, otherRoad.getXPosition(), otherRoad.getYPosition());
-
+						
 						if (roadConnections.containsKey(r)) {
 							RoadPair rp = roadConnections.get(r);
 							rp.setRoad2(newRoad);

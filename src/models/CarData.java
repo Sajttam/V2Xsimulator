@@ -17,10 +17,8 @@ public class CarData  {
 		oldMessage = newMessage;
 		newMessage = message;
 		
-		if (newMessage.getDirection() != 0)
-			setAngularVelocity(oldMessage.getDirection() / newMessage.getDirection());
-		else
-			setAngularVelocity(0);
+		setAngularVelocity((newMessage.getDirection() - oldMessage.getDirection())/ getTimeDiff());
+
 	}
 	
 	/**
@@ -30,10 +28,10 @@ public class CarData  {
 	 */
 	public Point getPositionAfterSteps(int steps) {
 		double angle = newMessage.getDirection() + getAngularVelocity() * steps;
-		double speed = newMessage.getSpeed();
+		double speed = newMessage.getSpeed() + getAcceleration() * steps;
 		double currentX = newMessage.getPosition().getX();
 		double currentY = newMessage.getPosition().getY();		
-		
+		//System.out.println("Angle: " + angle + " Direction "+ newMessage.getDirection() + "AngleV " + getAngularVelocity());
 		double newX = currentX + (steps * speed * Math.cos(angle));
 		double newY = currentY + (steps * speed * Math.sin(angle));
 		
@@ -44,6 +42,18 @@ public class CarData  {
 
 	public double getAngularVelocity() {
 		return angularVelocity;
+	}
+	
+	public double getAcceleration() {
+		double acceleration = (newMessage.getSpeed()-oldMessage.getSpeed())/getTimeDiff();
+		if(acceleration < 0) {
+			acceleration = 0;
+		}
+		return acceleration;
+	}
+	
+	public long getTimeDiff() {
+		return newMessage.getTimeStamp()-oldMessage.getTimeStamp();
 	}
 
 	public void setAngularVelocity(double angularVelocity) {
