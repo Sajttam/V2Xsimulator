@@ -63,7 +63,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		this.guiPanel = guiPanel;
 
 		GLOBAL.setBicycleCounter(0);
-		GLOBAL.setCarCounter(14);
+		GLOBAL.setCarCounter(6);
 		GLOBAL.setServerPort(1000);
 		GLOBAL.setTimeOutValue(16.6667);
 		GLOBAL.setSMARTCAR_CHANCE(0.5);

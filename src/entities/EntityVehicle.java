@@ -18,6 +18,7 @@ import java.util.List;
 
 import controller.StatsController.EventType;
 import models.SIScaling;
+import models.SharedValues;
 
 public class EntityVehicle extends Entity implements Collidable, EntityMouseListener {
 
@@ -35,6 +36,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	private Shape vehicleShape;
 	private boolean STOP = false;
 	private HashMap<Entity, RelationLog> relationLogs = new HashMap<Entity, RelationLog>();
+	private long birthTime = SharedValues.getInstance().getTimeStamp();
 	private int temp = 0;
 
 	private double crossing_velocity_modifier = 0.4; // fraction of max velocity when turning
@@ -52,7 +54,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 		int centerX = (int) (getXPosition());
 		int centerY = (int) (getYPosition());
-		double radius = scaling.getPixelsFromMeter(10);
+		double radius = scaling.getPixelsFromMeter(13);
 		double visionAngle = Math.PI / 180.0 * 55;
 		double angleLeft = getAngle() - visionAngle;
 		double angleRight = getAngle() + visionAngle;
@@ -147,9 +149,10 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	public int entityRelation(Entity e) {
 		double angle1 = getAngle();
 		double angle2 = getAngleBetweenPoints(getXPosition(), getYPosition(), e.getXPosition(), e.getYPosition());
+
 		double angleDiff = (180 / Math.PI) * 40;
 
-		if (angle1 > angle2 - Math.toRadians(5) && angle1 < angle2 + Math.toRadians(1))
+		if (angle1 > angle2 - Math.toRadians(8) && angle1 < angle2 + Math.toRadians(8))
 			return 0;
 		else if ((angle1 - angleDiff) > angle2 || angle2 < angle1)
 			return -1;
@@ -177,7 +180,25 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 		for (Entity otherEntity : entitiesInSight) {
 
-			if (otherEntity instanceof EntityVehicle) {
+			if (otherEntity instanceof EntityRoadReservation && this instanceof EntityCar) {
+
+				if (Math.toDegrees(Math.abs(((EntityRoadReservation) otherEntity).getAngle() - angle)) > 90) {
+
+					if (!((EntityRoadReservation) otherEntity).getReservations().isEmpty() && road.leftCurve) {
+
+						stopping();
+
+					}
+				} else {
+
+					// System.out.println("Adds reservation");
+
+					((EntityRoadReservation) otherEntity).addReservation(this.hashCode());
+
+				}
+			}
+
+			else if (otherEntity instanceof EntityVehicle) {
 				int v;
 
 				Area otherBounds = ((EntityVehicle) otherEntity).getVehicleBounds();
@@ -202,15 +223,13 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 					else if (relationLogs.containsKey(otherEntity)) {
 
 						if (Math.abs(relativeAngle - relationLogs.get(otherEntity).getAngleToVehicle()) < Math
-								.toRadians(2)) {
+								.toRadians(20)) {
 
 							if (relationLogs.get(otherEntity).getDistanceToVehicle() > distance
-									+ scaling.getPixelsFromMeter(0.1)) {
+									+ scaling.getPixelsFromMeter(0.5)) {
 
-								if (v == 0 || v == -1 && !road.straight) {
+								stopping();
 
-									stopping();
-								}
 								// System.out.println("Stopping..." + temp++);
 
 							}
@@ -221,7 +240,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 					relationLogs.put(otherEntity, new RelationLog(relativeAngle, distance));
 
-//					if ((!road.straight && otherEntity instanceof EntityBicycle) || (!road.straight && v == 1)
+//					if ((!road.straight && otherEntity instanceof EntityBicycle) || (!road.straight && v > -1)
 //							|| (road.straight && v == 0)) {
 //						stopping();
 //
@@ -321,7 +340,14 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			// Checks if inner, more precise bounds intersect
 			otherBounds.intersect(this.getVehicleBounds());
 
-			if (!otherBounds.isEmpty()) {
+			// Also checks thgat the vehicle haven't just spawned to prevent spawn collision
+			if (!otherBounds.isEmpty() && !isNewBorn()) {
+
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 
 				if (this instanceof EntitySmartCar && other instanceof EntityBicycle) {
 					castPropertyChange(EventType.SMARTCAR2BICYCLE.getEventType());
@@ -455,6 +481,13 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	public Area getVehicleBounds() {
 
 		return vehicleBounds;
+
+	}
+
+	// Checks if the entity is newly spawned
+	private boolean isNewBorn() {
+
+		return birthTime > SharedValues.getInstance().getTimeStamp() - 2000;
 
 	}
 

@@ -1,14 +1,18 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import entities.EntityRoad.RoadType;
 import entities.EntityTrafficLight.LightCycle;
+import models.SIScaling;
 
 public class EntityTrafficLightNode extends EntityNode {
 
 	private List<EntityTrafficLight> trafficLights;
 	private Thread t = null;
+	private SIScaling scaler = new SIScaling();
 
 	private List<EntityTrafficLight> setVertical = new ArrayList();
 	private List<EntityTrafficLight> setHorizontal = new ArrayList();
@@ -35,11 +39,35 @@ public class EntityTrafficLightNode extends EntityNode {
 				}
 				instanceCreate(l);
 				trafficLights.add(l);
+
+				if (r.straight && r.getRoadType().equals(RoadType.CAR)
+						&& Arrays.asList(0.0, 180.0).contains(Math.toDegrees(r.getAngle()))) {
+					addRoadReservation(r, l);
+
+				}
 			}
+
 		}
 
 		// t = new Thread(this);
 		// t.start();
+	}
+
+	private void addRoadReservation(EntityRoad r, EntityTrafficLight l) {
+
+		int resHeight = 10;
+		EntityRoadReservation rRes;
+
+		if (r.getAngle() == 0.0) {
+			rRes = new EntityRoadReservation(r.x2 - this.getWidth() * 1.1, r.y2 - resHeight / 2,
+					(int) (this.getWidth() * 1.5), resHeight, r.getAngle(), l);
+		} else {
+			rRes = new EntityRoadReservation(r.x2 - this.getWidth() * 0.4, r.y2 - resHeight / 2,
+					(int) (this.getWidth() * 1.5), resHeight, r.getAngle(), l);
+
+		}
+		instanceCreate(rRes);
+
 	}
 
 	public void toggleSignal(List<EntityTrafficLight> list) {
@@ -67,22 +95,22 @@ public class EntityTrafficLightNode extends EntityNode {
 			switch (caseTest) {
 			case 0:
 				toggleSignal(setVertical, LightCycle.STOP);
-				wait = 120;
+				wait = scaler.getStepsPerSecond() * 4;
 				caseTest = 1;
 				break;
 			case 1:
 				toggleSignal(setHorizontal, LightCycle.DRIVE);
-				wait = 300;
+				wait = scaler.getStepsPerSecond() * 10;
 				caseTest = 2;
 				break;
 			case 2:
 				toggleSignal(setHorizontal, LightCycle.STOP);
-				wait = 120;
+				wait = scaler.getStepsPerSecond() * 4;
 				caseTest = 3;
 				break;
 			case 3:
 				toggleSignal(setVertical, LightCycle.DRIVE);
-				wait = 300;
+				wait = scaler.getStepsPerSecond() * 10;
 				caseTest = 0;
 				break;
 			}
