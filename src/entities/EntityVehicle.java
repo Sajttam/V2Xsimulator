@@ -343,12 +343,6 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			// Also checks thgat the vehicle haven't just spawned to prevent spawn collision
 			if (!otherBounds.isEmpty() && !isNewBorn()) {
 
-				try {
-					wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-
 				if (this instanceof EntitySmartCar && other instanceof EntityBicycle) {
 					castPropertyChange(EventType.SMARTCAR2BICYCLE.getEventType());
 				} else if (this instanceof EntitySmartCar && other instanceof EntitySmartCar) {
