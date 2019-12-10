@@ -80,22 +80,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		initializeGame("resources/map2.txt");
 		guiPanel.setDrawInstaces(instances);
 		start();
-
-		(new Thread() {
-			@Override
-			public void run() {
-				// do stuff
-				while (true) {
-					try {
-						sleep(16);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					guiPanel.repaint();
-				}
-			}
-		}).start();
+		startGUIThread();
 
 	}
 
@@ -131,6 +116,26 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	public void initializeGame(String fileName) {
 		// (new mapAlpha()).getMap(this);
 		(new mapBeta()).getMap(this);
+	}
+
+	private void startGUIThread() {
+
+		(new Thread() {
+			@Override
+			public void run() {
+
+				while (true) {
+					try {
+						sleep(16);
+					} catch (InterruptedException e) {
+
+						e.printStackTrace();
+					}
+					guiPanel.repaint();
+				}
+			}
+		}).start();
+
 	}
 
 	/**
