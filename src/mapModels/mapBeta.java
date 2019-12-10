@@ -21,12 +21,12 @@ public class mapBeta implements SimulationMap {
 
 		controller.createInstance(new MouseObserver());
 
-		EntityNode nodeWest = new EntityNode(64, 472);
-		EntityNode nodeEast = new EntityNode(748, 472);
+		EntityNode nodeWest = new EntityNode(64, 600);
+		EntityNode nodeEast = new EntityNode(748, 600);
 		EntityNode nodeNorthWest = new EntityNode(64, 128);
 		EntityNode nodeNorthEast = new EntityNode(748, 128);
 		EntityTrafficLightNode nodeNorth = new EntityTrafficLightNode(406, 128);
-		EntityTrafficLightNode nodeCenter = new EntityTrafficLightNode(406, 472);
+		EntityTrafficLightNode nodeCenter = new EntityTrafficLightNode(406, 600);
 
 		RSUServerUDP serverNorth = new RSUServerUDP(SharedValues.getInstance().getServerPortNumber(),
 				(int) nodeNorth.getXPosition(), (int) nodeNorth.getYPosition());
@@ -36,12 +36,12 @@ public class mapBeta implements SimulationMap {
 				(int) nodeCenter.getXPosition(), (int) nodeCenter.getYPosition());
 		(new Thread(serverCenter)).start();
 
-		EntityBikeDetector bikeDetectorCenterTopRight = new EntityBikeDetector(450, 471, 75, 30);
+		EntityBikeDetector bikeDetectorCenterTopRight = new EntityBikeDetector(450, 600, 75, 30);
 		controller.createInstance(bikeDetectorCenterTopRight);
-		EntityBikeDetector bikeDetectorCenterNorthBottomLeft = new EntityBikeDetector(370, 180, 75, 30);
-		controller.createInstance(bikeDetectorCenterNorthBottomLeft);
+		EntityBikeDetector bikeDetectorNorthBottomLeft = new EntityBikeDetector(370, 180, 75, 30);
+		controller.createInstance(bikeDetectorNorthBottomLeft);
 
-		serverNorth.addBikeDetector(bikeDetectorCenterNorthBottomLeft);
+		serverNorth.addBikeDetector(bikeDetectorNorthBottomLeft);
 		serverCenter.addBikeDetector(bikeDetectorCenterTopRight);
 
 		// Create simulation instances

@@ -43,7 +43,7 @@ public abstract class Entity implements Comparable<Object> {
 	public Entity(int width, int height) {
 		setCollisionBounds(width, height);
 	}
-	
+
 	public Entity(double xPosition, double yPosition, int width, int height) {
 		this.xPosition = xPosition;
 		this.yPosition = yPosition;
@@ -326,17 +326,21 @@ public abstract class Entity implements Comparable<Object> {
 		g2d.drawImage(image, (int) (getXPosition() + image.getWidth()), (int) getYPosition(), -image.getWidth(),
 				image.getHeight(), null);
 	}
-	
+
 	public int getDepth() {
 		return depth;
 	}
-	
+
 	@Override
 	public int compareTo(Object arg0) {
-		if (!(arg0 instanceof Entity)) return 0;
+		if (!(arg0 instanceof Entity))
+			return 0;
 		Entity other = (Entity) arg0;
-		if (getDepth() > other.getDepth()) return 1;
-		else if (getDepth() < other.getDepth()) return -1; 
-		else return 0;
+		if (getDepth() > other.getDepth())
+			return 1;
+		else if (getDepth() < other.getDepth())
+			return -1;
+		else
+			return 0;
 	}
 }
