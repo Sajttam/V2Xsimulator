@@ -80,6 +80,22 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		guiPanel.setDrawInstaces(instances);
 		start();
 
+		(new Thread() {
+			@Override
+			public void run() {
+				// do stuff
+				while (true) {
+					try {
+						sleep(16);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					guiPanel.repaint();
+				}
+			}
+		}).start();
+
 	}
 
 	/**
@@ -168,7 +184,8 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		for (Entity entity : instances) {
 			Rectangle2D entityBounds = entity.getCollisionBounds();
 
-			if (area.intersects(entityBounds)) {
+			if (area.getBounds().intersects(entityBounds) && area.intersects(entityBounds)) {
+
 				entities.add(entity);
 			}
 		}
@@ -246,9 +263,6 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 				collisionChecking(entity);
 			}
 		}
-
-		// Update GUI
-		guiPanel.repaint();
 
 		if (performanceMonitor != null) {
 			performanceMonitor.endFrame();

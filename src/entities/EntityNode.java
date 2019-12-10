@@ -133,7 +133,7 @@ public class EntityNode extends Entity {
 		if (roadsSouth.isEmpty())
 			count++;
 
-		boolean starightRoads = !(count == 2);
+		boolean straightRoads = !(count == 2);
 
 		// if (starightRoads) System.out.println("YES");
 
@@ -160,7 +160,7 @@ public class EntityNode extends Entity {
 						// False due to it should only be able to spawn on exit from node
 						EntityCurvedRoad newRoad = new EntityCurvedRoad(this, this, r.getRoadType(), r.getAngle(),
 								otherRoad.getAngle()); // False due to it should only be able to spawn on exit from node
-						if (starightRoads) {
+						if (straightRoads) {
 							if (difAngle > -90 && difAngle < 0 || difAngle > 90 && difAngle < 180) {
 								newRoad.straight = false;
 								newRoad.leftCurve = true;
@@ -179,7 +179,7 @@ public class EntityNode extends Entity {
 							newRoad.leftCurve = false;
 						}
 						SIScaling scaler = new SIScaling();
-						if (starightRoads)
+						if (straightRoads)
 							newRoad.setSpeedLimit(scaler.kphToPixelsPerStep(MAX_SPEED_CARS));
 						newRoad.setPosition(r.x2, r.y2, otherRoad.getXPosition(), otherRoad.getYPosition());
 						
