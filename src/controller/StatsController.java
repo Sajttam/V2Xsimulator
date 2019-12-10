@@ -4,6 +4,9 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.swing.JFrame;
@@ -31,6 +34,14 @@ public class StatsController implements PropertyChangeListener {
 		
 		public JLabel getValue() {
 			return valueJLabel;
+		}
+		
+		public String getStringName() {
+			return nameJLabel.getText();
+		}
+		
+		public String getStringValue() {
+			return value+"";
 		}
 		
 		public void incValue() {
@@ -75,8 +86,8 @@ public class StatsController implements PropertyChangeListener {
 	private JFrame jframe;
 	private JPanel jpanel;
 	
-	private Map<String, StatsHolder> labelsCollsions;
-	private Map<String, StatsHolder> labelsSpawns;
+	private Map<String, StatsHolder> labelsSpawn;
+	private Map<String, StatsHolder> labelsCollision;
 	
 	private static int TEXT_SIZE = 30;
 	private static int HEADING_SIZE = 40;
@@ -88,24 +99,26 @@ public class StatsController implements PropertyChangeListener {
 	private StatsController(JFrame jframe){	
 		this.jframe = jframe;
 		
-		labelsCollsions = new TreeMap<String, StatsHolder>();
-		labelsSpawns = new TreeMap<String, StatsHolder>();
+		
+		labelsSpawn = new TreeMap<String, StatsHolder>();
+		labelsCollision = new TreeMap<String, StatsHolder>();
 		
 		createLabels(); //Creates labels and adds them to labelsWithValues
 		
 		jpanel = new JPanel();
 		
-		GridLayout gridLayout = new GridLayout(labelsCollsions.size() + labelsSpawns.size() + 2, 2);
+		GridLayout gridLayout = new GridLayout(labelsSpawn.size() + labelsCollision.size() + 2, 2);
 		
 		jpanel.setLayout(gridLayout);
 		
 		setFont();
 		addToPanel();
-		
+		writeStatsToFile("","test");
 		jframe.add(jpanel);
 		jframe.setVisible(true);
 		
 		jframe.pack();
+		
 	}
 	
 	private static StatsController statsController;
@@ -128,8 +141,8 @@ public class StatsController implements PropertyChangeListener {
 	public void propertyChange(PropertyChangeEvent event) {		
 		String eventname = event.getPropertyName();
 		
-		TreeMap<String, StatsHolder> labels = new TreeMap<String, StatsHolder>(labelsCollsions);
-		labels.putAll(labelsSpawns);
+		TreeMap<String, StatsHolder> labels = new TreeMap<String, StatsHolder>(labelsSpawn);
+		labels.putAll(labelsCollision);
 		
 		StatsHolder sh = labels.get(eventname);
 		JLabel l = sh.getValue();
@@ -140,9 +153,9 @@ public class StatsController implements PropertyChangeListener {
 		for (EventType e : EventType.values()) {
 			StatsHolder sh = new StatsHolder(e.getDisplayName(), 0);
 			if (e.getHeading().equals("Spawn"))
-				labelsCollsions.put(e.getEventType(), sh);
+				labelsSpawn.put(e.getEventType(), sh);
 			else
-				labelsSpawns.put(e.getEventType(), sh);
+				labelsCollision.put(e.getEventType(), sh);
 		}
 	}
 	
@@ -159,12 +172,12 @@ public class StatsController implements PropertyChangeListener {
 		jpanel.add(new JLabel("Spawns"));
 		jpanel.add(new JLabel(""));
 		
-		addToPanel(labelsCollsions);
+		addToPanel(labelsSpawn);
 		
 		jpanel.add(new JLabel("Collisions"));
 		jpanel.add(new JLabel(""));
 		
-		addToPanel(labelsSpawns);
+		addToPanel(labelsCollision);
 		
 				
 	}
@@ -178,7 +191,37 @@ public class StatsController implements PropertyChangeListener {
 	}
 	
 	private void setFont() {
-		setFont(labelsSpawns);
-		setFont(labelsCollsions);
+		setFont(labelsCollision);
+		setFont(labelsSpawn);
 	}
+	
+	public void writeStatsToFile(String url, String filename) {
+		
+		
+		StringBuilder sburl = new StringBuilder(url);
+		sburl.append(filename);
+		sburl.append(".tsv");
+		try {
+			FileWriter fwriter = new FileWriter(sburl.toString());
+			PrintWriter pwriter = new PrintWriter(fwriter);
+			pwriter.println("Spawns: \t");
+			for(StatsHolder sh : labelsSpawn.values()) {
+				pwriter.println(sh.getStringName()+"\t"+sh.getStringValue());
+			}
+			pwriter.println("Collisions: \t");
+			for(StatsHolder sh : labelsCollision.values()) {
+				pwriter.println(sh.getStringName()+"\t"+sh.getStringValue());
+			}
+			
+			pwriter.close();
+			fwriter.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	
 }
