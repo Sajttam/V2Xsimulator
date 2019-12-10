@@ -184,7 +184,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 				if (Math.toDegrees(Math.abs(((EntityRoadReservation) otherEntity).getAngle() - angle)) > 90) {
 
-					if (!((EntityRoadReservation) otherEntity).getReservations().isEmpty() && road.leftCurve) {
+					if (((EntityRoadReservation) otherEntity).getReserved() && road.leftCurve) {
 
 						stopping();
 
@@ -193,7 +193,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 					// System.out.println("Adds reservation");
 
-					((EntityRoadReservation) otherEntity).addReservation(this.hashCode());
+					((EntityRoadReservation) otherEntity).setReserved(true);
 
 				}
 			} else if (otherEntity instanceof EntityBicycle && this instanceof EntityBicycle) {
