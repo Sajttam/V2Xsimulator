@@ -196,6 +196,10 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 					((EntityRoadReservation) otherEntity).addReservation(this.hashCode());
 
 				}
+			} else if (otherEntity instanceof EntityBicycle && this instanceof EntityBicycle) {
+
+				stopping();
+
 			}
 
 			else if (otherEntity instanceof EntityVehicle) {
@@ -341,6 +345,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			otherBounds.intersect(this.getVehicleBounds());
 
 			// Also checks thgat the vehicle haven't just spawned to prevent spawn collision
+
 			if (!otherBounds.isEmpty() && !isNewBorn()) {
 
 				if (this instanceof EntitySmartCar && other instanceof EntityBicycle) {
@@ -355,6 +360,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 					castPropertyChange(EventType.CAR2BYCYCLE.getEventType());
 
 				}
+
 				instanceDestroy();
 			}
 		}
@@ -424,7 +430,6 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	public void mouseClicked(MouseEvent e) {
 		if (getCollisionBounds().contains(e.getX(), e.getY())) {
 			// instanceDestroy();
-			System.out.println(entitiesInSight + ": " + road.straight);
 		}
 	}
 
@@ -481,7 +486,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	// Checks if the entity is newly spawned
 	private boolean isNewBorn() {
 
-		return birthTime > SharedValues.getInstance().getTimeStamp() - 2000;
+		return birthTime > SharedValues.getInstance().getTimeStamp() - scaling.getStepsPerSecond() * 2;
 
 	}
 
