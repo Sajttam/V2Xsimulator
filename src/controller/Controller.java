@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import entities.Collidable;
 import entities.Entity;
 import entities.EntityMouseListener;
+import entities.EntityRoad;
 import mapModels.mapBeta;
 import models.SharedValues;
 import view.GuiPanel;
@@ -184,9 +185,11 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		for (Entity entity : instances) {
 			Rectangle2D entityBounds = entity.getCollisionBounds();
 
-			if (area.getBounds().intersects(entityBounds) && area.intersects(entityBounds)) {
+			if (entity instanceof EntityRoad) {
+				if (area.getBounds().intersects(entityBounds) && area.intersects(entityBounds)) {
 
-				entities.add(entity);
+					entities.add(entity);
+				}
 			}
 		}
 

@@ -166,6 +166,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		// getEntityAtPosition((int)(24*Math.cos(angle)+getXPosition()),
 		// (int)(24*Math.sin(angle)+getYPosition()));
 		entitiesInSight = getEntitiesInsideArea(visionArea);
+
 		entitiesInSight.remove(this);
 
 		modifySpeed(road.getSpeedLimit());
