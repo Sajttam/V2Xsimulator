@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
@@ -11,7 +12,13 @@ import java.util.Map;
 import java.util.TreeMap;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import models.SharedValues;
 
 public class StatsController implements PropertyChangeListener {
 	
@@ -100,6 +107,7 @@ public class StatsController implements PropertyChangeListener {
 		this.jframe = jframe;
 		
 		
+		
 		labelsSpawn = new TreeMap<String, StatsHolder>();
 		labelsCollision = new TreeMap<String, StatsHolder>();
 		
@@ -107,18 +115,35 @@ public class StatsController implements PropertyChangeListener {
 		
 		jpanel = new JPanel();
 		
+		
 		GridLayout gridLayout = new GridLayout(labelsSpawn.size() + labelsCollision.size() + 2, 2);
 		
 		jpanel.setLayout(gridLayout);
 		
 		setFont();
 		addToPanel();
-		writeStatsToFile("","test");
-		jframe.add(jpanel);
+		jframe.add(jpanel,BorderLayout.CENTER);
+		makeMenu(jframe);
 		jframe.setVisible(true);
 		
 		jframe.pack();
 		
+	}
+	/**
+	 * Creates a menubar for statistics window
+	 * @param jframe the frame that the menubar will be added to
+	 */
+	public void makeMenu(JFrame jframe) {
+		JMenuBar menuBar = new JMenuBar();
+
+		JMenu menuFile = new JMenu("File");
+		JMenuItem itemSave = new JMenuItem("Save stats");
+		itemSave.addActionListener(e -> saveToFile() );
+		
+		menuBar.add(menuFile);
+		menuFile.add(itemSave);
+		
+		jframe.add(menuBar,BorderLayout.NORTH);	
 	}
 	
 	private static StatsController statsController;
@@ -195,6 +220,19 @@ public class StatsController implements PropertyChangeListener {
 		setFont(labelsSpawn);
 	}
 	
+	/**
+	 * Open a InputDialog that register filename
+	 */
+	public void saveToFile() {
+		String fileName = JOptionPane.showInputDialog(jframe, "Specifiy name for savefile");
+		writeStatsToFile("",fileName);
+	}
+	
+	/**
+	 * Saves statistics to a .tsv file
+	 * @param url path to were the file is supposed to be saved
+	 * @param filename name of file to be saved
+	 */
 	public void writeStatsToFile(String url, String filename) {
 		
 		
@@ -218,9 +256,7 @@ public class StatsController implements PropertyChangeListener {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-		
+		}	
 	}
 	
 	

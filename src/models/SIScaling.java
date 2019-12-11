@@ -29,5 +29,9 @@ public class SIScaling {
 		return pixelsPerMeter * ((kph * 1000) / (stepsPerSecond * 3600));
 
 	}
+	
+	public double accelerationPerStep(double mps) {
+		return pixelsPerMeter * (mps/stepsPerSecond);
+	}
 
 }

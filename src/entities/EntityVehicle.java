@@ -284,8 +284,8 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	// accelerate up to targetspeed
 	private void modifySpeed(double targetVelocity) {
-		double acceleration = 0.005;
-		double deceleration = 0.1;
+		double acceleration = scaling.accelerationPerStep(2.1);
+		double deceleration = scaling.accelerationPerStep(2);
 
 		if (this.speed < targetVelocity) {
 			setSpeed(this.speed += acceleration);
@@ -302,7 +302,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	// break until complete stop or no obstacle is present
 	private void stopping() {
-		double deceleration = 0.08;
+		double deceleration = scaling.accelerationPerStep(2);
 		if (this.speed > 0) {
 			setSpeed(this.speed -= deceleration);
 			if (this.speed < 0) {
@@ -338,7 +338,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			// Checks if inner, more precise bounds intersect
 			otherBounds.intersect(this.getVehicleBounds());
 
-			// Also checks thgat the vehicle haven't just spawned to prevent spawn collision
+			// Also checks that the vehicle haven't just spawned to prevent spawn collision
 
 			if (!otherBounds.isEmpty() && !isNewBorn()) {
 
@@ -354,7 +354,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 					castPropertyChange(EventType.CAR2BYCYCLE.getEventType());
 
 				}
-
+				
 				instanceDestroy();
 			}
 		}
