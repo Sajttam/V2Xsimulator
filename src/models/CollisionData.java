@@ -27,7 +27,7 @@ public class CollisionData {
 		this.direction = direction;
 		this.position = position;
 	}
-	
+
 	public double getSpeed() {
 		return speed;
 	}
@@ -58,6 +58,10 @@ public class CollisionData {
 
 	public void setTimeStamp(long timeStamp) {
 		this.timeStamp = timeStamp;
+	}
+	
+	public String toString() {
+		return timeStamp + "," + speed + "," + direction + "," + position.toString();
 	}
 
 }

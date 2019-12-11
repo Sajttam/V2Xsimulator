@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import controller.StatsController.EventType;
+import models.CollisionData;
 import models.SIScaling;
 import models.SharedValues;
 
@@ -310,9 +311,21 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			}
 		}
 	}
-
+	/**
+	 * Cast a property change 
+	 * @param eventname event to be cast
+	 */
 	public void castPropertyChange(String eventname) {
 		propertyChangeSupportCounter.firePropertyChange(eventname, null, 1);
+	}
+	/**
+	 * Cast a property change with a new CollitionData
+	 * @param eventname event to be cast
+	 * @param vehicle vehicle that has collided and should send data
+	 */
+	public void castPropertyChange(String eventname, EntityVehicle vehicle) {
+		propertyChangeSupportCounter.firePropertyChange(eventname, null,
+				new CollisionData(vehicle.getSpeed(),vehicle.getAngle(),new Point2D.Double(vehicle.getXPosition(),vehicle.getYPosition())));
 	}
 
 	@Override
@@ -344,6 +357,8 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 				if (this instanceof EntitySmartCar && other instanceof EntityBicycle) {
 					castPropertyChange(EventType.SMARTCAR2BICYCLE.getEventType());
+					// cast a property change with collisionData
+					castPropertyChange(EventType.COLLISIONDATA.getEventType(),this);
 				} else if (this instanceof EntitySmartCar && other instanceof EntitySmartCar) {
 					castPropertyChange(EventType.SMARTCAR2SMARTCAR.getEventType());
 				} else if (this instanceof EntitySmartCar && other instanceof EntityCar) {
@@ -352,9 +367,9 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 					castPropertyChange(EventType.CAR2CAR.getEventType());
 				} else if (this instanceof EntityCar && other instanceof EntityBicycle) {
 					castPropertyChange(EventType.CAR2BYCYCLE.getEventType());
-
+					// cast a property change with collisionData
+					castPropertyChange(EventType.COLLISIONDATA.getEventType(),this);
 				}
-				
 				instanceDestroy();
 			}
 		}

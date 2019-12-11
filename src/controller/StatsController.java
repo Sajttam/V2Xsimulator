@@ -18,14 +18,20 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import controller.StatsController.EventType;
+import models.CollisionData;
+import models.SIScaling;
 import models.SharedValues;
 
 public class StatsController implements PropertyChangeListener {
+	
+	private SIScaling scaling = new SIScaling();
 	
 	private class StatsHolder {
 		private JLabel nameJLabel = null;
 		private JLabel valueJLabel = null;
 		private int value = 0;
+		
 		
 		public StatsHolder (String name, int value) {
 			setName(new JLabel(name));
@@ -65,7 +71,9 @@ public class StatsController implements PropertyChangeListener {
 		CAR2BYCYCLE("Car2Bicycle", "Car & Bicycle", "Collision"),
 		SMARTCAR2CAR("Smartcar2Car", "Smartcar & Car", "Collision"),
 		SMARTCAR2SMARTCAR("Smartcar2Smartcar", "Smartcar & Smartcar", "Collision"),
-		CAR2CAR("Car2Car", "Car & Car", "Collision");
+		CAR2CAR("Car2Car", "Car & Car", "Collision"),
+		COLLISIONDATA("CollisionData","Collision","Data");
+		
 		
 		private String eventType; // no spaces allowed in this string
 		private String displayName;
@@ -165,13 +173,21 @@ public class StatsController implements PropertyChangeListener {
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {		
 		String eventname = event.getPropertyName();
-		
+		if(eventname.equals(EventType.COLLISIONDATA.getEventType())) { // for handling a received CollisionData
+			if (event.getNewValue() instanceof CollisionData) {
+				CollisionData cd = (CollisionData) event.getNewValue();
+				if(scaling.pixelsPerStepToKph(cd.getSpeed()) > 50) {
+					System.out.println("Deadly");
+				}
+			}
+		}else{
 		TreeMap<String, StatsHolder> labels = new TreeMap<String, StatsHolder>(labelsSpawn);
 		labels.putAll(labelsCollision);
 		
 		StatsHolder sh = labels.get(eventname);
 		JLabel l = sh.getValue();
 		sh.incValue();
+		}
 	}
 	
 	private void createLabels() {
@@ -221,7 +237,7 @@ public class StatsController implements PropertyChangeListener {
 	}
 	
 	/**
-	 * Open a InputDialog that register filename
+	 * saveToFile: Opens a InputDialog that register filename
 	 */
 	public void saveToFile() {
 		String fileName = JOptionPane.showInputDialog(jframe, "Specifiy name for savefile");
@@ -229,12 +245,11 @@ public class StatsController implements PropertyChangeListener {
 	}
 	
 	/**
-	 * Saves statistics to a .tsv file
+	 * writeStatsToFile: Saves statistics to a .tsv file
 	 * @param url path to were the file is supposed to be saved
 	 * @param filename name of file to be saved
 	 */
 	public void writeStatsToFile(String url, String filename) {
-		
 		
 		StringBuilder sburl = new StringBuilder(url);
 		sburl.append(filename);
