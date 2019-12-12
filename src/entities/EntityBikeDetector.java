@@ -24,9 +24,15 @@ public class EntityBikeDetector extends Entity implements Collidable {
 	}
 	
 	Set<EntityBicycle> remove = new TreeSet<EntityBicycle>();;
+	private int wait = 0;
+	private int waitTime = 300;
 	@Override
 	public void step() {
-		bicycles.clear();
+		if (wait <= 0) {
+			bicycles.clear();
+			wait = waitTime;
+		}
+		else wait--;
 	}
 	
 	public Set<EntityBicycle> getBicycles() {
