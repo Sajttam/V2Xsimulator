@@ -30,4 +30,10 @@ public class SIScaling {
 
 	}
 
+	public double pixelsPerStepToKph(double pixelsPerStep) {
+
+		return 3.6 * ((pixelsPerStep / pixelsPerMeter) * stepsPerSecond);
+
+	}
+
 }

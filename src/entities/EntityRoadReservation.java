@@ -9,7 +9,7 @@ import entities.EntityTrafficLight.LightCycle;
  * road. Mainly used in crossings at a stop light to prevent cars going the
  * opposite way from crossing a lane when a car is coming.
  */
-public class EntityRoadReservation extends Entity {
+public class EntityRoadReservation extends Entity implements Collidable {
 
 	private double angle;
 	private boolean reserved = false;
@@ -100,6 +100,14 @@ public class EntityRoadReservation extends Entity {
 	 */
 	public void setReserved(boolean reserved) {
 		this.reserved = reserved;
+	}
+
+	@Override
+	public void collision(Entity other) {
+
+		if (other instanceof EntityCar)
+			setReserved(true);
+
 	}
 
 }

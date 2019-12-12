@@ -4,11 +4,9 @@ import java.awt.Point;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import controller.Controller;
@@ -40,7 +38,7 @@ public class FunctionHandler extends Thread {
 	private void blindspotChecker() throws Exception {
 
 		for (Entry<Integer, CarData> k : carLogs.entrySet()) {
-			
+
 			int port = k.getKey();
 			DatagramSocket socket;
 			socket = new DatagramSocket();
@@ -52,12 +50,15 @@ public class FunctionHandler extends Thread {
 			for (EntityBikeDetector bikeDetector : bdSet) {
 				bikeDetector.addCheckedPoint(newPosition40); // DEBUG
 				bikeDetector.addCheckedPoint(newPosition20); // DEBUG
-				if (bikeDetector.getCollisionBounds().contains(newPosition40) || bikeDetector.getCollisionBounds().contains(newPosition20) ) {
-					if(!bikeDetector.getBicycles().isEmpty()) {
-					System.out.println("HELLO!!! port:" + port + " " + k.getValue().getNewMessage().getListenerPort());
-					server.sendCommand(socket, new V2XCommand(Commands.STOP));
-					}// Send stop message
-				}else {
+				if (bikeDetector.getCollisionBounds().contains(newPosition40)
+						|| bikeDetector.getCollisionBounds().contains(newPosition20)) {
+					if (!bikeDetector.getBicycles().isEmpty()) {
+						System.out
+								.println("STOP!!! port:" + port + " " + k.getValue().getNewMessage().getListenerPort());
+						server.sendCommand(socket, new V2XCommand(Commands.STOP));
+					} // Send stop message
+				} else {
+					System.out.println("GO!!! port:" + port + " " + k.getValue().getNewMessage().getListenerPort());
 					server.sendCommand(socket, new V2XCommand(Commands.DRIVE));
 				}
 			}
@@ -81,7 +82,7 @@ public class FunctionHandler extends Thread {
 	 */
 	private void runFunctions() throws Exception {
 		eraseOld();
-		blindspotChecker();
+		// blindspotChecker();
 	}
 
 	/**

@@ -14,7 +14,7 @@ import models.SharedValues;
 public class EntityNode extends Entity {
 
 	private boolean spawning;
-	public static final int MAX_SPEED_CARS = 20;
+	public static final int MAX_SPEED_TURNS_CARS = 20;
 	public static final int MAX_SPEED_BIKE = 20;
 
 	public enum Direction {
@@ -133,7 +133,7 @@ public class EntityNode extends Entity {
 		if (roadsSouth.isEmpty())
 			count++;
 
-		boolean straightRoads = !(count == 2);
+		boolean starightRoads = !(count == 2);
 
 		// if (starightRoads) System.out.println("YES");
 
@@ -160,7 +160,7 @@ public class EntityNode extends Entity {
 						// False due to it should only be able to spawn on exit from node
 						EntityCurvedRoad newRoad = new EntityCurvedRoad(this, this, r.getRoadType(), r.getAngle(),
 								otherRoad.getAngle()); // False due to it should only be able to spawn on exit from node
-						if (straightRoads) {
+						if (starightRoads) {
 							if (difAngle > -90 && difAngle < 0 || difAngle > 90 && difAngle < 180) {
 								newRoad.straight = false;
 								newRoad.leftCurve = true;
@@ -179,10 +179,14 @@ public class EntityNode extends Entity {
 							newRoad.leftCurve = false;
 						}
 						SIScaling scaler = new SIScaling();
-						if (straightRoads)
-							newRoad.setSpeedLimit(scaler.kphToPixelsPerStep(MAX_SPEED_CARS));
+						if (newRoad.straight)
+							newRoad.setSpeedLimit(SharedValues.getInstance().getMaxSpeed("CAR"));
+						else {
+							newRoad.setSpeedLimit(scaler.kphToPixelsPerStep(MAX_SPEED_TURNS_CARS));
+
+						}
 						newRoad.setPosition(r.x2, r.y2, otherRoad.getXPosition(), otherRoad.getYPosition());
-						
+
 						if (roadConnections.containsKey(r)) {
 							RoadPair rp = roadConnections.get(r);
 							rp.setRoad2(newRoad);

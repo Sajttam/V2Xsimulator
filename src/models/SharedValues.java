@@ -176,4 +176,16 @@ public class SharedValues {
 		}
 	}
 
+	public double getMaxSpeed(String vehicle) {
+
+		if (vehicle.equals("BICYCLE"))
+			return bicycleMaxSpeed;
+		else if ((vehicle.equals("CAR"))) {
+			return carMaxSpeed;
+		} else {
+
+			return carMaxSpeed;
+		}
+	}
+
 }

@@ -63,8 +63,8 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	public Controller(GuiPanel guiPanel) {
 		this.guiPanel = guiPanel;
 
-		GLOBAL.setBicycleCounter(12);
-		GLOBAL.setCarCounter(6);
+		GLOBAL.setBicycleCounter(8);
+		GLOBAL.setCarCounter(8);
 		GLOBAL.setServerPort(1000);
 		GLOBAL.setTimeOutValue(16.6667);
 		GLOBAL.setSMARTCAR_CHANCE(0.5);
@@ -190,7 +190,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		for (Entity entity : instances) {
 			Rectangle2D entityBounds = entity.getCollisionBounds();
 
-			if (entity instanceof EntityRoad) {
+			if (!(entity instanceof EntityRoad)) {
 				if (area.getBounds().intersects(entityBounds) && area.intersects(entityBounds)) {
 
 					entities.add(entity);

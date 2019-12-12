@@ -9,7 +9,6 @@ import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -34,6 +33,8 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	protected SIScaling scaling = new SIScaling();
 	private Area vehicleBounds;
 	private Shape vehicleShape;
+	private EntityRoadReservation temp1;
+	private EntityRoadReservation temp2;
 
 	private boolean rsuStopSignal = false;
 
@@ -53,9 +54,21 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		int centerX = (int) (getXPosition());
 		int centerY = (int) (getYPosition());
 		double radius = scaling.getPixelsFromMeter(13);
-		double visionAngle = Math.PI / 180.0 * 55;
-		double angleLeft = getAngle() - visionAngle;
-		double angleRight = getAngle() + visionAngle;
+		double visionAngle = Math.toRadians(100 / 2);
+		double angleLeft = 0;
+		double angleRight = 0;
+
+		if (road.straight) {
+			angleLeft = getAngle() - visionAngle;
+			angleRight = getAngle() + visionAngle;
+		} else if (road.leftCurve) {
+			angleLeft = getAngle() - visionAngle - Math.toRadians(15);
+			angleRight = getAngle() + visionAngle - Math.toRadians(15);
+		} else if (!road.leftCurve) {
+			angleLeft = getAngle() - visionAngle + Math.toRadians(15);
+			angleRight = getAngle() + visionAngle + Math.toRadians(15);
+		}
+
 		int points = 5;
 
 		visionArea.addPoint(centerX, centerY);
@@ -150,7 +163,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 		double angleDiff = (180 / Math.PI) * 40;
 
-		if (angle1 > angle2 - Math.toRadians(8) && angle1 < angle2 + Math.toRadians(8))
+		if (angle1 > angle2 - Math.toRadians(5) && angle1 < angle2 + Math.toRadians(5))
 			return 0;
 		else if ((angle1 - angleDiff) > angle2 || angle2 < angle1)
 			return -1;
@@ -162,99 +175,74 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	@Override
 	public void step() {
-		// Entity inSight =
-		// getEntityAtPosition((int)(24*Math.cos(angle)+getXPosition()),
-		// (int)(24*Math.sin(angle)+getYPosition()));
+
 		entitiesInSight = getEntitiesInsideArea(visionArea);
 
 		entitiesInSight.remove(this);
 
 		modifySpeed(road.getSpeedLimit());
 
-		// setSpeed(SharedValues.getInstance().getMaxSpeed(this));
+		// Lowers the speed if its close to a intersection
+		for (Entity otherEntity : entitiesInSight) {
+			if (otherEntity instanceof EntityTrafficLightNode) {
+				modifySpeed(scaling.kphToPixelsPerStep(30));
+
+			}
+		}
 
 		for (Entity otherEntity : entitiesInSight) {
 
-			if (otherEntity instanceof EntityRoadReservation && this instanceof EntityCar) {
-
-				if (Math.toDegrees(Math.abs(((EntityRoadReservation) otherEntity).getAngle() - angle)) > 90) {
-
-					if (((EntityRoadReservation) otherEntity).getReserved() && road.leftCurve) {
-
-						stopping();
-
-					}
-				} else {
-
-					// System.out.println("Adds reservation");
-
-					((EntityRoadReservation) otherEntity).setReserved(true);
-
-				}
-			} else if (otherEntity instanceof EntityBicycle && this instanceof EntityBicycle) {
-
-				stopping();
-
-			}
-
-			else if (otherEntity instanceof EntityVehicle) {
-				int v;
-
-				Area otherBounds = ((EntityVehicle) otherEntity).getVehicleBounds();
-				Area vArea = new Area(visionArea);
-				otherBounds.intersect(vArea);
-				if (!otherBounds.isEmpty()) {
-					v = entityRelation(otherEntity);
-
-					double relativeAngle = getAngleBetweenPoints(getXPosition(), getYPosition(),
-							otherEntity.getXPosition(), otherEntity.getYPosition());
-
-					// System.out.println(relativeAngle);
-
-					double distance = Point2D.distance(getXPosition(), getYPosition(), otherEntity.getXPosition(),
-							otherEntity.getYPosition());
-					// System.out.println(distance);
-					if (road.straight && v == 0) {
-
-						stopping();
-					}
-
-					else if (relationLogs.containsKey(otherEntity)) {
-
-						if (Math.abs(relativeAngle - relationLogs.get(otherEntity).getAngleToVehicle()) < Math
-								.toRadians(20)) {
-
-							if (relationLogs.get(otherEntity).getDistanceToVehicle() > distance
-									+ scaling.getPixelsFromMeter(0.5)) {
-
-								stopping();
-
-								// System.out.println("Stopping..." + temp++);
-
-							}
-
-						}
-
-					}
-
-					relationLogs.put(otherEntity, new RelationLog(relativeAngle, distance));
-
-//					if ((!road.straight && otherEntity instanceof EntityBicycle) || (!road.straight && v > -1)
-//							|| (road.straight && v == 0)) {
-//						stopping();
-//
-//					}
-				}
-
-			}
+			int v = entityRelation(otherEntity);
 
 			if (otherEntity instanceof EntityTrafficLight) {
 				EntityTrafficLight trafficLight = (EntityTrafficLight) otherEntity;
 				Rectangle tLightBounds = trafficLight.getCollisionBounds();
 				Rectangle thisBounds = this.getCollisionBounds();
 
-				if (entityRelation(trafficLight) == 0 && road.straight && !(tLightBounds.intersects(thisBounds))) {
+				if (v == 0 && road.straight && !(tLightBounds.intersects(thisBounds))) {
 					stopping();
+				}
+			} else if (otherEntity instanceof EntityRoadReservation && this instanceof EntityCar) {
+				if (Math.toDegrees(Math.abs(((EntityRoadReservation) otherEntity).getAngle() - angle)) > 90) {
+					if (((EntityRoadReservation) otherEntity).getReserved() && road.leftCurve) {
+						if (!this.getCollisionBounds().intersects(otherEntity.getCollisionBounds())) {
+
+							stopping();
+						}
+					}
+				} else {
+
+					((EntityRoadReservation) otherEntity).setReserved(true);
+
+				}
+			} else if (this instanceof EntityBicycle && otherEntity instanceof EntityVehicle) {
+
+				if (otherEntity instanceof EntityBicycle)
+					stopping();
+				else if (v == 0 && Math.toDegrees(getAngle()) % 180 == 0)
+					stopping();
+
+			} else if (otherEntity instanceof EntityBicycle && ((EntityBicycle) otherEntity).getSpeed() > 0) {
+
+				if (!road.straight || road.straight && angleDifference((int) Math.toDegrees(this.getAngle()),
+						(int) Math.toDegrees(((EntityBicycle) otherEntity).getAngle())) == 90) {
+
+					stopping();
+				}
+
+			}
+
+			else if (otherEntity instanceof EntityCar) {
+
+				// Checks if the entities are moving in the same general direction +- degrees
+				if (angleDifference((int) Math.toDegrees(this.getAngle()),
+						(int) Math.toDegrees(((EntityVehicle) otherEntity).getAngle())) < 70) {
+
+					// Checks if this is moving away from the other entity and thusly shouldnt stop
+					if (!this.movingAwayFrom((EntityVehicle) otherEntity)) {
+
+						stopping();
+					}
 				}
 			}
 		}
@@ -303,13 +291,31 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	// break until complete stop or no obstacle is present
 	private void stopping() {
-		double deceleration = 0.08;
+
+		double deceleration = 0.2;
 		if (this.speed > 0) {
 			setSpeed(this.speed -= deceleration);
 			if (this.speed < 0) {
 				setSpeed(0);
 			}
 		}
+	}
+
+	private boolean movingAwayFrom(EntityVehicle other) {
+
+		// Excepting when this is traveling vertically
+		if (Math.round(this.gethSpeed()) == 0 && this.getSpeed() != 0) {
+			return false;
+
+		} else if (this.gethSpeed() - other.gethSpeed() < 0 && this.getXPosition() - other.getXPosition() < 0) {
+			return true;
+		} else if (this.gethSpeed() - other.gethSpeed() > 0 && this.getXPosition() - other.getXPosition() > 0)
+			return true;
+		else {
+			return false;
+
+		}
+
 	}
 
 	public void castPropertyChange(String eventname) {
@@ -339,12 +345,20 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			// Checks if inner, more precise bounds intersect
 			otherBounds.intersect(this.getVehicleBounds());
 
-			// Also checks thgat the vehicle haven't just spawned to prevent spawn collision
+			// Also checks that the vehicle haven't just spawned to prevent spawn collision
 
 			if (!otherBounds.isEmpty() && !isNewBorn()) {
 
+//				try {
+//					wait();
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+
 				if (this instanceof EntitySmartCar && other instanceof EntityBicycle) {
 					castPropertyChange(EventType.SMARTCAR2BICYCLE.getEventType());
+
 				} else if (this instanceof EntitySmartCar && other instanceof EntitySmartCar) {
 					castPropertyChange(EventType.SMARTCAR2SMARTCAR.getEventType());
 				} else if (this instanceof EntitySmartCar && other instanceof EntityCar) {
@@ -424,7 +438,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (getCollisionBounds().contains(e.getX(), e.getY())) {
-			// instanceDestroy();
+			instanceDestroy();
 		}
 	}
 
@@ -483,6 +497,12 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 		return birthTime > SharedValues.getInstance().getTimeStamp() - scaling.getStepsPerSecond() * 2;
 
+	}
+
+	public int angleDifference(int alpha, int beta) {
+		int phi = Math.abs(beta - alpha) % 360;
+		int distance = phi > 180 ? 360 - phi : phi;
+		return distance;
 	}
 
 }

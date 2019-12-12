@@ -19,6 +19,7 @@ public class EntityTrafficLightNode extends EntityNode {
 
 	public EntityTrafficLightNode(int x, int y) {
 		super(x, y);
+		setCollisionBounds(getWidth(), getHeight());
 		// TODO Auto-generated constructor stub
 	}
 
@@ -55,7 +56,7 @@ public class EntityTrafficLightNode extends EntityNode {
 
 	private void addRoadReservation(EntityRoad r, EntityTrafficLight l) {
 
-		int resHeight = 10;
+		int resHeight = (int) scaler.getPixelsFromMeter(5);
 		EntityRoadReservation rRes;
 
 		if (r.getAngle() == 0.0) {
