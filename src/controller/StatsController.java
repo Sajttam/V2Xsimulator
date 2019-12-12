@@ -103,6 +103,7 @@ public class StatsController implements PropertyChangeListener {
 	
 	private Map<String, StatsHolder> labelsSpawn;
 	private Map<String, StatsHolder> labelsCollision;
+	private Map<Long, CollisionData> collisionDataMap;
 	
 	private static int TEXT_SIZE = 30;
 	private static int HEADING_SIZE = 40;
@@ -115,7 +116,7 @@ public class StatsController implements PropertyChangeListener {
 		this.jframe = jframe;
 		
 		
-		
+		collisionDataMap = new TreeMap<Long,CollisionData>();
 		labelsSpawn = new TreeMap<String, StatsHolder>();
 		labelsCollision = new TreeMap<String, StatsHolder>();
 		
@@ -176,9 +177,7 @@ public class StatsController implements PropertyChangeListener {
 		if(eventname.equals(EventType.COLLISIONDATA.getEventType())) { // for handling a received CollisionData
 			if (event.getNewValue() instanceof CollisionData) {
 				CollisionData cd = (CollisionData) event.getNewValue();
-				if(scaling.pixelsPerStepToKph(cd.getSpeed()) > 50) {
-					System.out.println("Deadly");
-				}
+				collisionDataMap.put(cd.getTimeStamp(),cd);
 			}
 		}else{
 		TreeMap<String, StatsHolder> labels = new TreeMap<String, StatsHolder>(labelsSpawn);
