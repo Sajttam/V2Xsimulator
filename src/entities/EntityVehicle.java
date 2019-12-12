@@ -15,11 +15,10 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.List;
-
-import controller.StatsController.EventType;
 import models.CollisionData;
 import models.SIScaling;
 import models.SharedValues;
+import models.stats.StatsEventType;
 
 public class EntityVehicle extends Entity implements Collidable, EntityMouseListener {
 
@@ -261,8 +260,8 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	// accelerate up to targetspeed
 	private void modifySpeed(double targetVelocity) {
-		double acceleration = scaling.accelerationPerStep(2.1);
-		double deceleration = scaling.accelerationPerStep(2);
+		double acceleration = 0.005; //scaling.accelerationPerStep(2.1);
+		double deceleration = 0.1; scaling.accelerationPerStep(2);
 
 		if (this.speed < targetVelocity) {
 			setSpeed(this.speed += acceleration);
@@ -331,19 +330,19 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			if (!otherBounds.isEmpty() && !isNewBorn()) {
 
 				if (this instanceof EntitySmartCar && other instanceof EntityBicycle) {
-					castPropertyChange(EventType.SMARTCAR2BICYCLE.getEventType());
+					castPropertyChange(StatsEventType.SMARTCAR2BICYCLE.getEventType());
 					// cast a property change with collisionData
-					castPropertyChange(EventType.COLLISIONDATA.getEventType(),this);
+					castPropertyChange(StatsEventType.COLLISIONDATA.getEventType(),this);
 				} else if (this instanceof EntitySmartCar && other instanceof EntitySmartCar) {
-					castPropertyChange(EventType.SMARTCAR2SMARTCAR.getEventType());
+					castPropertyChange(StatsEventType.SMARTCAR2SMARTCAR.getEventType());
 				} else if (this instanceof EntitySmartCar && other instanceof EntityCar) {
-					castPropertyChange(EventType.SMARTCAR2CAR.getEventType());
+					castPropertyChange(StatsEventType.SMARTCAR2CAR.getEventType());
 				} else if (this instanceof EntityCar && other instanceof EntityCar) {
-					castPropertyChange(EventType.CAR2CAR.getEventType());
+					castPropertyChange(StatsEventType.CAR2CAR.getEventType());
 				} else if (this instanceof EntityCar && other instanceof EntityBicycle) {
-					castPropertyChange(EventType.CAR2BYCYCLE.getEventType());
+					castPropertyChange(StatsEventType.CAR2BYCYCLE.getEventType());
 						// cast a property change with collisionData
-					castPropertyChange(EventType.COLLISIONDATA.getEventType(),this);
+					castPropertyChange(StatsEventType.COLLISIONDATA.getEventType(),this);
 				}
 				instanceDestroy();
 			}
