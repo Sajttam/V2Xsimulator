@@ -132,7 +132,7 @@ public class StatsController implements PropertyChangeListener {
 		jpanel = new JPanel();
 		
 		
-		GridLayout gridLayout = new GridLayout(labelsCollsions.size() + labelsSpawns.size() + 2, 2);
+		GridLayout gridLayout = new GridLayout(labelsCollision.size() + labelsSpawn.size() + 2, 2);
 		jpanel.setLayout(gridLayout);
 		
 		setFont();
@@ -198,8 +198,8 @@ public class StatsController implements PropertyChangeListener {
 	public void clear() {
 		 //Creates labels and adds them to labelsWithValues
 		jpanel.removeAll();
-		labelsCollsions = new TreeMap<String, StatsHolder>();
-		labelsSpawns = new TreeMap<String, StatsHolder>();
+		labelsCollision = new TreeMap<String, StatsHolder>();
+		labelsSpawn = new TreeMap<String, StatsHolder>();
 		createLabels();
 		setFont();
 		addToPanel();		
@@ -211,7 +211,7 @@ public class StatsController implements PropertyChangeListener {
 			StatsHolder sh = new StatsHolder(e.getDisplayName(), 0);
 			if (e.getHeading().equals("Spawn"))
 				labelsSpawn.put(e.getEventType(), sh);
-			else
+			else if (e.getHeading().equals("Collision"))
 				labelsCollision.put(e.getEventType(), sh);
 		}
 	}
