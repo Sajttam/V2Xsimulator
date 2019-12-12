@@ -54,13 +54,8 @@ public class FunctionHandler extends Thread {
 				bikeDetector.addCheckedPoint(newPosition20); // DEBUG
 				if (bikeDetector.getCollisionBounds().contains(newPosition40) || bikeDetector.getCollisionBounds().contains(newPosition20) ) {
 					if(!bikeDetector.getBicycles().isEmpty()) {
-						System.out.println("HELLO!!! port:" + port + " " + k.getValue().getNewMessage().getListenerPort());
 						server.sendCommand(socket, new V2XCommand(Commands.STOP));
 					}
-				} 
-				if(bikeDetector.getBicycles().isEmpty()) {
-					//System.out.println("GO");
-					//server.sendCommand(socket, new V2XCommand(Commands.DRIVE));
 				}
 			}
 		}
