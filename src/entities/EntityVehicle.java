@@ -35,12 +35,11 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	private Area vehicleBounds;
 	private Shape vehicleShape;
 
-	private boolean rsuStopSignal = false;
-
 	private HashMap<Entity, RelationLog> relationLogs = new HashMap<Entity, RelationLog>();
 	private long birthTime = SharedValues.getInstance().getTimeStamp();
 
 	public static final double CROSSING_VELOCITY_MODIFIER = 0.6; // fraction of max velocity when turning
+	public static final double DECELERATION = 0.08;
 
 	public EntityVehicle(EntityRoad road, PropertyChangeListener listener) {
 		setRoad(road);
@@ -176,30 +175,18 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		for (Entity otherEntity : entitiesInSight) {
 
 			if (otherEntity instanceof EntityRoadReservation && this instanceof EntityCar) {
-
 				if (Math.toDegrees(Math.abs(((EntityRoadReservation) otherEntity).getAngle() - angle)) > 90) {
-
 					if (((EntityRoadReservation) otherEntity).getReserved() && road.leftCurve) {
-
-						stopping();
-
+						stopping(DECELERATION);
 					}
 				} else {
-
-					// System.out.println("Adds reservation");
-
 					((EntityRoadReservation) otherEntity).setReserved(true);
-
 				}
 			} else if (otherEntity instanceof EntityBicycle && this instanceof EntityBicycle) {
-
-				stopping();
-
+				stopping(DECELERATION);
 			}
-
 			else if (otherEntity instanceof EntityVehicle) {
 				int v;
-
 				Area otherBounds = ((EntityVehicle) otherEntity).getVehicleBounds();
 				Area vArea = new Area(visionArea);
 				otherBounds.intersect(vArea);
@@ -215,28 +202,17 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 							otherEntity.getYPosition());
 					// System.out.println(distance);
 					if (road.straight && v == 0) {
-
-						stopping();
+						stopping(DECELERATION);
 					}
-
 					else if (relationLogs.containsKey(otherEntity)) {
-
 						if (Math.abs(relativeAngle - relationLogs.get(otherEntity).getAngleToVehicle()) < Math
 								.toRadians(20)) {
-
 							if (relationLogs.get(otherEntity).getDistanceToVehicle() > distance
 									+ scaling.getPixelsFromMeter(0.5)) {
-
-								stopping();
-
-								// System.out.println("Stopping..." + temp++);
-
+								stopping(DECELERATION);
 							}
-
 						}
-
 					}
-
 					relationLogs.put(otherEntity, new RelationLog(relativeAngle, distance));
 
 //					if ((!road.straight && otherEntity instanceof EntityBicycle) || (!road.straight && v > -1)
@@ -254,7 +230,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 				Rectangle thisBounds = this.getCollisionBounds();
 
 				if (entityRelation(trafficLight) == 0 && road.straight && !(tLightBounds.intersects(thisBounds))) {
-					stopping();
+					stopping(DECELERATION);
 				}
 			}
 		}
@@ -272,15 +248,14 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			}
 		}
 
-		if (rsuStopSignal) {
-			stopping();
+		if (getRSUStopSignal()) {
+			speed = 0;//stopping(10000000);
 		}
 
 		hSpeed = speed * Math.cos(angle);
 		vSpeed = speed * Math.sin(angle);
 
 		move(hSpeed, vSpeed);
-
 	}
 
 	// accelerate up to targetspeed
@@ -302,8 +277,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	}
 
 	// break until complete stop or no obstacle is present
-	private void stopping() {
-		double deceleration = 0.08;
+	private void stopping(double deceleration) {
 		if (this.speed > 0) {
 			setSpeed(this.speed -= deceleration);
 			if (this.speed < 0) {
@@ -353,7 +327,6 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 					castPropertyChange(EventType.CAR2CAR.getEventType());
 				} else if (this instanceof EntityCar && other instanceof EntityBicycle) {
 					castPropertyChange(EventType.CAR2BYCYCLE.getEventType());
-
 				}
 
 				instanceDestroy();
@@ -414,11 +387,14 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	}
 
 	public boolean getRSUStopSignal() {
-		return rsuStopSignal;
+		if (waitTimer > 0)
+			waitTimer--;
+		return waitTimer > 0;
 	}
-
+	
+	private int waitTimer = 0;
 	public void setRSUStopSignal(boolean signal) {
-		this.rsuStopSignal = signal;
+		waitTimer = 120;
 	}
 
 	@Override
