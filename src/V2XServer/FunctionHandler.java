@@ -57,9 +57,9 @@ public class FunctionHandler extends Thread {
 						server.sendCommand(socket, new V2XCommand(Commands.STOP));
 					}
 				}
+
 			}
 		}
-
 	}
 
 	private void eraseOld() {
