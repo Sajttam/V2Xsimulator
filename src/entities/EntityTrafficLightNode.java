@@ -56,7 +56,7 @@ public class EntityTrafficLightNode extends EntityNode {
 
 	private void addRoadReservation(EntityRoad r, EntityTrafficLight l) {
 
-		int resHeight = (int) scaler.getPixelsFromMeter(5);
+		int resHeight = (int) scaler.getPixelsFromMeter(2.5);
 		EntityRoadReservation rRes;
 
 		if (r.getAngle() == 0.0) {
