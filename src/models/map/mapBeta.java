@@ -1,4 +1,4 @@
-package mapModels;
+package models.map;
 
 import java.util.ArrayList;
 import java.util.List;

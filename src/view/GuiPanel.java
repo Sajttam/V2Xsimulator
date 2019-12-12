@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.imageio.ImageIO;
@@ -36,7 +37,7 @@ import models.SharedValues;
 public class GuiPanel extends JPanel {
 	public static final String PROJECT_TITLE = "V2X Simulator";
 
-	private CopyOnWriteArrayList<Entity> entityList;
+	private List<Entity> entityList;
 	private BufferedImage background;
 	private int width;
 	private int height;
@@ -108,10 +109,10 @@ public class GuiPanel extends JPanel {
 	/**
 	 * Sets the list of Entities that will be drawn on the screen
 	 * 
-	 * @param l the list of Entities that will be drawn on the screen
+	 * @param instances the list of Entities that will be drawn on the screen
 	 */
-	public void setDrawInstaces(CopyOnWriteArrayList<Entity> l) {
-		entityList = l;
+	public void setDrawInstaces(List<Entity> instances) {
+		entityList = instances;
 	}
 
 	/**
@@ -151,7 +152,8 @@ public class GuiPanel extends JPanel {
 
 		JMenu menuFile = new JMenu("File");
 		// JMenuItem itemSave = new JMenuItem("Save");
-		JMenuItem itemLoad = new JMenuItem("Load");
+		JMenuItem itemRestart = new JMenuItem("Restart");
+		itemRestart.addActionListener(e -> controller.restart());
 		// itemLoad.addActionListener(e -> controller.loadLevel());
 		JMenuItem itemExit = new JMenuItem("Exit");
 		itemExit.addActionListener(e -> System.exit(0));
@@ -181,7 +183,7 @@ public class GuiPanel extends JPanel {
 
 		menuBar.add(menuFile);
 		// menuFile.add(itemSave);
-		// menuFile.add(itemLoad);
+		menuFile.add(itemRestart);
 		menuFile.add(itemExit);
 
 		menuBar.add(menuOptions);

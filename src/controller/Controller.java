@@ -20,8 +20,8 @@ import javax.swing.JOptionPane;
 import entities.Collidable;
 import entities.Entity;
 import entities.EntityMouseListener;
-import mapModels.mapBeta;
 import models.SharedValues;
+import models.map.mapBeta;
 import view.GuiPanel;
 
 /**
@@ -37,7 +37,7 @@ import view.GuiPanel;
  */
 public class Controller extends Thread implements ActionListener, PropertyChangeListener {
 	private GuiPanel guiPanel;
-	private CopyOnWriteArrayList<Entity> instances;
+	private List<Entity> instances;
 	private List<Entity> createInstances;
 	private List<Entity> deleteInstances;
 	private PerformanceMonitor performanceMonitor;
@@ -68,7 +68,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		GLOBAL.setTimeOutValue(16.6667);
 		GLOBAL.setSMARTCAR_CHANCE(0.5);
 
-		instances = new CopyOnWriteArrayList<Entity>();
+		instances = new ArrayList<Entity>();
 		createInstances = new ArrayList<Entity>();
 		deleteInstances = new ArrayList<Entity>();
 		guiPanel.getFrame().addKeyListener(new TAdapter());
@@ -80,6 +80,20 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		guiPanel.setDrawInstaces(instances);
 		start();
 
+	}
+	
+	public void restart() {
+		GLOBAL.setBicycleCounter(12);
+		GLOBAL.setCarCounter(6);
+		GLOBAL.setServerPort(1000);
+		GLOBAL.setTimeOutValue(16.6667);
+		GLOBAL.setSMARTCAR_CHANCE(0.5);
+		instances.clear();
+		createInstances.clear();
+		deleteInstances.clear();
+		guiPanel.setDrawInstaces(instances);
+		StatsController.getInstance().clear();
+		initializeGame("");
 	}
 
 	/**

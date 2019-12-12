@@ -33,6 +33,11 @@ public class StatsController implements PropertyChangeListener {
 			return valueJLabel;
 		}
 		
+		public void reset() {
+			value = -1;
+			incValue();
+		}
+		
 		public void incValue() {
 			value++;
 			valueJLabel.setText("\t"+value);
@@ -87,21 +92,12 @@ public class StatsController implements PropertyChangeListener {
 	 */
 	private StatsController(JFrame jframe){	
 		this.jframe = jframe;
-		
-		labelsCollsions = new TreeMap<String, StatsHolder>();
-		labelsSpawns = new TreeMap<String, StatsHolder>();
-		
-		createLabels(); //Creates labels and adds them to labelsWithValues
-		
 		jpanel = new JPanel();
 		
+		clear();		
+		
 		GridLayout gridLayout = new GridLayout(labelsCollsions.size() + labelsSpawns.size() + 2, 2);
-		
 		jpanel.setLayout(gridLayout);
-		
-		setFont();
-		addToPanel();
-		
 		jframe.add(jpanel);
 		jframe.setVisible(true);
 		
@@ -134,6 +130,17 @@ public class StatsController implements PropertyChangeListener {
 		StatsHolder sh = labels.get(eventname);
 		JLabel l = sh.getValue();
 		sh.incValue();
+	}
+	
+	public void clear() {
+		 //Creates labels and adds them to labelsWithValues
+		jpanel.removeAll();
+		labelsCollsions = new TreeMap<String, StatsHolder>();
+		labelsSpawns = new TreeMap<String, StatsHolder>();
+		createLabels();
+		setFont();
+		addToPanel();		
+		jframe.pack();
 	}
 	
 	private void createLabels() {
