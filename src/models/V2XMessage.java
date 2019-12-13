@@ -62,7 +62,7 @@ public class V2XMessage implements Serializable {
 	@Override
 	public String toString() {
 
-		return "{id: " + id + ", speed: " + getSpeed() + ", direction: " + Math.round(Math.toDegrees(getDirection()))
+		return "{id: " + id + ", speed: " + Math.round(getSpeed()) + ", direction: " + Math.round(Math.toDegrees(getDirection()))
 				+ ", position: " + "[" + Math.round(getPosition().getX()) + ", " + Math.round(getPosition().getY())
 				+ "]" + ", timestamp: " + timeStamp + "}";
 

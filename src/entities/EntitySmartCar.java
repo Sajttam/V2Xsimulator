@@ -129,7 +129,7 @@ public class EntitySmartCar extends EntityCar {
 					if (i.getRSUBoundaries().tryConnect(this)) {
 
 						V2XMessage message = new V2XMessage(this.hashCode(),
-								Math.round(scaling.pixelsPerStepToKph(this.speed)), getAngle(),
+								scaling.pixelsPerStepToKph(this.speed), getAngle(),
 								new Point2D.Double(getXPosition(), getYPosition()), listenerPort);
 
 						connectToRSU(i.getServerPort());

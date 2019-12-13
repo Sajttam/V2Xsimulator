@@ -50,9 +50,9 @@ public class EntityBikeDetector extends Entity implements Collidable {
 		else
 			g.setColor(STOP_RED);
 		g.fillRect((int)getXPosition(), (int)getYPosition(), getWidth(), getHeight());
-		/*//DEBUG 
+		//DEBUG 
 		g.setColor(Color.RED);
-		for (Point p : pointsChecked) {  
+		/*for (Point p : pointsChecked) {  
 			g.fillRect(p.x-2, p.y-2, 4, 4);
 		}*/
 	
@@ -61,7 +61,10 @@ public class EntityBikeDetector extends Entity implements Collidable {
 	@Override
 	public void collision(Entity other) {
 		if (other instanceof EntityBicycle) {
-			bicycles.add((EntityBicycle)other);
+			
+			EntityBicycle bike = (EntityBicycle) other;
+			if (bike.getSpeed() > 0)
+				bicycles.add((EntityBicycle)other);
 		}
 	}
 }

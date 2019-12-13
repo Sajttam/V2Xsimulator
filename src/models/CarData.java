@@ -6,6 +6,7 @@ import java.awt.geom.Point2D;
 public class CarData  {
 	private V2XMessage oldMessage = null;
 	private V2XMessage newMessage = null;
+	private SIScaling scaling = new SIScaling();
 	private double angularVelocity	= 0;
 	
 	public CarData(V2XMessage message) {
@@ -28,7 +29,7 @@ public class CarData  {
 	 */
 	public Point getPositionAfterSteps(int steps) {
 		double angle = newMessage.getDirection() + getAngularVelocity() * steps;
-		double speed = newMessage.getSpeed() + getAcceleration() * steps;
+		double speed = scaling.kphToPixelsPerStep(newMessage.getSpeed()) + getAcceleration() * steps;
 		double currentX = newMessage.getPosition().getX();
 		double currentY = newMessage.getPosition().getY();		
 		//System.out.println("Angle: " + angle + " Direction "+ newMessage.getDirection() + "AngleV " + getAngularVelocity());
@@ -45,7 +46,7 @@ public class CarData  {
 	}
 	
 	public double getAcceleration() {
-		double acceleration = (newMessage.getSpeed()-oldMessage.getSpeed())/getTimeDiff();
+		double acceleration = scaling.kphToPixelsPerStep((newMessage.getSpeed()-oldMessage.getSpeed()))/getTimeDiff();
 		if(acceleration < 0) {
 			acceleration = 0;
 		}
