@@ -200,15 +200,31 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			}
 
 			else if (otherEntity instanceof EntityCar) {
+				boolean close = distanceToVehicle((EntityVehicle) otherEntity) < scaling.getPixelsFromMeter(1.5);
 
-				// Checks if the entities are moving in the same general direction +- degrees
-				if (angleDifference((int) Math.toDegrees(this.getAngle()),
-						(int) Math.toDegrees(((EntityVehicle) otherEntity).getAngle())) < 70) {
+				boolean inFront = false;
 
-					// Checks if this is moving away from the other entity and thusly shouldnt stop
-					if (!this.movingAwayFrom((EntityVehicle) otherEntity)) {
+				if (v == 0) {
+					inFront = true;
+				}
 
-						stopping(DECELERATION);
+				if (close) {
+
+					System.out.println("Close " + close);
+
+					System.out.println("Is in front " + inFront);
+				}
+
+				if (close && inFront || !close) {
+					// Checks if the entities are moving in the same general direction +- degrees
+					if (angleDifference((int) Math.toDegrees(this.getAngle()),
+							(int) Math.toDegrees(((EntityVehicle) otherEntity).getAngle())) < 70) {
+
+						// Checks if this is moving away from the other entity and thusly shouldnt stop
+						if (!this.movingAwayFrom((EntityVehicle) otherEntity)) {
+
+							stopping(DECELERATION);
+						}
 					}
 				}
 			}
@@ -493,10 +509,19 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	}
 
-	public int angleDifference(int alpha, int beta) {
+	private int angleDifference(int alpha, int beta) {
 		int phi = Math.abs(beta - alpha) % 360;
 		int distance = phi > 180 ? 360 - phi : phi;
 		return distance;
+	}
+
+	private double distanceToVehicle(EntityVehicle other) {
+
+		double x1 = other.getXPosition();
+		double y1 = other.getYPosition();
+		double x2 = this.getXPosition();
+		double y2 = this.getYPosition();
+		return Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
 	}
 
 }
