@@ -14,11 +14,10 @@ import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
-
-import controller.StatsController.EventType;
-import models.CollisionData;
 import models.SIScaling;
 import models.SharedValues;
+import models.stats.ModelCollision;
+import models.stats.StatsEventType;
 
 public class EntityVehicle extends Entity implements Collidable, EntityMouseListener {
 
@@ -35,6 +34,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	protected SIScaling scaling = new SIScaling();
 	private Area vehicleBounds;
 	private Shape vehicleShape;
+	private String vehicleName = "Vehicle";
 	private long birthTime = SharedValues.getInstance().getTimeStamp();
 
 	public static final double CROSSING_VELOCITY_MODIFIER = 0.6; // fraction of max velocity when turning
@@ -286,7 +286,15 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		}
 
 	}
-
+	
+	public void setVehicleName(String vehicleName) {
+		this.vehicleName = vehicleName;
+	}
+	
+	public String getVehicleName() {
+		return vehicleName;
+	}
+	
 	/**
 	 * Cast a property change
 	 * 
@@ -303,8 +311,19 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	 * @param vehicle   vehicle that has collided and should send data
 	 */
 	public void castPropertyChange(String eventname, EntityVehicle vehicle) {
-		propertyChangeSupportCounter.firePropertyChange(eventname, null, new CollisionData(vehicle.getSpeed(),
-				vehicle.getAngle(), new Point2D.Double(vehicle.getXPosition(), vehicle.getYPosition())));
+
+		ModelCollision mc = new ModelCollision();
+		
+		mc.setStatsEventType(eventname);
+		
+		mc.setVehicleFirstType(getVehicleName());
+		
+		mc.setVehicleFirstSpeed(scaling.pixelsPerStepToKph(getSpeed()));
+		
+		mc.setVehicleOtherType(getVehicleName());
+		mc.setVehicleOtherSpeed(scaling.pixelsPerStepToKph(vehicle.getSpeed()));
+		
+		propertyChangeSupportCounter.firePropertyChange(eventname, null, mc);
 	}
 
 	@Override
@@ -344,21 +363,19 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 //				}
 
 				if (this instanceof EntitySmartCar && other instanceof EntityBicycle) {
-					castPropertyChange(EventType.SMARTCAR2BICYCLE.getEventType());
-
+					castPropertyChange(StatsEventType.SMARTCAR2BICYCLE.getEventType());
 					// cast a property change with collisionData
-					castPropertyChange(EventType.COLLISIONDATA.getEventType(), this);
-
+					castPropertyChange(StatsEventType.COLLISION_DATA.getEventType(),(EntityVehicle) other);
 				} else if (this instanceof EntitySmartCar && other instanceof EntitySmartCar) {
-					castPropertyChange(EventType.SMARTCAR2SMARTCAR.getEventType());
+					castPropertyChange(StatsEventType.SMARTCAR2SMARTCAR.getEventType());
 				} else if (this instanceof EntitySmartCar && other instanceof EntityCar) {
-					castPropertyChange(EventType.SMARTCAR2CAR.getEventType());
+					castPropertyChange(StatsEventType.SMARTCAR2CAR.getEventType());
 				} else if (this instanceof EntityCar && other instanceof EntityCar) {
-					castPropertyChange(EventType.CAR2CAR.getEventType());
+					castPropertyChange(StatsEventType.CAR2CAR.getEventType());
 				} else if (this instanceof EntityCar && other instanceof EntityBicycle) {
-					castPropertyChange(EventType.CAR2BYCYCLE.getEventType());
-					// cast a property change with collisionData
-					castPropertyChange(EventType.COLLISIONDATA.getEventType(), this);
+					castPropertyChange(StatsEventType.CAR2BYCYCLE.getEventType());
+						// cast a property change with collisionData
+					castPropertyChange(StatsEventType.COLLISION_DATA.getEventType(),(EntityVehicle) other);
 				}
 				instanceDestroy();
 			}
