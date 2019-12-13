@@ -24,6 +24,7 @@ public class EntityRoad extends Entity {
 	private Boolean spawning;
 	private double speedLimit = 2;
 	private SIScaling scaler = new SIScaling();
+	boolean drawn;
 
 	public boolean straight = true;
 	public boolean leftCurve = false;
@@ -96,7 +97,7 @@ public class EntityRoad extends Entity {
 						SharedValues.getInstance().decrementCarCounter();
 					}
 				}
-				wait = (int) (50 + (Math.random() * 400));
+				wait = scaler.getStepsPerSecond() * 4;
 			}
 		wait--;
 	}
@@ -107,22 +108,25 @@ public class EntityRoad extends Entity {
 
 	@Override
 	public void draw(Graphics g) {
-		switch (roadType) {
-		case CAR:
+		if (!drawn) {
+			switch (roadType) {
+			case CAR:
 
-			g.setColor(Color.GREEN);
-			break;
-		case BICYCLE:
-			g.setColor(Color.ORANGE);
-			break;
+				g.setColor(Color.GREEN);
+				break;
+			case BICYCLE:
+				g.setColor(Color.ORANGE);
+				break;
+			}
+
+			g.drawLine((int) getXPosition(), (int) getYPosition(), (int) x2, (int) y2);
+			// g.fillRect(x2,y2-4,8,8);
+			g.setColor(Color.WHITE);
+			// g.drawString((angle*(180.0/Math.PI)) + "�",
+			// (int)(getXPosition()+(distX/2)),
+			// (int)(getYPosition()+distY/2));
+
 		}
-
-		g.drawLine((int) getXPosition(), (int) getYPosition(), (int) x2, (int) y2);
-		// g.fillRect(x2,y2-4,8,8);
-		g.setColor(Color.WHITE);
-		// g.drawString((angle*(180.0/Math.PI)) + "�",
-		// (int)(getXPosition()+(distX/2)),
-		// (int)(getYPosition()+distY/2));
 
 	}
 

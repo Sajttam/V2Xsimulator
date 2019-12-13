@@ -36,7 +36,7 @@ public class RSUServerUDP extends ConnectionUDP implements Runnable {
 	public int getServerPort() {
 		return serverPort;
 	}
-	
+
 	public boolean addBikeDetector(EntityBikeDetector bikeDetector) {
 		return bikeDetectors.add(bikeDetector);
 	}

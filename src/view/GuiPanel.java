@@ -235,11 +235,12 @@ public class GuiPanel extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+
 		int paintXOffset = 0;
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.scale(scaling, scaling);
 		g2d.translate(paintXOffset, 0);
-		super.paintComponent(g);
+
 		for (int i = 0; i < 20; i++)
 			g2d.drawImage(background, null, (int) (231 * i + paintXOffset * 0.1), 0);
 

@@ -120,7 +120,7 @@ public class EntitySmartCar extends EntityCar {
 	 */
 	@Override
 	public void step() {
-        
+
 		if (tempWait <= 0) {
 			try {
 
@@ -128,7 +128,8 @@ public class EntitySmartCar extends EntityCar {
 
 					if (i.getRSUBoundaries().tryConnect(this)) {
 
-						V2XMessage message = new V2XMessage(this.hashCode(), this.speed, getAngle(),
+						V2XMessage message = new V2XMessage(this.hashCode(),
+								Math.round(scaling.pixelsPerStepToKph(this.speed)), getAngle(),
 								new Point2D.Double(getXPosition(), getYPosition()), listenerPort);
 
 						connectToRSU(i.getServerPort());
@@ -148,11 +149,11 @@ public class EntitySmartCar extends EntityCar {
 		super.step();
 
 	}
-	
+
 	private Color getSmartCarColor() {
-		if(colorWaitCounter <= 0) {
+		if (colorWaitCounter <= 0) {
 			return Color.BLUE;
-		}else {
+		} else {
 			colorWaitCounter--;
 			return Color.PINK;
 		}
