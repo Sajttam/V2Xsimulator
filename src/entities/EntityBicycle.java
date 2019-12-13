@@ -10,6 +10,7 @@ public class EntityBicycle extends EntityVehicle {
 
 	public EntityBicycle(EntityRoad road, PropertyChangeListener listener, String entitytype) {
 		super(road, listener);
+		setVehicleName("Bicycle");
 		setSpeed(SharedValues.getInstance().getMaxSpeed(this));
 		setCollisionBounds(12, 12);
 		setCollisionBounds((getCollisionBounds()), -6, -6);

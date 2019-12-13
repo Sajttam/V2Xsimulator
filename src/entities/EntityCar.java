@@ -13,7 +13,7 @@ public class EntityCar extends EntityVehicle {
 
 	public EntityCar(EntityRoad road, PropertyChangeListener listener, String entitytype) {
 		super(road, listener);
-
+		setVehicleName("Car");
 		setParameters(road, listener, entitytype);
 
 	}
