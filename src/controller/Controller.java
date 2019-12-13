@@ -13,7 +13,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.JOptionPane;
 
@@ -83,7 +82,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		startGUIThread();
 
 	}
-	
+
 	public void restart() {
 		GLOBAL.setBicycleCounter(12);
 		GLOBAL.setCarCounter(6);

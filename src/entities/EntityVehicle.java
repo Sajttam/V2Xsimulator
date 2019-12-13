@@ -13,7 +13,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.HashMap;
 import java.util.List;
 
 import controller.StatsController.EventType;
@@ -25,6 +24,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	private EntityRoad road;
 	protected double speed = 0;
+	protected double previousSpeed = 0;
 	private double distX = 0;
 	private double distY = 0;
 	private double angle = 0;
@@ -35,14 +35,11 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	protected SIScaling scaling = new SIScaling();
 	private Area vehicleBounds;
 	private Shape vehicleShape;
-	private EntityRoadReservation temp1;
-	private EntityRoadReservation temp2;
-
-	private HashMap<Entity, RelationLog> relationLogs = new HashMap<Entity, RelationLog>();
 	private long birthTime = SharedValues.getInstance().getTimeStamp();
 
 	public static final double CROSSING_VELOCITY_MODIFIER = 0.6; // fraction of max velocity when turning
-	public static final double DECELERATION = 0.08;
+	public static final double DECELERATION = 0.1;
+	public static final double ACCELERATION = 0.08;
 
 	public EntityVehicle(EntityRoad road, PropertyChangeListener listener) {
 		setRoad(road);
@@ -92,35 +89,6 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	}
 
-	private class RelationLog {
-		private double angleToVehicle;
-		private double distanceToVehicle;
-
-		public RelationLog(double angleToVehicle, double distanceToVehicle) {
-
-			this.angleToVehicle = angleToVehicle;
-			this.distanceToVehicle = distanceToVehicle;
-
-		}
-
-		public double getAngleToVehicle() {
-			return angleToVehicle;
-		}
-
-		public void setAngleToVehicle(double angleToVehicle) {
-			this.angleToVehicle = angleToVehicle;
-		}
-
-		public double getDistanceToVehicle() {
-			return distanceToVehicle;
-		}
-
-		public void setDistanceToVehicle(double distanceToVehicle) {
-			this.distanceToVehicle = distanceToVehicle;
-		}
-
-	}
-
 	@Override
 	public void move(double x, double y) {
 		super.move(x, y);
@@ -138,9 +106,6 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		distY = road.y2 - road.getYPosition();
 
 		angle = road.getAngle();
-
-		hSpeed = speed * Math.cos(angle);
-		vSpeed = speed * Math.sin(angle);
 
 		visionArea = getVisionArea();
 
@@ -177,6 +142,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	@Override
 	public void step() {
 
+		previousSpeed = speed;
 		entitiesInSight = getEntitiesInsideArea(visionArea);
 
 		entitiesInSight.remove(this);
@@ -262,27 +228,26 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		}
 
 		if (getRSUStopSignal()) {
-			speed = 0;// stopping(10000000);
+			stopping(DECELERATION);
 		}
 
 		hSpeed = speed * Math.cos(angle);
 		vSpeed = speed * Math.sin(angle);
-
 		move(hSpeed, vSpeed);
 	}
 
 	// accelerate up to targetspeed
 	private void modifySpeed(double targetVelocity) {
-		double acceleration = scaling.accelerationPerStep(2.1);
-		double deceleration = scaling.accelerationPerStep(2);
+		double acceleration = scaling.accelerationPerStep(ACCELERATION);
+		double deceleration = scaling.accelerationPerStep(DECELERATION);
 
-		if (this.speed < targetVelocity) {
-			setSpeed(this.speed += acceleration);
+		if (this.previousSpeed < targetVelocity) {
+			setSpeed(previousSpeed + acceleration);
 			if (this.speed > targetVelocity) {
 				setSpeed(targetVelocity);
 			}
-		} else if (this.speed > targetVelocity) {
-			setSpeed(this.speed -= deceleration);
+		} else if (this.previousSpeed > targetVelocity) {
+			setSpeed(previousSpeed - deceleration);
 			if (this.speed < targetVelocity) {
 				setSpeed(targetVelocity);
 			}
@@ -293,11 +258,15 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	private void stopping(double deceleration) {
 
-		if (this.speed > 0) {
-			setSpeed(this.speed -= deceleration);
+		if (this.previousSpeed > 0) {
+			setSpeed(previousSpeed - deceleration);
 			if (this.speed < 0) {
 				setSpeed(0);
 			}
+		} else if (this.speed != 0) {
+
+			setSpeed(0);
+
 		}
 	}
 
@@ -363,13 +332,15 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 			// Also checks that the vehicle haven't just spawned to prevent spawn collision
 
-			if (!otherBounds.isEmpty() && !isNewBorn()) {
-
-//				try {
-//					wait();
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
+			if (!otherBounds.isEmpty() && !isNewBorn() && !((EntityVehicle) other).isNewBorn()) {
+//
+//				if (this instanceof EntityCar && other instanceof EntityCar) {
+//					try {
+//						wait();
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
 //				}
 
 				if (this instanceof EntitySmartCar && other instanceof EntityBicycle) {
@@ -395,7 +366,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	}
 
 	public double getSpeed() {
-		return speed;
+		return previousSpeed;
 	}
 
 	public void setSpeed(double speed) {

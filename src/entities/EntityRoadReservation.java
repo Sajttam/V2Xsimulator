@@ -13,6 +13,7 @@ public class EntityRoadReservation extends Entity implements Collidable {
 
 	private double angle;
 	private boolean reserved = false;
+	private int waitTimeout = 5;
 
 	private boolean oldReserved = false;
 
@@ -61,6 +62,12 @@ public class EntityRoadReservation extends Entity implements Collidable {
 		// Sets the reservation to last step rounds reservations if Light is not red
 		if (!tLight.getLightCycle().equals(LightCycle.STOP)) {
 			oldReserved = reserved;
+			waitTimeout = 5;
+
+		} else if (waitTimeout > 0) {
+			oldReserved = reserved;
+			waitTimeout--;
+
 		}
 		reserved = false;
 
@@ -105,8 +112,10 @@ public class EntityRoadReservation extends Entity implements Collidable {
 	@Override
 	public void collision(Entity other) {
 
-		if (other instanceof EntityCar)
+		if (other instanceof EntityCar) {
 			setReserved(true);
+
+		}
 
 	}
 
