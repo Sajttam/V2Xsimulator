@@ -36,7 +36,10 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	private Shape vehicleShape;
 	private String vehicleName = "Vehicle";
 	private long birthTime = SharedValues.getInstance().getTimeStamp();
-
+	
+	public static final int DELETION_TIMER_CONSTANT = 1000;
+	private int deletionTimer = DELETION_TIMER_CONSTANT;
+	
 	public static final double CROSSING_VELOCITY_MODIFIER = 0.6; // fraction of max velocity when turning
 	public static final double DECELERATION = 0.1;
 	public static final double ACCELERATION = 0.08;
@@ -234,6 +237,8 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		hSpeed = speed * Math.cos(angle);
 		vSpeed = speed * Math.sin(angle);
 		move(hSpeed, vSpeed);
+		
+		autoDeletHandeler();
 	}
 
 	// accelerate up to targetspeed
@@ -252,6 +257,19 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 				setSpeed(targetVelocity);
 			}
 		}
+	}
+	
+	private void autoDeletHandeler() {
+		if (speed == 0) {
+			if (deletionTimer <= 0) {
+				instanceDestroy();
+			}
+			deletionTimer--;
+		}
+		else {
+			deletionTimer = DELETION_TIMER_CONSTANT;
+		}
+			
 	}
 
 	// break until complete stop or no obstacle is present
