@@ -13,6 +13,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.JOptionPane;
 
@@ -37,7 +38,7 @@ import view.GuiPanel;
  */
 public class Controller extends Thread implements ActionListener, PropertyChangeListener {
 	private GuiPanel guiPanel;
-	private List<Entity> instances;
+	private CopyOnWriteArrayList<Entity> instances;
 	private List<Entity> createInstances;
 	private List<Entity> deleteInstances;
 	private PerformanceMonitor performanceMonitor;
@@ -66,9 +67,9 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		GLOBAL.setCarCounter(12);
 		GLOBAL.setServerPort(1000);
 		GLOBAL.setTimeOutValue(16.6667);
-		GLOBAL.setSMARTCAR_CHANCE(0.0);
+		GLOBAL.setSMARTCAR_CHANCE(0.5);
 
-		instances = new ArrayList<Entity>();
+		instances = new CopyOnWriteArrayList<Entity>();
 		createInstances = new ArrayList<Entity>();
 		deleteInstances = new ArrayList<Entity>();
 		guiPanel.getFrame().addKeyListener(new TAdapter());

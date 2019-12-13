@@ -79,7 +79,7 @@ public class FunctionHandler extends Thread {
 	 */
 	private void runFunctions() throws Exception {
 		eraseOld();
-		// blindspotChecker();
+		blindspotChecker();
 	}
 
 	/**
