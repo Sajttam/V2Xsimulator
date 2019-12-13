@@ -190,6 +190,14 @@ public class StatsController implements PropertyChangeListener {
 			for (ModelStatsHolder sh : headings.get(hStr[1]).values()) {
 				pwriter.println(sh.getStringName() + "\t" + sh.getStringValue());
 			}
+			pwriter.println("Cars - Bicycles: \t");
+			for (ModelStatsHolder sh : headings.get(hStr[3]).values()) {
+				pwriter.println(sh.getStringName() + "\t" + sh.getStringValue());
+			}
+			pwriter.println("Smartcars - Bicycles: \t");
+			for (ModelStatsHolder sh : headings.get(hStr[4]).values()) {
+				pwriter.println(sh.getStringName() + "\t" + sh.getStringValue());
+			}
 
 			pwriter.close();
 			fwriter.close();
