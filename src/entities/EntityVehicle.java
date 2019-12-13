@@ -9,11 +9,11 @@ import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
+
 import models.SIScaling;
 import models.SharedValues;
 import models.stats.ModelCollision;
@@ -203,15 +203,25 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			}
 
 			else if (otherEntity instanceof EntityCar) {
+				boolean close = distanceToVehicle((EntityVehicle) otherEntity) < scaling.getPixelsFromMeter(1.5);
 
-				// Checks if the entities are moving in the same general direction +- degrees
-				if (angleDifference((int) Math.toDegrees(this.getAngle()),
-						(int) Math.toDegrees(((EntityVehicle) otherEntity).getAngle())) < 70) {
+				boolean inFront = false;
 
-					// Checks if this is moving away from the other entity and thusly shouldnt stop
-					if (!this.movingAwayFrom((EntityVehicle) otherEntity)) {
+				if (v == 0) {
+					inFront = true;
+				}
 
-						stopping(DECELERATION);
+				// Avoiding deadlock with inaccurate collisionboxes
+				if (close && inFront || !close) {
+					// Checks if the entities are moving in the same general direction +- degrees
+					if (angleDifference((int) Math.toDegrees(this.getAngle()),
+							(int) Math.toDegrees(((EntityVehicle) otherEntity).getAngle())) < 70) {
+
+						// Checks if this is moving away from the other entity and thusly shouldnt stop
+						if (!this.movingAwayFrom((EntityVehicle) otherEntity)) {
+
+							stopping(DECELERATION);
+						}
 					}
 				}
 			}
@@ -304,15 +314,15 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		}
 
 	}
-	
+
 	public void setVehicleName(String vehicleName) {
 		this.vehicleName = vehicleName;
 	}
-	
+
 	public String getVehicleName() {
 		return vehicleName;
 	}
-	
+
 	/**
 	 * Cast a property change
 	 * 
@@ -331,16 +341,16 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	public void castPropertyChange(String eventname, EntityVehicle vehicle) {
 
 		ModelCollision mc = new ModelCollision();
-		
+
 		mc.setStatsEventType(eventname);
-		
+
 		mc.setVehicleFirstType(getVehicleName());
-		
+
 		mc.setVehicleFirstSpeed(scaling.pixelsPerStepToKph(getSpeed()));
-		
+
 		mc.setVehicleOtherType(getVehicleName());
 		mc.setVehicleOtherSpeed(scaling.pixelsPerStepToKph(vehicle.getSpeed()));
-		
+
 		propertyChangeSupportCounter.firePropertyChange(eventname, null, mc);
 	}
 
@@ -383,7 +393,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 				if (this instanceof EntitySmartCar && other instanceof EntityBicycle) {
 					castPropertyChange(StatsEventType.SMARTCAR2BICYCLE.getEventType());
 					// cast a property change with collisionData
-					castPropertyChange(StatsEventType.COLLISION_DATA.getEventType(),(EntityVehicle) other);
+					castPropertyChange(StatsEventType.COLLISION_DATA.getEventType(), (EntityVehicle) other);
 				} else if (this instanceof EntitySmartCar && other instanceof EntitySmartCar) {
 					castPropertyChange(StatsEventType.SMARTCAR2SMARTCAR.getEventType());
 				} else if (this instanceof EntitySmartCar && other instanceof EntityCar) {
@@ -392,8 +402,8 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 					castPropertyChange(StatsEventType.CAR2CAR.getEventType());
 				} else if (this instanceof EntityCar && other instanceof EntityBicycle) {
 					castPropertyChange(StatsEventType.CAR2BYCYCLE.getEventType());
-						// cast a property change with collisionData
-					castPropertyChange(StatsEventType.COLLISION_DATA.getEventType(),(EntityVehicle) other);
+					// cast a property change with collisionData
+					castPropertyChange(StatsEventType.COLLISION_DATA.getEventType(), (EntityVehicle) other);
 				}
 				instanceDestroy();
 			}
@@ -528,10 +538,19 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	}
 
-	public int angleDifference(int alpha, int beta) {
+	private int angleDifference(int alpha, int beta) {
 		int phi = Math.abs(beta - alpha) % 360;
 		int distance = phi > 180 ? 360 - phi : phi;
 		return distance;
+	}
+
+	private double distanceToVehicle(EntityVehicle other) {
+
+		double x1 = other.getXPosition();
+		double y1 = other.getYPosition();
+		double x2 = this.getXPosition();
+		double y2 = this.getYPosition();
+		return Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
 	}
 
 }
