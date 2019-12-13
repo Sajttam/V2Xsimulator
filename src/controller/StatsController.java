@@ -19,9 +19,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import models.CollisionData;
 import models.SIScaling;
 import models.SharedValues;
+import models.stats.ModelCollision;
 import models.stats.ModelStatsHolder;
 import models.stats.StatsEventType;
 import view.StatsPanel;
@@ -31,9 +31,9 @@ public class StatsController implements PropertyChangeListener {
 	private SIScaling scaling = new SIScaling();
 	private JFrame jframe;
 	private JPanel jpanel;
-
+    private List<ModelCollision> modelCollisions;
 	private Map<String, Map<String, ModelStatsHolder>> headings;
-	private String[] hStr = { "Spawn", "Collision", "Data"};
+	private String[] hStr = { "Spawn", "Collision", "Data", "Cars - Bicycles", "Smartcars - Bicycles"};
 
 	/*
 	 * private Map<String, ModelStatsHolder> labelsSpawn; private Map<String,
@@ -50,6 +50,8 @@ public class StatsController implements PropertyChangeListener {
 		this.jframe = jframe;
 		jpanel = new JPanel();
 		//clear();
+		
+		modelCollisions = new ArrayList<ModelCollision>();
 
 		headings = new TreeMap<String, Map<String, ModelStatsHolder>>();
 		for (String s : hStr)
@@ -104,10 +106,30 @@ public class StatsController implements PropertyChangeListener {
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		String eventname = event.getPropertyName();
-		if (eventname.equals(StatsEventType.COLLISIONDATA.getEventType())) { // for handling a received CollisionData
-			if (event.getNewValue() instanceof CollisionData) {
-				CollisionData cd = (CollisionData) event.getNewValue();
-				// collisionDataMap.put(cd.getTimeStamp(),cd);
+		if (eventname.equals(StatsEventType.COLLISION_DATA.getEventType())) { // for handling a received CollisionData
+			if (event.getNewValue() instanceof ModelCollision) {
+				ModelCollision mc = (ModelCollision) event.getNewValue();
+				modelCollisions.add(mc);
+				
+				if (mc.getVehicleFirstSpeed() < 20) {
+					if (mc.getVehicleFirstType().equals("Car")) 
+						headings.get(hStr[3]).get("c2b_020").incValue();
+					else
+						headings.get(hStr[4]).get("sc2b_020").incValue();
+				}
+				else if (mc.getVehicleFirstSpeed() < 40) {
+					if (mc.getVehicleFirstType().equals("Car")) 
+						headings.get(hStr[3]).get("c2b_2040").incValue();
+					else
+						headings.get(hStr[4]).get("sc2b_2040").incValue();
+				}
+				else {
+					if (mc.getVehicleFirstType().equals("Car")) 
+						headings.get(hStr[3]).get("c2b_4060").incValue();
+					else
+						headings.get(hStr[4]).get("sc2b_4060").incValue();
+				}
+				
 			}
 		} else {
 			TreeMap<String, ModelStatsHolder> labels = new TreeMap<String, ModelStatsHolder>((headings.get(hStr[0])));

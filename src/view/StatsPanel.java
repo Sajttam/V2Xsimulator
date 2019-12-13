@@ -16,16 +16,16 @@ import models.stats.StatsEventType;
 
 public class StatsPanel extends JPanel {
 	
-	private static int TEXT_SIZE = 30;
-	private static int HEADING_SIZE = 40;
+	private static int TEXT_SIZE = 20;
+	private static int HEADING_SIZE = 24;
 	
-	private String[] hStr = { "Spawn", "Collision", "Data"};
+	private String[] hStr = { "Spawn", "Collision",  "Data", "Cars - Bicycles", "Smartcars - Bicycles"};
 	private Map<String, Map<String, ModelStatsHolder>> headings;
 	
 	public StatsPanel(Map<String, Map<String, ModelStatsHolder>> headings) {
 		this.headings = headings;
 		
-		GridLayout gridLayout = new GridLayout(headings.get(hStr[0]).size() + headings.get(hStr[1]).size() + 2, 2);
+		GridLayout gridLayout = new GridLayout(headings.get(hStr[0]).size() + headings.get(hStr[1]).size() + 2 + 8, 2);
 		setLayout(gridLayout);
 		
 		setFont();
@@ -38,21 +38,30 @@ public class StatsPanel extends JPanel {
 			add(sh.getValue());
 		}
 	}
+	
+	public void addHeading(String s) {
+		JLabel heading = new JLabel(s);
+		heading.setFont(new Font("Serif", Font.BOLD, HEADING_SIZE));
+		add(heading);
+		add(new JLabel(""));
+	}
 
 	private void addToPanel() {
-		add(new JLabel("Spawns"));
-		add(new JLabel(""));
-
+		addHeading("Spawns");
 		addToPanel(headings.get(hStr[0]));
-
-		add(new JLabel("Collisions"));
-		add(new JLabel(""));
-
-		addToPanel(headings.get(hStr[1]));
+		
+		addHeading("Collisions");		
+		addToPanel(headings.get(hStr[1]));		
+		
+		addHeading("Cars - Bicycles");
+		addToPanel(headings.get(hStr[3]));
+		
+		addHeading("Smartcars - Bicycles");
+		addToPanel(headings.get(hStr[4]));
 	}
 
 	private void setFont(Map<String, ModelStatsHolder> map) {
-		Font font = new Font("Serif", Font.PLAIN, HEADING_SIZE);
+		Font font = new Font("Serif", Font.PLAIN, TEXT_SIZE);
 		for (ModelStatsHolder sh : map.values()) {
 			sh.getName().setFont(font);
 			sh.getValue().setFont(font);
@@ -62,5 +71,7 @@ public class StatsPanel extends JPanel {
 	private void setFont() {
 		setFont(headings.get(hStr[0]));
 		setFont(headings.get(hStr[1]));
+		setFont(headings.get(hStr[3]));
+		setFont(headings.get(hStr[4]));
 	}
 }

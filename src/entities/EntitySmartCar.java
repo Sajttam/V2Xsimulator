@@ -45,8 +45,8 @@ public class EntitySmartCar extends EntityCar {
 	 */
 
 	public EntitySmartCar(EntityRoad road, PropertyChangeListener listener, String entitytype) {
-
 		super(road, listener, entitytype);
+		setVehicleName("Smartcar");
 		startListener();
 
 	}
