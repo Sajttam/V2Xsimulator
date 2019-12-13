@@ -41,8 +41,8 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	private int deletionTimer = DELETION_TIMER_CONSTANT;
 	
 	public static final double CROSSING_VELOCITY_MODIFIER = 0.6; // fraction of max velocity when turning
-	public static final double DECELERATION = 0.1;
-	public static final double ACCELERATION = 0.08;
+	public static final double DECELERATION = scaling.accelerationPerStep(2.5); //[pixels/step]
+	public static final double ACCELERATION = scaling.accelerationPerStep(2.1); //[pixels/step]
 
 	public EntityVehicle(EntityRoad road, PropertyChangeListener listener) {
 		setRoad(road);
@@ -253,8 +253,8 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	// accelerate up to targetspeed
 	private void modifySpeed(double targetVelocity) {
-		double acceleration = scaling.accelerationPerStep(ACCELERATION);
-		double deceleration = scaling.accelerationPerStep(DECELERATION);
+		double acceleration = ACCELERATION;
+		double deceleration = DECELERATION;
 
 		if (this.previousSpeed < targetVelocity) {
 			setSpeed(previousSpeed + acceleration);
@@ -285,16 +285,13 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	// break until complete stop or no obstacle is present
 
 	private void stopping(double deceleration) {
-
 		if (this.previousSpeed > 0) {
 			setSpeed(previousSpeed - deceleration);
 			if (this.speed < 0) {
 				setSpeed(0);
 			}
 		} else if (this.speed != 0) {
-
 			setSpeed(0);
-
 		}
 	}
 
