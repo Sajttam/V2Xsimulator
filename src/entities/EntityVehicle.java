@@ -31,13 +31,13 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	private double vSpeed = 0;
 	private PropertyChangeSupport propertyChangeSupportCounter;
 	private Polygon visionArea;
-	protected SIScaling scaling = new SIScaling();
+	protected static SIScaling scaling = new SIScaling();
 	private Area vehicleBounds;
 	private Shape vehicleShape;
 	private String vehicleName = "Vehicle";
 	private long birthTime = SharedValues.getInstance().getTimeStamp();
 	
-	public static final int DELETION_TIMER_CONSTANT = 1000;
+	public static final int DELETION_TIMER_CONSTANT = 32 * scaling.getStepsPerSecond();
 	private int deletionTimer = DELETION_TIMER_CONSTANT;
 	
 	public static final double CROSSING_VELOCITY_MODIFIER = 0.6; // fraction of max velocity when turning

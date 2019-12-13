@@ -155,7 +155,6 @@ public class StatsController implements PropertyChangeListener {
 	private void createLabels() {
 		for (StatsEventType e : StatsEventType.values()) {
 			ModelStatsHolder sh = new ModelStatsHolder(e.getDisplayName(), 0);
-			System.out.println("Heading: " + e.getHeading());
 			Map<String, ModelStatsHolder> head = headings.get(e.getHeading());
 			head.put(e.getEventType(), sh);
 		}
