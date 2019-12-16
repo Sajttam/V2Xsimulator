@@ -51,7 +51,13 @@ public class SIScaling {
 	 * @return value in pixels per step
 	 */
 	public double accelerationPerStep(double mps) {
-		return pixelsPerMeter * (mps / stepsPerSecond);
+		return pixelsPerMeter * (mps / (stepsPerSecond));
+	}
+	
+	public static void main(String[] args) {
+		SIScaling s = new SIScaling();
+		System.out.println("1 [meter/sekund^2] = " + s.accelerationPerStep(1) + " [pixlar/step]");
+		System.out.println("60 [kph] = " + s.kphToPixelsPerStep(60) + " [pixlar/step]");
 	}
 
 }
