@@ -36,10 +36,10 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	private Shape vehicleShape;
 	private String vehicleName = "Vehicle";
 	private long birthTime = SharedValues.getInstance().getTimeStamp();
-	
+
 	public static final int DELETION_TIMER_CONSTANT = 32 * scaling.getStepsPerSecond();
 	private int deletionTimer = DELETION_TIMER_CONSTANT;
-	
+
 	public static final double CROSSING_VELOCITY_MODIFIER = 0.6; // fraction of max velocity when turning
 	public static final double DECELERATION = 0.1;
 	public static final double ACCELERATION = 0.08;
@@ -247,7 +247,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		hSpeed = speed * Math.cos(angle);
 		vSpeed = speed * Math.sin(angle);
 		move(hSpeed, vSpeed);
-		
+
 		autoDeletHandeler();
 	}
 
@@ -268,18 +268,17 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			}
 		}
 	}
-	
+
 	private void autoDeletHandeler() {
 		if (speed == 0) {
 			if (deletionTimer <= 0) {
 				instanceDestroy();
 			}
 			deletionTimer--;
-		}
-		else {
+		} else {
 			deletionTimer = DELETION_TIMER_CONSTANT;
 		}
-			
+
 	}
 
 	// break until complete stop or no obstacle is present
@@ -398,7 +397,8 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 					castPropertyChange(StatsEventType.SMARTCAR2SMARTCAR.getEventType());
 				} else if (this instanceof EntitySmartCar && other instanceof EntityCar) {
 					castPropertyChange(StatsEventType.SMARTCAR2CAR.getEventType());
-				} else if (this instanceof EntityCar && other instanceof EntityCar) {
+				} else if (this instanceof EntityCar && other instanceof EntityCar
+						&& !(other instanceof EntitySmartCar)) {
 					castPropertyChange(StatsEventType.CAR2CAR.getEventType());
 				} else if (this instanceof EntityCar && other instanceof EntityBicycle) {
 					castPropertyChange(StatsEventType.CAR2BYCYCLE.getEventType());
