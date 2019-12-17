@@ -26,6 +26,11 @@ import models.stats.ModelStatsHolder;
 import models.stats.StatsEventType;
 import view.StatsPanel;
 
+/**
+ * Controlls the statistics in the program, logs crashes and spawns
+ * @author Mattias Sikvall Källström
+ *
+ */
 public class StatsController implements PropertyChangeListener {
 
 	private SIScaling scaling = new SIScaling();
@@ -48,24 +53,7 @@ public class StatsController implements PropertyChangeListener {
 	 */
 	private StatsController(JFrame jframe) {
 		this.jframe = jframe;
-		jpanel = new JPanel();
-		//clear();
-		
-		modelCollisions = new ArrayList<ModelCollision>();
-
-		headings = new TreeMap<String, Map<String, ModelStatsHolder>>();
-		for (String s : hStr)
-			headings.put(s, new TreeMap<String, ModelStatsHolder>());
-
-		createLabels(); // Creates labels and adds them to labelsWithValues
-
-		jpanel = new StatsPanel(headings);
-		
-		jframe.add(jpanel);
-		jframe.setJMenuBar(makeMenu());
-		jframe.setVisible(true);
-		jframe.pack();
-
+		clear();
 	}
 
 	/**
@@ -87,7 +75,10 @@ public class StatsController implements PropertyChangeListener {
 	}
 
 	private static StatsController statsController;
-
+	/**
+	 * Initializes the singleton
+	 * @param jFrame
+	 */
 	public static void initialize(JFrame jFrame) {
 		if (statsController == null)
 			statsController = new StatsController(jFrame);
@@ -98,7 +89,11 @@ public class StatsController implements PropertyChangeListener {
 		}
 
 	}
-
+	
+	/**
+	 * Get an instance of the StatsController singelton
+	 * @return the StatsController singleton, null if the class hasn't been initialized
+	 */
 	public static StatsController getInstance() {
 		return statsController;
 	}
@@ -141,15 +136,24 @@ public class StatsController implements PropertyChangeListener {
 	}
 
 	public void clear() {
-		// Creates labels and adds them to labelsWithValues
-		/*jpanel.removeAll();
+		jframe.getContentPane().removeAll();
+		jframe.repaint();
+		
+		modelCollisions = new ArrayList<ModelCollision>();
+
 		headings = new TreeMap<String, Map<String, ModelStatsHolder>>();
-		headings.put(hStr[0], new TreeMap<String, ModelStatsHolder>());
-		headings.put(hStr[1], new TreeMap<String, ModelStatsHolder>());
-		createLabels();
-		setFont();
-		addToPanel();
-		jframe.pack();*/
+		for (String s : hStr)
+			headings.put(s, new TreeMap<String, ModelStatsHolder>());
+
+		createLabels(); // Creates labels and adds them to labelsWithValues
+		
+		if (jpanel != null) jpanel.removeAll();
+		jpanel = new StatsPanel(headings);
+		
+		jframe.add(jpanel);
+		jframe.setJMenuBar(makeMenu());
+		jframe.setVisible(true);
+		jframe.pack();
 	}
 
 	private void createLabels() {
