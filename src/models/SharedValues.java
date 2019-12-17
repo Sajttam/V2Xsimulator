@@ -28,6 +28,7 @@ public class SharedValues {
 	private double rsuHeight = nodeHeight * 2;
 	private double rsuWidth = nodeWidth * 2;
 	private List<RSUServerUDP> availableRSUs = new ArrayList<RSUServerUDP>();
+	private boolean showFieldOfView = true;
 
 	private SharedValues() {
 
@@ -186,6 +187,14 @@ public class SharedValues {
 
 			return carMaxSpeed;
 		}
+	}
+
+	public boolean isShowFieldOfView() {
+		return showFieldOfView;
+	}
+
+	public void setShowFieldOfView(boolean showFieldOfView) {
+		this.showFieldOfView = showFieldOfView;
 	}
 
 }

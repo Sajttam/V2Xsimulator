@@ -359,9 +359,10 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 		int alpha = 60; // 50% transparent
 		Color hitBoxYellow = new Color(235, 229, 52, alpha);
-		g.setColor(hitBoxYellow);
-
-		g.fillPolygon(visionArea);
+		if (SharedValues.getInstance().isShowFieldOfView()) {
+			g.setColor(hitBoxYellow);
+			g.fillPolygon(visionArea);
+		}
 	}
 
 	@Override
