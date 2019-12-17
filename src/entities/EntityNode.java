@@ -57,6 +57,8 @@ public class EntityNode extends Entity {
 		setXPosition(x);
 		setYPosition(y);
 		setSpawning(false);
+		setCollisionBounds(getWidth(), getHeight(), 0, 0);
+
 	}
 
 	public boolean isSpawning() {
@@ -138,8 +140,9 @@ public class EntityNode extends Entity {
 		// if (starightRoads) System.out.println("YES");
 
 		for (EntityRoad r : roads) {
+
 			if (equals(r.getExitNode())) {
-				// roadConnections.put(r, new RoadPair(null, null));
+
 				List<EntityRoad> allOtherRoads = getAllRoads();
 				allOtherRoads.removeAll(roads);
 
@@ -153,31 +156,13 @@ public class EntityNode extends Entity {
 						double x2 = otherRoad.getXPosition();
 						double y2 = otherRoad.getYPosition();
 
-						double difAngle = Math.toDegrees(getAngleBetweenPoints(x1, y1, x2, y2));
 						// System.out.print("Angle: " + difAngle);
 
 						// EntityRoad newRoad = new EntityRoad(this, this, r.getRoadType(),false); //
 						// False due to it should only be able to spawn on exit from node
 						EntityCurvedRoad newRoad = new EntityCurvedRoad(this, this, r.getRoadType(), r.getAngle(),
 								otherRoad.getAngle()); // False due to it should only be able to spawn on exit from node
-						if (starightRoads) {
-							if (difAngle > -90 && difAngle < 0 || difAngle > 90 && difAngle < 180) {
-								newRoad.straight = false;
-								newRoad.leftCurve = true;
-								// System.out.println(" left");
-							} else if (difAngle > -180 && difAngle < -90 || difAngle > 0 && difAngle < 90) {
-								newRoad.straight = false;
-								newRoad.leftCurve = false;
-								// System.out.println(" right");
-							} else {
-								newRoad.straight = true;
-								newRoad.leftCurve = false;
-								// System.out.println(" straight");
-							}
-						} else {
-							newRoad.straight = true;
-							newRoad.leftCurve = false;
-						}
+
 						SIScaling scaler = new SIScaling();
 						if (newRoad.straight)
 							newRoad.setSpeedLimit(SharedValues.getInstance().getMaxSpeed("CAR"));
@@ -211,8 +196,10 @@ public class EntityNode extends Entity {
 
 	public void addConnectionTo(EntityNode other, Direction direction, RoadType roadType) {
 		EntityRoad road = new EntityRoad(this, other, roadType, spawning);
+
 		addRoad(road, direction);
 		other.addRoad(road, getOppositDirection(direction));
+
 		instanceCreate(road);
 	}
 
@@ -231,6 +218,7 @@ public class EntityNode extends Entity {
 				for (int i = 0; i < roads.size(); i++)
 					roads.get(i).setPosition(this, (int) getXPosition(),
 							(int) getYPosition() + i * (ySeparation / (roads.size() - 1)) + roadYOffset);
+
 			break;
 		case EAST:
 			roads = roadsEast;
@@ -259,10 +247,38 @@ public class EntityNode extends Entity {
 							(int) getYPosition() + getHeight());
 			break;
 		}
+
 	}
 
 	public boolean roadIsExit(EntityRoad road) {
 		return equals(road.getExitNode());
+	}
+
+	public void addRoadReservation(EntityRoad r, EntityTrafficLight l) {
+
+		int resHeight = getWidth();
+		EntityRoadReservation rRes = null;
+
+		double angle = Math.toDegrees(r.getAngle());
+
+		if (angle == 0.0) {
+			rRes = new EntityRoadReservation(r.x2, r.y2, this.getWidth(), getHeight() / 10, r.getAngle());
+		} else if (angle == 180.0) {
+			rRes = new EntityRoadReservation(r.x2, r.y2, this.getWidth(), getHeight() / 10, r.getAngle());
+
+		} else if (angle == -90.0) {
+			rRes = new EntityRoadReservation(r.x2, r.y2, this.getWidth() / 10, getHeight(), r.getAngle());
+
+		} else if (angle == 90.0) {
+			rRes = new EntityRoadReservation(r.x2, r.y2, this.getWidth() / 10, getHeight(), r.getAngle());
+
+		} else {
+			rRes = new EntityRoadReservation(r.x2 - this.getWidth() * 1.6, r.y2 - resHeight / 3, this.getWidth() * 2,
+					resHeight, r.getAngle());
+
+		}
+		instanceCreate(rRes);
+
 	}
 
 	@Override

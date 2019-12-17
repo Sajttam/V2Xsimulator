@@ -3,6 +3,7 @@ package entities;
 import java.awt.Graphics;
 
 import entities.EntityTrafficLight.LightCycle;
+import models.SIScaling;
 
 /**
  * The Class EntityRoadReservation is used to add a reservation to a part of the
@@ -18,6 +19,7 @@ public class EntityRoadReservation extends Entity implements Collidable {
 	private boolean oldReserved = false;
 
 	EntityTrafficLight tLight;
+	SIScaling scaling = new SIScaling();
 
 	/**
 	 * Instantiates a new entity road reservation.
@@ -34,6 +36,12 @@ public class EntityRoadReservation extends Entity implements Collidable {
 		super(xPosition, yPosition, width, height);
 		this.angle = angle;
 		this.tLight = tLight;
+	}
+
+	public EntityRoadReservation(double xPosition, double yPosition, int width, int height, double angle) {
+		super(xPosition, yPosition, width, height);
+		this.angle = angle;
+		this.tLight = null;
 	}
 
 	/*
@@ -60,9 +68,9 @@ public class EntityRoadReservation extends Entity implements Collidable {
 
 		oldReserved = false;
 		// Sets the reservation to last step rounds reservations if Light is not red
-		if (!tLight.getLightCycle().equals(LightCycle.STOP)) {
+		if (tLight != null && !tLight.getLightCycle().equals(LightCycle.STOP)) {
 			oldReserved = reserved;
-			waitTimeout = 5;
+			waitTimeout = scaling.getStepsPerSecond();
 
 		} else if (waitTimeout > 0) {
 			oldReserved = reserved;
