@@ -14,6 +14,8 @@ public class SharedValues {
 
 	private SIScaling scaler = new SIScaling();
 	private int carCounter;
+	private int smartCarCounter;
+
 	private int bicycleCounter;
 	private int serverPort;
 	private double timeOutValue;
@@ -83,12 +85,20 @@ public class SharedValues {
 		carCounter--;
 	}
 
+	public void decrementSmartCarCounter() {
+		smartCarCounter--;
+	}
+
 	public void decrementBicycleCounter() {
 		bicycleCounter--;
 	}
 
 	public void incrementCarCounter() {
 		carCounter++;
+	}
+
+	public void incrementSmartCarCounter() {
+		smartCarCounter++;
 	}
 
 	public void incrementBicycleCounter() {
@@ -186,6 +196,16 @@ public class SharedValues {
 
 			return carMaxSpeed;
 		}
+	}
+
+	public void setSmartCarCounter(int i) {
+		smartCarCounter = i;
+
+	}
+
+	public int getSmartCarCounter() {
+
+		return smartCarCounter;
 	}
 
 }

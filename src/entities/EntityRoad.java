@@ -3,7 +3,6 @@ package entities;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import controller.Controller;
 import controller.StatsController;
 import models.SIScaling;
 import models.SharedValues;
@@ -86,14 +85,19 @@ public class EntityRoad extends Entity {
 						SharedValues.getInstance().decrementBicycleCounter();
 					}
 				} else {
-					if (SharedValues.getInstance().getCarCounter() > 0) {
 
-						boolean smartVehicle = Math.random() > Controller.GLOBAL.getSMARTCAR_CHANCE() ? true : false;
-						if (smartVehicle) {
-							instanceCreate(new EntitySmartCar(this, StatsController.getInstance(), "Smartcar"));
-						} else {
-							instanceCreate(new EntityCar(this, StatsController.getInstance(), "Car"));
-						}
+					boolean smartVehicle = Math.random() > 0.5 ? true : false;
+
+					if (smartVehicle && SharedValues.getInstance().getSmartCarCounter() > 0) {
+
+						instanceCreate(new EntitySmartCar(this, StatsController.getInstance(), "Smartcar"));
+
+						SharedValues.getInstance().decrementSmartCarCounter();
+
+					} else if (SharedValues.getInstance().getCarCounter() > 0) {
+
+						instanceCreate(new EntityCar(this, StatsController.getInstance(), "Car"));
+
 						SharedValues.getInstance().decrementCarCounter();
 					}
 				}

@@ -1,8 +1,5 @@
 package controller;
 
-import java.awt.BorderLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.FileWriter;
@@ -12,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -19,8 +17,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import models.SIScaling;
-import models.SharedValues;
+
 import models.stats.ModelCollision;
 import models.stats.ModelStatsHolder;
 import models.stats.StatsEventType;
@@ -28,12 +25,11 @@ import view.StatsPanel;
 
 public class StatsController implements PropertyChangeListener {
 
-	private SIScaling scaling = new SIScaling();
 	private JFrame jframe;
 	private JPanel jpanel;
-    private List<ModelCollision> modelCollisions;
+	private List<ModelCollision> modelCollisions;
 	private Map<String, Map<String, ModelStatsHolder>> headings;
-	private String[] hStr = { "Spawn", "Collision", "Data", "Cars - Bicycles", "Smartcars - Bicycles"};
+	private String[] hStr = { "Spawn", "Collision", "Data", "Cars - Bicycles", "Smartcars - Bicycles" };
 
 	/*
 	 * private Map<String, ModelStatsHolder> labelsSpawn; private Map<String,
@@ -49,8 +45,8 @@ public class StatsController implements PropertyChangeListener {
 	private StatsController(JFrame jframe) {
 		this.jframe = jframe;
 		jpanel = new JPanel();
-		//clear();
-		
+		// clear();
+
 		modelCollisions = new ArrayList<ModelCollision>();
 
 		headings = new TreeMap<String, Map<String, ModelStatsHolder>>();
@@ -59,8 +55,8 @@ public class StatsController implements PropertyChangeListener {
 
 		createLabels(); // Creates labels and adds them to labelsWithValues
 
-		jpanel = new StatsPanel(headings);
-		
+		jpanel = new StatsPanel(headings, System.currentTimeMillis());
+
 		jframe.add(jpanel);
 		jframe.setJMenuBar(makeMenu());
 		jframe.setVisible(true);
@@ -82,7 +78,7 @@ public class StatsController implements PropertyChangeListener {
 
 		menuBar.add(menuFile);
 		menuFile.add(itemSave);
-		
+
 		return menuBar;
 	}
 
@@ -110,26 +106,24 @@ public class StatsController implements PropertyChangeListener {
 			if (event.getNewValue() instanceof ModelCollision) {
 				ModelCollision mc = (ModelCollision) event.getNewValue();
 				modelCollisions.add(mc);
-				
+
 				if (mc.getVehicleFirstSpeed() < 20) {
-					if (mc.getVehicleFirstType().equals("Car")) 
+					if (mc.getVehicleFirstType().equals("Car"))
 						headings.get(hStr[3]).get("c2b_020").incValue();
 					else
 						headings.get(hStr[4]).get("sc2b_020").incValue();
-				}
-				else if (mc.getVehicleFirstSpeed() < 40) {
-					if (mc.getVehicleFirstType().equals("Car")) 
+				} else if (mc.getVehicleFirstSpeed() < 40) {
+					if (mc.getVehicleFirstType().equals("Car"))
 						headings.get(hStr[3]).get("c2b_2040").incValue();
 					else
 						headings.get(hStr[4]).get("sc2b_2040").incValue();
-				}
-				else {
-					if (mc.getVehicleFirstType().equals("Car")) 
+				} else {
+					if (mc.getVehicleFirstType().equals("Car"))
 						headings.get(hStr[3]).get("c2b_4060").incValue();
 					else
 						headings.get(hStr[4]).get("sc2b_4060").incValue();
 				}
-				
+
 			}
 		} else {
 			TreeMap<String, ModelStatsHolder> labels = new TreeMap<String, ModelStatsHolder>((headings.get(hStr[0])));
@@ -142,14 +136,12 @@ public class StatsController implements PropertyChangeListener {
 
 	public void clear() {
 		// Creates labels and adds them to labelsWithValues
-		/*jpanel.removeAll();
-		headings = new TreeMap<String, Map<String, ModelStatsHolder>>();
-		headings.put(hStr[0], new TreeMap<String, ModelStatsHolder>());
-		headings.put(hStr[1], new TreeMap<String, ModelStatsHolder>());
-		createLabels();
-		setFont();
-		addToPanel();
-		jframe.pack();*/
+		/*
+		 * jpanel.removeAll(); headings = new TreeMap<String, Map<String,
+		 * ModelStatsHolder>>(); headings.put(hStr[0], new TreeMap<String,
+		 * ModelStatsHolder>()); headings.put(hStr[1], new TreeMap<String,
+		 * ModelStatsHolder>()); createLabels(); setFont(); addToPanel(); jframe.pack();
+		 */
 	}
 
 	private void createLabels() {

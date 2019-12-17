@@ -42,7 +42,9 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	public static final double CROSSING_VELOCITY_MODIFIER = 0.6; // fraction of max velocity when turning
 	public static final double DECELERATION = scaling.mpsToPixelsPerStep(9) / scaling.getStepsPerSecond(); // [pixels/step]
-	public static final double ACCELERATION = scaling.mpsToPixelsPerStep(5.5) / scaling.getStepsPerSecond(); // [pixels/step]
+	public static final double ACCELERATION = scaling.mpsToPixelsPerStep(2) / scaling.getStepsPerSecond(); // [pixels/step]
+	public static final double BIKEACCELERATION = ACCELERATION / 4;
+	public static final double BIKEDECELERATION = DECELERATION / 4;
 
 	public EntityVehicle(EntityRoad road, PropertyChangeListener listener) {
 		setRoad(road);
@@ -155,7 +157,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		// Lowers the speed if its close to a intersection
 		for (Entity otherEntity : entitiesInSight) {
 			if (otherEntity instanceof EntityNode) {
-				modifySpeed(scaling.kphToPixelsPerStep(30));
+				modifySpeed(scaling.kphToPixelsPerStep(40));
 
 			}
 		}
@@ -256,8 +258,20 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	// accelerate up to targetspeed
 	private void modifySpeed(double targetVelocity) {
-		double acceleration = ACCELERATION;
-		double deceleration = DECELERATION;
+
+		double acceleration;
+		double deceleration;
+
+		if (this instanceof EntityBicycle) {
+
+			acceleration = BIKEACCELERATION;
+			deceleration = BIKEDECELERATION;
+
+		} else {
+			acceleration = ACCELERATION;
+			deceleration = DECELERATION;
+
+		}
 
 		if (this.previousSpeed < targetVelocity) {
 			setSpeed(previousSpeed + acceleration);
@@ -291,7 +305,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		double distance = distanceToEntity(otherEntity);
 		double relativeDeceleration = Math.abs(deceleration * (scaling.getPixelsFromMeter(15) / distance));
 
-		if (speed > scaling.kphToPixelsPerStep(15) || distance < scaling.getPixelsFromMeter(15)
+		if (speed > scaling.kphToPixelsPerStep(15) || distance < scaling.getPixelsFromMeter(10)
 				|| otherEntity instanceof EntityRoadReservation) {
 			if (relativeDeceleration > deceleration || otherEntity instanceof EntityRoadReservation)
 				relativeDeceleration = deceleration;
@@ -370,11 +384,11 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		// g.fillOval((int)(24*Math.cos(angle)+getXPosition())-2,
 		// (int)(24*Math.sin(angle)+getYPosition())-2, 4, 4);
 
-		int alpha = 60; // 50% transparent
-		Color hitBoxYellow = new Color(235, 229, 52, alpha);
-		g.setColor(hitBoxYellow);
-
-		g.fillPolygon(visionArea);
+//		int alpha = 60; // 50% transparent
+//		Color hitBoxYellow = new Color(235, 229, 52, alpha);
+//		g.setColor(hitBoxYellow);
+//
+//		g.fillPolygon(visionArea);
 	}
 
 	@Override
@@ -394,7 +408,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 			if (!otherBounds.isEmpty() && !((EntityVehicle) other).isNewBorn()) {
 
-//				if (this instanceof EntityCar && other instanceof EntityCar) {
+//				if (this instanceof EntitySmartCar && other instanceof EntityBicycle) {
 //					try {
 //						wait();
 //					} catch (InterruptedException e) {
