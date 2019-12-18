@@ -29,6 +29,7 @@ public class SharedValues {
 	private double rsuWidth = nodeWidth * 2;
 	private List<RSUServerUDP> availableRSUs = new ArrayList<RSUServerUDP>();
 	private boolean showFieldOfView = true;
+	private int serverDelayMiliseconds = 0;
 
 	private SharedValues() {
 
@@ -195,6 +196,14 @@ public class SharedValues {
 
 	public void setShowFieldOfView(boolean showFieldOfView) {
 		this.showFieldOfView = showFieldOfView;
+	}
+
+	public int getServerDelayMiliseconds() {
+		return serverDelayMiliseconds;
+	}
+
+	public void setServerDelayMiliseconds(int serverDelayMiliseconds) {
+		this.serverDelayMiliseconds = serverDelayMiliseconds;
 	}
 
 }

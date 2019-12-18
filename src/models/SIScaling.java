@@ -17,6 +17,9 @@ public class SIScaling {
 	public int getStepsPerSecond() {
 		return stepsPerSecond;
 	}
+	public double getStepsPerMillisecond() {
+		return 0.06;
+	}
 
 	public void setStepsPerSecond(int stepsPerSecond) {
 		this.stepsPerSecond = stepsPerSecond;

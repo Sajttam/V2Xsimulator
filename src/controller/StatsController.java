@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -19,6 +22,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
+
 import models.SIScaling;
 import models.SharedValues;
 import models.stats.ModelCollision;
@@ -68,8 +74,12 @@ public class StatsController implements PropertyChangeListener {
 		JMenuItem itemSave = new JMenuItem("Save stats");
 		itemSave.addActionListener(e -> saveToFile());
 
+		JMenuItem itemSaveModels = new JMenuItem("Save stats models");
+		itemSaveModels.addActionListener(e -> modelsToFile());
+		
 		menuBar.add(menuFile);
 		menuFile.add(itemSave);
+		menuFile.add(itemSaveModels);
 		
 		return menuBar;
 	}
@@ -170,6 +180,29 @@ public class StatsController implements PropertyChangeListener {
 	public void saveToFile() {
 		String fileName = JOptionPane.showInputDialog(jframe, "Specifiy name for savefile");
 		writeStatsToFile("", fileName);
+	}
+	
+	public void modelsToFile() {
+		JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+		int returnValue = jfc.showSaveDialog(null);
+		// if (returnValue == JFileChooser.SAVE_DIALOG) {
+			File selectedFile = jfc.getSelectedFile();
+			try {
+				modelsToFile(selectedFile, '\t');
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		// }
+	}
+	
+	public void modelsToFile(File file, char seperator) throws IOException {
+		FileWriter fw = new FileWriter(file.getAbsoluteFile() + ".tsv");
+		fw.write(ModelCollision.getTsvHeadings());
+		for (ModelCollision mc : modelCollisions) {
+			fw.write("\n");
+			fw.write(mc.toTsvString());
+		}	 
+		fw.close();
 	}
 
 	/**

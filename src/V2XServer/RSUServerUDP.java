@@ -8,6 +8,8 @@ import java.util.TreeSet;
 
 import entities.EntityBikeDetector;
 import entities.EntityRSUBoundaries;
+import models.SIScaling;
+import models.SharedValues;
 import models.V2XCommand;
 import models.V2XMessage;
 
@@ -29,8 +31,15 @@ public class RSUServerUDP extends ConnectionUDP implements Runnable {
 	}
 
 	public void sendCommand(DatagramSocket socket, V2XCommand command) throws IOException {
+		SIScaling s = new SIScaling();
+		double timeStamp = SharedValues.getInstance().getTimeStamp();
+		double timeWait = Double.MAX_VALUE; 
+		while (timeStamp > timeWait)
+			timeWait = (SharedValues.getInstance().getTimeStamp()-s.getStepsPerMillisecond()*SharedValues.getInstance().getServerDelayMiliseconds());
+		System.out.println("Time Stamp: " + (timeWait-timeStamp) + "TimeWait:" + timeWait + " TimeStamp: " +timeStamp);
 		DatagramPacket packet = objectToDatagaram(socket, command);
 		socket.send(packet);
+		
 	}
 
 	public int getServerPort() {
