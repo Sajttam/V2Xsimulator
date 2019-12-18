@@ -251,7 +251,12 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		autoDeletHandeler();
 	}
 
-	// accelerate up to targetspeed
+	/**
+	 *  modifySpeed: accelerate up to speed set as parameter
+	 *  A number higher than speed traveling increases speed in next step
+	 *  The opposite if number is lower than speed traveling
+	 * @param targetVelocity
+	 */
 	private void modifySpeed(double targetVelocity) {
 		double acceleration = ACCELERATION;
 		double deceleration = DECELERATION;
@@ -281,8 +286,10 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	}
 
-	// break until complete stop or no obstacle is present
-
+	/**
+	 * stopping: lowers speed/breaks vehicle until complete stop or no obstacle is present
+	 * @param deceleration
+	 */
 	private void stopping(double deceleration) {
 		if (this.previousSpeed > 0) {
 			setSpeed(previousSpeed - deceleration);
@@ -310,7 +317,9 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		}
 
 	}
-
+	/*
+	 * setVehicleName: sets name on this vehicle
+	 */
 	public void setVehicleName(String vehicleName) {
 		this.vehicleName = vehicleName;
 	}
@@ -321,7 +330,6 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	/**
 	 * Cast a property change
-	 * 
 	 * @param eventname event to be cast
 	 */
 	public void castPropertyChange(String eventname) {
@@ -330,9 +338,8 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	/**
 	 * Cast a property change with a new CollitionData
-	 * 
-	 * @param eventname event to be cast
-	 * @param vehicle   vehicle that has collided and should send data
+	 * @param eventname event to be cast to receiving function
+	 * @param vehicle that has collided and should send data
 	 */
 	public void castPropertyChange(String eventname, EntityVehicle vehicle) {
 
@@ -349,7 +356,10 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 		propertyChangeSupportCounter.firePropertyChange(eventname, null, mc);
 	}
-
+	/**
+	 * draw: draws a box around vehicle to display hitbox
+	 * area that can collide
+	 */
 	@Override
 	public void draw(Graphics g) {
 		// g.setColor(Color.YELLOW);
@@ -362,7 +372,10 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 		g.fillPolygon(visionArea);
 	}
-
+	/**
+	 * collision: Handles collision decision of vehicle
+	 * determines if a vehicle has collided
+	 */
 	@Override
 	public void collision(Entity other) {
 
