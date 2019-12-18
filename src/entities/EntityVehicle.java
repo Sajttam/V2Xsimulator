@@ -156,9 +156,10 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 		// Lowers the speed if its close to a intersection
 		for (Entity otherEntity : entitiesInSight) {
-			if (otherEntity instanceof EntityNode) {
+			if (otherEntity instanceof EntityTrafficLightNode)
+				modifySpeed(scaling.kphToPixelsPerStep(30));
+			else if (otherEntity instanceof EntityNode) {
 				modifySpeed(scaling.kphToPixelsPerStep(40));
-
 			}
 		}
 

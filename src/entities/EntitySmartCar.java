@@ -128,9 +128,8 @@ public class EntitySmartCar extends EntityCar {
 
 					if (i.getRSUBoundaries().tryConnect(this)) {
 
-						V2XMessage message = new V2XMessage(this.hashCode(),
-								scaling.pixelsPerStepToKph(this.speed), getAngle(),
-								new Point2D.Double(getXPosition(), getYPosition()), listenerPort);
+						V2XMessage message = new V2XMessage(this.hashCode(), scaling.pixelsPerStepToKph(this.speed),
+								getAngle(), new Point2D.Double(getXPosition(), getYPosition()), listenerPort);
 
 						connectToRSU(i.getServerPort());
 						connectionUDP.sendMessage(senderSocket, message);
@@ -171,8 +170,9 @@ public class EntitySmartCar extends EntityCar {
 
 	@Override
 	public void collision(Entity other) {
-		super.collision(other);
+
 		if (other instanceof EntityVehicle) {
+			super.collision(other);
 			listenerSocket.close();
 			listenerThread.interrupt();
 		}
