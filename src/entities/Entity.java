@@ -18,7 +18,7 @@ import view.Animation;
  * extends Observable, which enables all Entities to notify the Controller of
  * changes to be made.
  *
- * @author Mattias Källström
+ * @author Mattias Kï¿½llstrï¿½m
  * @version 2.0
  */
 
@@ -80,21 +80,32 @@ public abstract class Entity implements Comparable<Object> {
 		this.anim = anim;
 		setCollisionBounds();
 	}
-
+	/**
+	 * addObserver : Makes i possible to observe changes of objects
+	 * @param listener
+	 */
 	public void addObserver(PropertyChangeListener listener) {
 		if (propertyChangeSupport == null)
 			propertyChangeSupport = new PropertyChangeSupport(this);
 		propertyChangeSupport.addPropertyChangeListener(listener);
 	}
-
+	
 	public void draw(Graphics g) {
 
 	}
-
+	/**
+	 *
+	 * @param controller
+	 */
 	public void setController(Controller controller) {
 		this.controller = controller;
 	}
-
+	/**
+	 * getEntityAtPosition : 
+	 * @param x position, where the 
+	 * @param y position,
+	 * @return returns entity at the coordinates x position and y position
+	 */
 	public Entity getEntityAtPosition(int x, int y) {
 		if (controller == null)
 			return null;

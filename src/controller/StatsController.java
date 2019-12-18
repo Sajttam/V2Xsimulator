@@ -42,7 +42,7 @@ public class StatsController implements PropertyChangeListener {
 	 */
 
 	/**
-	 * Creates the statics view in the given JFrame
+	 * Creates the statistics view in a new JFrame
 	 * 
 	 * @param jframe
 	 */
@@ -70,7 +70,7 @@ public class StatsController implements PropertyChangeListener {
 
 	/**
 	 * Creates a menubar for statistics window
-	 * 
+	 *  
 	 * @param jframe the frame that the menubar will be added to
 	 */
 	public JMenuBar makeMenu() {
@@ -85,7 +85,10 @@ public class StatsController implements PropertyChangeListener {
 		
 		return menuBar;
 	}
-
+	/**
+	 * Initialises a new Statscontroller in a new fram
+	 * @param jframe object
+	 */
 	private static StatsController statsController;
 
 	public static void initialize(JFrame jFrame) {
@@ -98,11 +101,16 @@ public class StatsController implements PropertyChangeListener {
 		}
 
 	}
-
+	/**
+	 * Statscontroller : Returns the instance of statsController
+	 * @return statsController instance
+	 */
 	public static StatsController getInstance() {
 		return statsController;
 	}
-
+	/**
+	 * Propertychange :
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		String eventname = event.getPropertyName();
