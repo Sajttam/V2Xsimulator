@@ -68,6 +68,7 @@ public class FunctionHandler extends Thread {
 				}
 
 			}
+			socket.close();
 		}
 	}
 
