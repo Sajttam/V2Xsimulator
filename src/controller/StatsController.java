@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -197,11 +198,12 @@ public class StatsController implements PropertyChangeListener {
 
 	public void modelsToFile() {
 		JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-		int returnValue = jfc.showSaveDialog(null);
+		//int returnValue = jfc.showSaveDialog(null);
 		// if (returnValue == JFileChooser.SAVE_DIALOG) {
-		File selectedFile = jfc.getSelectedFile();
+		//File selectedFile = jfc.getSelectedFile();
+		String fileName = JOptionPane.showInputDialog(jframe, "Specifiy name for savefile");
 		try {
-			modelsToFile(selectedFile, '\t');
+			modelsToFile(new File(fileName), '\t');
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
