@@ -19,7 +19,7 @@ public class SharedValues {
 	private int bicycleCounter;
 	private int serverPort;
 	private double timeOutValue;
-	private double SMARTCAR_CHANCE;
+
 	private volatile long stepsEpic = 0;
 
 	private ArrayList<Integer> serverPortNumbers = new ArrayList<Integer>();
@@ -114,14 +114,6 @@ public class SharedValues {
 	public void setTimeOutValue(double timeOutValue) {
 		// if (timeOutValue < 0) throw new Exception("");
 		this.timeOutValue = timeOutValue;
-	}
-
-	public double getSMARTCAR_CHANCE() {
-		return SMARTCAR_CHANCE;
-	}
-
-	public void setSMARTCAR_CHANCE(double sMARTCAR_CHANCE) {
-		SMARTCAR_CHANCE = sMARTCAR_CHANCE;
 	}
 
 	public int getBroadcastPort() {

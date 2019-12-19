@@ -153,7 +153,7 @@ public class GuiPanel extends JPanel {
 		JMenu menuFile = new JMenu("File");
 		// JMenuItem itemSave = new JMenuItem("Save");
 		JMenuItem itemRestart = new JMenuItem("Restart");
-		itemRestart.addActionListener(e -> controller.restart(12, 6, 0.5, 0));
+		itemRestart.addActionListener(e -> controller.restart(12, 6, 6, 0));
 		// itemLoad.addActionListener(e -> controller.loadLevel());
 		JMenuItem itemExit = new JMenuItem("Exit");
 		itemExit.addActionListener(e -> System.exit(0));
@@ -169,8 +169,8 @@ public class GuiPanel extends JPanel {
 			SharedValues v = SharedValues.getInstance();
 			if (v.isShowFieldOfView()) {
 				v.setShowFieldOfView(false);
-			}
-			else v.setShowFieldOfView(true);
+			} else
+				v.setShowFieldOfView(true);
 		});
 		JMenuItem itemGetFromServer = new JMenuItem("GetFromServer");
 		JMenuItem itemCollisionBoxes = new JMenuItem("Collision Bounds");
