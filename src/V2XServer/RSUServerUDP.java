@@ -36,7 +36,6 @@ public class RSUServerUDP extends ConnectionUDP implements Runnable {
 		double timeWait = Double.MAX_VALUE; 
 		while (timeStamp > timeWait)
 			timeWait = (SharedValues.getInstance().getTimeStamp()-s.getStepsPerMillisecond()*SharedValues.getInstance().getServerDelayMiliseconds());
-		System.out.println("Time Stamp: " + (timeWait-timeStamp) + "TimeWait:" + timeWait + " TimeStamp: " +timeStamp);
 		DatagramPacket packet = objectToDatagaram(socket, command);
 		socket.send(packet);
 		
