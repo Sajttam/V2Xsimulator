@@ -164,12 +164,24 @@ public class EntityNode extends Entity {
 								otherRoad.getAngle()); // False due to it should only be able to spawn on exit from node
 
 						SIScaling scaler = new SIScaling();
-						if (newRoad.straight)
-							newRoad.setSpeedLimit(SharedValues.getInstance().getMaxSpeed("CAR"));
-						else {
-							newRoad.setSpeedLimit(scaler.kphToPixelsPerStep(MAX_SPEED_TURNS_CARS));
 
+						switch (r.getRoadType()) {
+						case BICYCLE:
+							newRoad.setSpeedLimit(scaler.kphToPixelsPerStep(20));
+							break;
+						case CAR:
+							if (newRoad.straight)
+								newRoad.setSpeedLimit(SharedValues.getInstance().getMaxSpeed("CAR"));
+							else {
+								newRoad.setSpeedLimit(scaler.kphToPixelsPerStep(MAX_SPEED_TURNS_CARS));
+
+							}
+							break;
+						default:
+							newRoad.setSpeedLimit(scaler.kphToPixelsPerStep(60));
+							break;
 						}
+
 						newRoad.setPosition(r.x2, r.y2, otherRoad.getXPosition(), otherRoad.getYPosition());
 
 						if (roadConnections.containsKey(r)) {

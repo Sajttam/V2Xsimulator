@@ -25,7 +25,7 @@ public class EntitySmartCar extends EntityCar {
 
 	DatagramSocket senderSocket;
 	DatagramSocket listenerSocket;
-	static int serverInterval = 10;
+	static int serverInterval = scaling.getStepsPerSecond() / 3;
 	int tempWait = serverInterval;
 	private ConnectionUDP connectionUDP;
 	private byte[] buf = new byte[256];
@@ -173,7 +173,10 @@ public class EntitySmartCar extends EntityCar {
 
 		if (other instanceof EntityVehicle) {
 			super.collision(other);
-			listenerSocket.close();
+			if (listenerSocket != null)
+				listenerSocket.close();
+			if (senderSocket != null)
+				senderSocket.close();
 			listenerThread.interrupt();
 		}
 	}

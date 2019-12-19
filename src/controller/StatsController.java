@@ -107,23 +107,28 @@ public class StatsController implements PropertyChangeListener {
 				ModelCollision mc = (ModelCollision) event.getNewValue();
 				modelCollisions.add(mc);
 
-				if (mc.getVehicleFirstSpeed() < 20) {
-					if (mc.getVehicleFirstType().equals("Car"))
-						headings.get(hStr[3]).get("c2b_020").incValue();
-					else
-						headings.get(hStr[4]).get("sc2b_020").incValue();
-				} else if (mc.getVehicleFirstSpeed() < 40) {
-					if (mc.getVehicleFirstType().equals("Car"))
-						headings.get(hStr[3]).get("c2b_2040").incValue();
-					else
-						headings.get(hStr[4]).get("sc2b_2040").incValue();
-				} else {
-					if (mc.getVehicleFirstType().equals("Car"))
-						headings.get(hStr[3]).get("c2b_4060").incValue();
-					else
-						headings.get(hStr[4]).get("sc2b_4060").incValue();
-				}
+				if (mc.getVehicleFirstSpeed() != 0) {
+					if (mc.getVehicleFirstSpeed() < 20) {
+						if (mc.getVehicleFirstType().equals("Car"))
+							headings.get(hStr[3]).get("c2b_020").incValue();
+						else
+							headings.get(hStr[4]).get("sc2b_020").incValue();
+					} else if (mc.getVehicleFirstSpeed() < 40) {
+						if (mc.getVehicleFirstType().equals("Car"))
+							headings.get(hStr[3]).get("c2b_2040").incValue();
+						else {
+							headings.get(hStr[4]).get("sc2b_2040").incValue();
+							System.out.println(mc.getVehicleFirstSpeed());
+						}
 
+					} else {
+						if (mc.getVehicleFirstType().equals("Car"))
+							headings.get(hStr[3]).get("c2b_4060").incValue();
+						else
+							headings.get(hStr[4]).get("sc2b_4060").incValue();
+					}
+
+				}
 			}
 		} else {
 			TreeMap<String, ModelStatsHolder> labels = new TreeMap<String, ModelStatsHolder>((headings.get(hStr[0])));
