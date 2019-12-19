@@ -54,17 +54,18 @@ public class EntityTrafficLightNode extends EntityNode {
 		// t.start();
 	}
 
-	private void addRoadReservation(EntityRoad r, EntityTrafficLight l) {
+	@Override
+	public void addRoadReservation(EntityRoad r, EntityTrafficLight l) {
 
 		int resHeight = (int) scaler.getPixelsFromMeter(2.5);
 		EntityRoadReservation rRes;
 
 		if (r.getAngle() == 0.0) {
-			rRes = new EntityRoadReservation(r.x2 - this.getWidth() * 1.1, r.y2 - resHeight / 2,
-					(int) (this.getWidth() * 1.5), resHeight, r.getAngle(), l);
+			rRes = new EntityRoadReservation(r.x2 - this.getWidth() * 1.6, r.y2 - resHeight / 3, this.getWidth() * 2,
+					resHeight, r.getAngle(), l);
 		} else {
-			rRes = new EntityRoadReservation(r.x2 - this.getWidth() * 0.4, r.y2 - resHeight / 2,
-					(int) (this.getWidth() * 1.5), resHeight, r.getAngle(), l);
+			rRes = new EntityRoadReservation(r.x2 - this.getWidth() * 0.4, r.y2 - resHeight / 3, this.getWidth() * 2,
+					resHeight, r.getAngle(), l);
 
 		}
 		instanceCreate(rRes);

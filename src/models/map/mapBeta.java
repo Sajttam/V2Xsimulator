@@ -36,9 +36,9 @@ public class mapBeta implements SimulationMap {
 				(int) nodeCenter.getXPosition(), (int) nodeCenter.getYPosition());
 		(new Thread(serverCenter)).start();
 
-		EntityBikeDetector bikeDetectorCenterTopRight = new EntityBikeDetector(450, 600, 75, 30);
+		EntityBikeDetector bikeDetectorCenterTopRight = new EntityBikeDetector(460, 600, 75, 30, 0);
 		controller.createInstance(bikeDetectorCenterTopRight);
-		EntityBikeDetector bikeDetectorNorthBottomLeft = new EntityBikeDetector(370, 180, 75, 30);
+		EntityBikeDetector bikeDetectorNorthBottomLeft = new EntityBikeDetector(370, 180, 75, 30, 180);
 		controller.createInstance(bikeDetectorNorthBottomLeft);
 
 		serverNorth.addBikeDetector(bikeDetectorNorthBottomLeft);

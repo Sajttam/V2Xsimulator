@@ -46,14 +46,21 @@ public class FunctionHandler extends Thread {
 
 			Point newPosition40 = k.getValue().getPositionAfterSteps(40); // position of the car in n number of steps
 			Point newPosition20 = k.getValue().getPositionAfterSteps(20); // position of the car in n number of steps
+//			Point newPosition30 = k.getValue().getPositionAfterSteps(30); // position of the car in n number of steps
+//			Point newPosition10 = k.getValue().getPositionAfterSteps(10); // position of the car in n number of steps
 			Set<EntityBikeDetector> bdSet = server.getBikeDetectors();
 			for (EntityBikeDetector bikeDetector : bdSet) {
-				//bikeDetector.addCheckedPoint(newPosition40); // DEBUG
-				//bikeDetector.addCheckedPoint(newPosition20); // DEBUG
+				bikeDetector.addCheckedPoint(newPosition40); // DEBUG
+				bikeDetector.addCheckedPoint(newPosition20); // DEBUG
 
-				if ((bikeDetector.getCollisionBounds().contains(newPosition40)
-						|| bikeDetector.getCollisionBounds().contains(newPosition20))) {
-						// && !bikeDetector.getCollisionBounds().contains((k.getValue().getPositionAfterSteps(0))) {
+				if (bikeDetector.getCollisionBounds().contains(newPosition40)
+						|| bikeDetector.getCollisionBounds().contains(newPosition20)
+//						|| bikeDetector.getCollisionBounds().contains(newPosition30)
+//						|| bikeDetector.getCollisionBounds().contains(newPosition10)
+				) {
+					// &&
+					// !bikeDetector.getCollisionBounds().contains((k.getValue().getPositionAfterSteps(0)))
+					// {
 					if (!bikeDetector.getBicycles().isEmpty()) {
 						server.sendCommand(socket, new V2XCommand(Commands.STOP));
 					}
@@ -62,6 +69,56 @@ public class FunctionHandler extends Thread {
 
 			}
 		}
+	}
+
+	private void newBlindspotChecker() throws Exception {
+
+		for (Entry<Integer, CarData> k : carLogs.entrySet()) {
+
+			int port = k.getKey();
+			DatagramSocket socket;
+			socket = new DatagramSocket();
+			socket.connect(InetAddress.getByName("localhost"), port);
+
+			Set<EntityBikeDetector> bdSet = server.getBikeDetectors();
+			for (EntityBikeDetector bikeDetector : bdSet) {
+				// bikeDetector.addCheckedPoint(newPosition60); // DEBUG
+//				bikeDetector.addCheckedPoint(newPosition40); // DEBUG 
+
+				double kDirection = Math.toDegrees(k.getValue().getNewMessage().getDirection());
+
+				if (!bikeDetector.getLightIsRed()) {
+					if (bikeDetector.getViewingAngle() == 180 && (kDirection < 90 && kDirection > -10)) {
+
+						if (kDirection > 0) {
+							if (!bikeDetector.getBicycles().isEmpty()) {
+								// System.out.println("Sent stop TOP");
+								server.sendCommand(socket, new V2XCommand(Commands.STOP));
+							}
+						}
+
+					}
+
+					if (bikeDetector.getViewingAngle() == 0 && (kDirection > 170 && kDirection < 270)) {
+
+						if ((kDirection - 180) > 0) {
+							if (!bikeDetector.getBicycles().isEmpty()) {
+								server.sendCommand(socket, new V2XCommand(Commands.STOP));
+								// System.out.println("Sent stop BOTTOM");
+							}
+						}
+
+					}
+				} else {
+
+					bikeDetector.setLightIsRed(false);
+
+				}
+
+			}
+
+		}
+
 	}
 
 	private void eraseOld() {
@@ -80,7 +137,8 @@ public class FunctionHandler extends Thread {
 	 */
 	private void runFunctions() throws Exception {
 		eraseOld();
-		blindspotChecker();
+//		blindspotChecker();
+		newBlindspotChecker();
 	}
 
 	/**

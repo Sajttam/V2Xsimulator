@@ -43,10 +43,14 @@ public class EntityCar extends EntityVehicle {
 		drawVehicleShape(g, Color.green);
 
 	}
-	
+
 	@Override
 	public void instanceDestroy() {
 		super.instanceDestroy();
-		SharedValues.getInstance().incrementCarCounter();
+		if (this instanceof EntitySmartCar)
+			SharedValues.getInstance().incrementSmartCarCounter();
+		else
+			SharedValues.getInstance().incrementCarCounter();
+
 	}
 }

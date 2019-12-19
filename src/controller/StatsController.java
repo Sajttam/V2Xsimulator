@@ -1,8 +1,5 @@
 package controller;
 
-import java.awt.BorderLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -22,11 +19,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
-import models.SIScaling;
-import models.SharedValues;
 import models.stats.ModelCollision;
 import models.stats.ModelStatsHolder;
 import models.stats.StatsEventType;
@@ -34,17 +28,17 @@ import view.StatsPanel;
 
 /**
  * Controlls the statistics in the program, logs crashes and spawns
+ * 
  * @author Mattias Sikvall Källström
  *
  */
 public class StatsController implements PropertyChangeListener {
 
-	private SIScaling scaling = new SIScaling();
 	private JFrame jframe;
 	private JPanel jpanel;
-    private List<ModelCollision> modelCollisions;
+	private List<ModelCollision> modelCollisions;
 	private Map<String, Map<String, ModelStatsHolder>> headings;
-	private String[] hStr = { "Spawn", "Collision", "Data", "Cars - Bicycles", "Smartcars - Bicycles"};
+	private String[] hStr = { "Spawn", "Collision", "Data", "Cars - Bicycles", "Smartcars - Bicycles" };
 
 	/*
 	 * private Map<String, ModelStatsHolder> labelsSpawn; private Map<String,
@@ -60,11 +54,29 @@ public class StatsController implements PropertyChangeListener {
 	private StatsController(JFrame jframe) {
 		this.jframe = jframe;
 		clear();
+		jpanel = new JPanel();
+		// clear();
+
+		modelCollisions = new ArrayList<ModelCollision>();
+
+		headings = new TreeMap<String, Map<String, ModelStatsHolder>>();
+		for (String s : hStr)
+			headings.put(s, new TreeMap<String, ModelStatsHolder>());
+
+		createLabels(); // Creates labels and adds them to labelsWithValues
+
+		jpanel = new StatsPanel(headings);
+
+		jframe.add(jpanel);
+		jframe.setJMenuBar(makeMenu());
+		jframe.setVisible(true);
+		jframe.pack();
+
 	}
 
 	/**
 	 * Creates a menubar for statistics window
-	 *  
+	 * 
 	 * @param jframe the frame that the menubar will be added to
 	 */
 	public JMenuBar makeMenu() {
@@ -76,20 +88,24 @@ public class StatsController implements PropertyChangeListener {
 
 		JMenuItem itemSaveModels = new JMenuItem("Save stats models");
 		itemSaveModels.addActionListener(e -> modelsToFile());
-		
+
 		menuBar.add(menuFile);
 		menuFile.add(itemSave);
 		menuFile.add(itemSaveModels);
-		
+
 		return menuBar;
 	}
+
 	/**
 	 * Initialises a new Statscontroller in a new fram
+	 * 
 	 * @param jframe object
 	 */
 	private static StatsController statsController;
+
 	/**
 	 * Initializes the singleton
+	 * 
 	 * @param jFrame
 	 */
 	public static void initialize(JFrame jFrame) {
@@ -103,14 +119,16 @@ public class StatsController implements PropertyChangeListener {
 
 	}
 
-	
 	/**
 	 * Get an instance of the StatsController singelton
-	 * @return the StatsController singleton, null if the class hasn't been initialized
+	 * 
+	 * @return the StatsController singleton, null if the class hasn't been
+	 *         initialized
 	 */
 	public static StatsController getInstance() {
 		return statsController;
 	}
+
 	/**
 	 * Propertychange :
 	 */
@@ -121,26 +139,29 @@ public class StatsController implements PropertyChangeListener {
 			if (event.getNewValue() instanceof ModelCollision) {
 				ModelCollision mc = (ModelCollision) event.getNewValue();
 				modelCollisions.add(mc);
-				
-				if (mc.getVehicleFirstSpeed() < 20) {
-					if (mc.getVehicleFirstType().equals("Car")) 
-						headings.get(hStr[3]).get("c2b_020").incValue();
-					else
-						headings.get(hStr[4]).get("sc2b_020").incValue();
+
+				if (mc.getVehicleFirstSpeed() != 0) {
+					if (mc.getVehicleFirstSpeed() < 20) {
+						if (mc.getVehicleFirstType().equals("Car"))
+							headings.get(hStr[3]).get("c2b_020").incValue();
+						else
+							headings.get(hStr[4]).get("sc2b_020").incValue();
+					} else if (mc.getVehicleFirstSpeed() < 40) {
+						if (mc.getVehicleFirstType().equals("Car"))
+							headings.get(hStr[3]).get("c2b_2040").incValue();
+						else {
+							headings.get(hStr[4]).get("sc2b_2040").incValue();
+							System.out.println(mc.getVehicleFirstSpeed());
+						}
+
+					} else {
+						if (mc.getVehicleFirstType().equals("Car"))
+							headings.get(hStr[3]).get("c2b_4060").incValue();
+						else
+							headings.get(hStr[4]).get("sc2b_4060").incValue();
+					}
+
 				}
-				else if (mc.getVehicleFirstSpeed() < 40) {
-					if (mc.getVehicleFirstType().equals("Car")) 
-						headings.get(hStr[3]).get("c2b_2040").incValue();
-					else
-						headings.get(hStr[4]).get("sc2b_2040").incValue();
-				}
-				else {
-					if (mc.getVehicleFirstType().equals("Car")) 
-						headings.get(hStr[3]).get("c2b_4060").incValue();
-					else
-						headings.get(hStr[4]).get("sc2b_4060").incValue();
-				}
-				
 			}
 		} else {
 			TreeMap<String, ModelStatsHolder> labels = new TreeMap<String, ModelStatsHolder>((headings.get(hStr[0])));
@@ -152,9 +173,10 @@ public class StatsController implements PropertyChangeListener {
 	}
 
 	public void clear() {
+
 		jframe.getContentPane().removeAll();
 		jframe.repaint();
-		
+
 		modelCollisions = new ArrayList<ModelCollision>();
 
 		headings = new TreeMap<String, Map<String, ModelStatsHolder>>();
@@ -162,14 +184,16 @@ public class StatsController implements PropertyChangeListener {
 			headings.put(s, new TreeMap<String, ModelStatsHolder>());
 
 		createLabels(); // Creates labels and adds them to labelsWithValues
-		
-		if (jpanel != null) jpanel.removeAll();
+
+		if (jpanel != null)
+			jpanel.removeAll();
 		jpanel = new StatsPanel(headings);
-		
+
 		jframe.add(jpanel);
 		jframe.setJMenuBar(makeMenu());
 		jframe.setVisible(true);
 		jframe.pack();
+
 	}
 
 	private void createLabels() {
@@ -187,27 +211,27 @@ public class StatsController implements PropertyChangeListener {
 		String fileName = JOptionPane.showInputDialog(jframe, "Specifiy name for savefile");
 		writeStatsToFile("", fileName);
 	}
-	
+
 	public void modelsToFile() {
 		JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 		int returnValue = jfc.showSaveDialog(null);
 		// if (returnValue == JFileChooser.SAVE_DIALOG) {
-			File selectedFile = jfc.getSelectedFile();
-			try {
-				modelsToFile(selectedFile, '\t');
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		File selectedFile = jfc.getSelectedFile();
+		try {
+			modelsToFile(selectedFile, '\t');
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		// }
 	}
-	
+
 	public void modelsToFile(File file, char seperator) throws IOException {
 		FileWriter fw = new FileWriter(file.getAbsoluteFile() + ".tsv");
 		fw.write(ModelCollision.getTsvHeadings());
 		for (ModelCollision mc : modelCollisions) {
 			fw.write("\n");
 			fw.write(mc.toTsvString());
-		}	 
+		}
 		fw.close();
 	}
 

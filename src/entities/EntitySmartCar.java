@@ -25,7 +25,7 @@ public class EntitySmartCar extends EntityCar {
 
 	DatagramSocket senderSocket;
 	DatagramSocket listenerSocket;
-	static int serverInterval = 10;
+	static int serverInterval = scaling.getStepsPerSecond() / 3;
 	int tempWait = serverInterval;
 	private ConnectionUDP connectionUDP;
 	private byte[] buf = new byte[256];
@@ -128,9 +128,8 @@ public class EntitySmartCar extends EntityCar {
 
 					if (i.getRSUBoundaries().tryConnect(this)) {
 
-						V2XMessage message = new V2XMessage(this.hashCode(),
-								scaling.pixelsPerStepToKph(this.speed), getAngle(),
-								new Point2D.Double(getXPosition(), getYPosition()), listenerPort);
+						V2XMessage message = new V2XMessage(this.hashCode(), scaling.pixelsPerStepToKph(this.speed),
+								getAngle(), new Point2D.Double(getXPosition(), getYPosition()), listenerPort);
 
 						connectToRSU(i.getServerPort());
 						connectionUDP.sendMessage(senderSocket, message);
@@ -171,9 +170,13 @@ public class EntitySmartCar extends EntityCar {
 
 	@Override
 	public void collision(Entity other) {
-		super.collision(other);
+
 		if (other instanceof EntityVehicle) {
-			listenerSocket.close();
+			super.collision(other);
+			if (listenerSocket != null)
+				listenerSocket.close();
+			if (senderSocket != null)
+				senderSocket.close();
 			listenerThread.interrupt();
 		}
 	}

@@ -41,8 +41,10 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	private int deletionTimer = DELETION_TIMER_CONSTANT;
 
 	public static final double CROSSING_VELOCITY_MODIFIER = 0.6; // fraction of max velocity when turning
-	public static final double DECELERATION = scaling.accelerationPerStep(2.5); //[pixels/step]
-	public static final double ACCELERATION = scaling.accelerationPerStep(2.1); //[pixels/step]
+	public static final double DECELERATION = scaling.mpsToPixelsPerStep(9) / scaling.getStepsPerSecond(); // [pixels/step]
+	public static final double ACCELERATION = scaling.mpsToPixelsPerStep(2) / scaling.getStepsPerSecond(); // [pixels/step]
+	public static final double BIKEACCELERATION = scaling.mpsToPixelsPerStep(2) / scaling.getStepsPerSecond(); // [pixels/step]
+	public static final double BIKEDECELERATION = scaling.mpsToPixelsPerStep(2.7) / scaling.getStepsPerSecond(); // [pixels/step]
 
 	public EntityVehicle(EntityRoad road, PropertyChangeListener listener) {
 		setRoad(road);
@@ -54,7 +56,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 		int centerX = (int) (getXPosition());
 		int centerY = (int) (getYPosition());
-		double radius = scaling.getPixelsFromMeter(13);
+		double radius = scaling.getPixelsFromMeter(30);
 		double visionAngle = Math.toRadians(100 / 2);
 		double angleLeft = 0;
 		double angleRight = 0;
@@ -63,11 +65,11 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			angleLeft = getAngle() - visionAngle;
 			angleRight = getAngle() + visionAngle;
 		} else if (road.leftCurve) {
-			angleLeft = getAngle() - visionAngle - Math.toRadians(15);
-			angleRight = getAngle() + visionAngle - Math.toRadians(15);
+			angleLeft = getAngle() - visionAngle - Math.toRadians(10);
+			angleRight = getAngle() + visionAngle - Math.toRadians(10);
 		} else if (!road.leftCurve) {
-			angleLeft = getAngle() - visionAngle + Math.toRadians(15);
-			angleRight = getAngle() + visionAngle + Math.toRadians(15);
+			angleLeft = getAngle() - visionAngle + Math.toRadians(10);
+			angleRight = getAngle() + visionAngle + Math.toRadians(10);
 		}
 
 		int points = 5;
@@ -154,9 +156,10 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 		// Lowers the speed if its close to a intersection
 		for (Entity otherEntity : entitiesInSight) {
-			if (otherEntity instanceof EntityTrafficLightNode) {
+			if (this instanceof EntityCar && otherEntity instanceof EntityTrafficLightNode)
 				modifySpeed(scaling.kphToPixelsPerStep(30));
-
+			else if (this instanceof EntityCar && otherEntity instanceof EntityNode) {
+				modifySpeed(scaling.kphToPixelsPerStep(40));
 			}
 		}
 
@@ -170,14 +173,14 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 				Rectangle thisBounds = this.getCollisionBounds();
 
 				if (v == 0 && road.straight && !(tLightBounds.intersects(thisBounds))) {
-					stopping(DECELERATION);
+					stopping(DECELERATION, otherEntity);
 				}
 			} else if (otherEntity instanceof EntityRoadReservation && this instanceof EntityCar) {
 				if (Math.toDegrees(Math.abs(((EntityRoadReservation) otherEntity).getAngle() - angle)) > 90) {
 					if (((EntityRoadReservation) otherEntity).getReserved() && road.leftCurve) {
 						if (!this.getCollisionBounds().intersects(otherEntity.getCollisionBounds())) {
 
-							stopping(DECELERATION);
+							stopping(DECELERATION, otherEntity);
 						}
 					}
 				} else {
@@ -188,22 +191,23 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			} else if (this instanceof EntityBicycle && otherEntity instanceof EntityVehicle) {
 
 				if (otherEntity instanceof EntityBicycle)
-					stopping(DECELERATION);
-				else if (v == 0 && Math.toDegrees(getAngle()) % 180 == 0)
-					stopping(DECELERATION);
+					stopping(DECELERATION, otherEntity);
+				else if (!(Math.toDegrees(((EntityVehicle) otherEntity).getAngle()) % 90 == 0) && v == 0
+						&& Math.toDegrees(getAngle()) % 180 == 0)
+					stopping(DECELERATION, otherEntity);
 
 			} else if (otherEntity instanceof EntityBicycle && ((EntityBicycle) otherEntity).getSpeed() > 0) {
 
 				if (!road.straight || road.straight && angleDifference((int) Math.toDegrees(this.getAngle()),
 						(int) Math.toDegrees(((EntityBicycle) otherEntity).getAngle())) == 90) {
 
-					stopping(DECELERATION);
+					stopping(DECELERATION, otherEntity);
 				}
 
 			}
 
 			else if (otherEntity instanceof EntityCar) {
-				boolean close = distanceToVehicle((EntityVehicle) otherEntity) < scaling.getPixelsFromMeter(1.5);
+				boolean close = distanceToEntity(otherEntity) < scaling.getPixelsFromMeter(1.5);
 
 				boolean inFront = false;
 
@@ -215,14 +219,17 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 				if (close && inFront || !close) {
 					// Checks if the entities are moving in the same general direction +- degrees
 					if (angleDifference((int) Math.toDegrees(this.getAngle()),
-							(int) Math.toDegrees(((EntityVehicle) otherEntity).getAngle())) < 70) {
+							(int) Math.toDegrees(((EntityVehicle) otherEntity).getAngle())) < 80) {
 
 						// Checks if this is moving away from the other entity and thusly shouldnt stop
 						if (!this.movingAwayFrom((EntityVehicle) otherEntity)) {
 
-							stopping(DECELERATION);
+							stopping(DECELERATION, otherEntity);
+
 						}
+
 					}
+
 				}
 			}
 		}
@@ -241,25 +248,39 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		}
 
 		if (getRSUStopSignal()) {
-			stopping(DECELERATION);
+
+			hardStop(DECELERATION);
 		}
 
 		hSpeed = speed * Math.cos(angle);
 		vSpeed = speed * Math.sin(angle);
 		move(hSpeed, vSpeed);
 
-		autoDeletHandeler();
+		autoDeleteHandler();
 	}
 
 	/**
-	 *  modifySpeed: accelerate up to speed set as parameter
-	 *  A number higher than speed traveling increases speed in next step
-	 *  The opposite if number is lower than speed traveling
+	 * modifySpeed: accelerate up to speed set as parameter A number higher than
+	 * speed traveling increases speed in next step The opposite if number is lower
+	 * than speed traveling
+	 * 
 	 * @param targetVelocity
 	 */
 	private void modifySpeed(double targetVelocity) {
-		double acceleration = ACCELERATION;
-		double deceleration = DECELERATION;
+
+		double acceleration;
+		double deceleration;
+
+		if (this instanceof EntityBicycle) {
+
+			acceleration = BIKEACCELERATION;
+			deceleration = BIKEDECELERATION;
+
+		} else {
+			acceleration = ACCELERATION;
+			deceleration = DECELERATION;
+
+		}
 
 		if (this.previousSpeed < targetVelocity) {
 			setSpeed(previousSpeed + acceleration);
@@ -274,7 +295,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		}
 	}
 
-	private void autoDeletHandeler() {
+	private void autoDeleteHandler() {
 		if (speed == 0) {
 			if (deletionTimer <= 0) {
 				instanceDestroy();
@@ -287,14 +308,42 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	}
 
 	/**
-	 * stopping: lowers speed/breaks vehicle until complete stop or no obstacle is present
+	 * stopping: lowers speed/breaks vehicle until complete stop or no obstacle is
+	 * present
+	 * 
 	 * @param deceleration
 	 */
-	private void stopping(double deceleration) {
+
+	private void stopping(double deceleration, Entity otherEntity) {
+
+		double distance = distanceToEntity(otherEntity);
+		double relativeDeceleration = Math.abs(deceleration * (scaling.getPixelsFromMeter(15) / distance));
+		int stoppingDistance = (otherEntity instanceof EntityTrafficLight) ? 5 : 10;
+
+		if (speed > scaling.kphToPixelsPerStep(15) || distance < scaling.getPixelsFromMeter(stoppingDistance)
+				|| otherEntity instanceof EntityRoadReservation) {
+			if (relativeDeceleration > deceleration || otherEntity instanceof EntityRoadReservation)
+				relativeDeceleration = deceleration;
+
+			if (this.previousSpeed > 0) {
+				setSpeed(previousSpeed - relativeDeceleration);
+				if (this.speed < 0) {
+					setSpeed(0);
+
+				}
+			} else if (this.speed != 0) {
+				setSpeed(0);
+			}
+		}
+	}
+
+	private void hardStop(double deceleration) {
+
 		if (this.previousSpeed > 0) {
 			setSpeed(previousSpeed - deceleration);
 			if (this.speed < 0) {
 				setSpeed(0);
+
 			}
 		} else if (this.speed != 0) {
 			setSpeed(0);
@@ -317,6 +366,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		}
 
 	}
+
 	/*
 	 * setVehicleName: sets name on this vehicle
 	 */
@@ -330,6 +380,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	/**
 	 * Cast a property change
+	 * 
 	 * @param eventname event to be cast
 	 */
 	public void castPropertyChange(String eventname) {
@@ -338,8 +389,9 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 	/**
 	 * Cast a property change with a new CollitionData
+	 * 
 	 * @param eventname event to be cast to receiving function
-	 * @param vehicle that has collided and should send data
+	 * @param vehicle   that has collided and should send data
 	 */
 	public void castPropertyChange(String eventname, EntityBicycle vehicle) {
 
@@ -358,9 +410,9 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 		propertyChangeSupportCounter.firePropertyChange(eventname, null, mc);
 	}
+
 	/**
-	 * draw: draws a box around vehicle to display hitbox
-	 * area that can collide
+	 * draw: draws a box around vehicle to display hitbox area that can collide
 	 */
 	@Override
 	public void draw(Graphics g) {
@@ -374,15 +426,20 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 			g.setColor(hitBoxYellow);
 			g.fillPolygon(visionArea);
 		}
+
 	}
+
 	/**
-	 * collision: Handles collision decision of vehicle
-	 * determines if a vehicle has collided
+	 * collision: Handles collision decision of vehicle determines if a vehicle has
+	 * collided
 	 */
 	@Override
 	public void collision(Entity other) {
+		if (isNewBorn()) {
 
-		if (other instanceof EntityVehicle) {
+			instanceDestroy();
+
+		} else if (other instanceof EntityVehicle) {
 
 			Area otherBounds = ((EntityVehicle) other).getVehicleBounds();
 
@@ -391,9 +448,9 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 			// Also checks that the vehicle haven't just spawned to prevent spawn collision
 
-			if (!otherBounds.isEmpty() && !isNewBorn() && !((EntityVehicle) other).isNewBorn()) {
-//
-//				if (this instanceof EntityCar && other instanceof EntityCar) {
+			if (!otherBounds.isEmpty() && !((EntityVehicle) other).isNewBorn()) {
+
+//				if (this instanceof EntitySmartCar && other instanceof EntityBicycle) {
 //					try {
 //						wait();
 //					} catch (InterruptedException e) {
@@ -483,7 +540,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	private int waitTimer = 0;
 
 	public void setRSUStopSignal(boolean signal) {
-		waitTimer = 120;
+		waitTimer = scaling.getStepsPerSecond() * 3;
 	}
 
 	@Override
@@ -546,7 +603,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	// Checks if the entity is newly spawned
 	private boolean isNewBorn() {
 
-		return birthTime > SharedValues.getInstance().getTimeStamp() - scaling.getStepsPerSecond() * 2;
+		return birthTime > SharedValues.getInstance().getTimeStamp() - scaling.getStepsPerSecond();
 
 	}
 
@@ -556,7 +613,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		return distance;
 	}
 
-	private double distanceToVehicle(EntityVehicle other) {
+	private double distanceToEntity(Entity other) {
 
 		double x1 = other.getXPosition();
 		double y1 = other.getYPosition();
@@ -564,7 +621,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		double y2 = this.getYPosition();
 		return Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
 	}
-	
+
 	public long getBirthTime() {
 		return birthTime;
 	}
@@ -572,6 +629,5 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	public void setBirthTime(long birthTime) {
 		this.birthTime = birthTime;
 	}
-
 
 }

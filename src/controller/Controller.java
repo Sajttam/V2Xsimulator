@@ -64,6 +64,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		this.guiPanel = guiPanel;
 
 		setInitValues(bikeCounter, carCounter, smartCarChance, serverDelay);
+
 		instances = new CopyOnWriteArrayList<Entity>();
 		createInstances = new ArrayList<Entity>();
 		deleteInstances = new ArrayList<Entity>();
@@ -81,6 +82,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 
 	public void restart(int bikeCounter, int carCounter, double smartCarChance, int serverDelay) {
 		setInitValues(bikeCounter, carCounter, smartCarChance, serverDelay);
+
 		instances.clear();
 		createInstances.clear();
 		deleteInstances.clear();
@@ -88,7 +90,7 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 		StatsController.getInstance().clear();
 		initializeGame("");
 	}
-	
+
 	public void setInitValues(int bikeCounter, int carCounter, double smartCarChance, int serverDelay) {
 		GLOBAL.setBicycleCounter(bikeCounter);
 		GLOBAL.setCarCounter(carCounter);
