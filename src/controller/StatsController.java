@@ -54,23 +54,6 @@ public class StatsController implements PropertyChangeListener {
 	private StatsController(JFrame jframe) {
 		this.jframe = jframe;
 		clear();
-		jpanel = new JPanel();
-		// clear();
-
-		modelCollisions = new ArrayList<ModelCollision>();
-
-		headings = new TreeMap<String, Map<String, ModelStatsHolder>>();
-		for (String s : hStr)
-			headings.put(s, new TreeMap<String, ModelStatsHolder>());
-
-		createLabels(); // Creates labels and adds them to labelsWithValues
-
-		jpanel = new StatsPanel(headings);
-
-		jframe.add(jpanel);
-		jframe.setJMenuBar(makeMenu());
-		jframe.setVisible(true);
-		jframe.pack();
 
 	}
 
