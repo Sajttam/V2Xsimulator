@@ -540,7 +540,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	private int waitTimer = 0;
 
 	public void setRSUStopSignal(boolean signal) {
-		waitTimer = scaling.getStepsPerSecond() * 3;
+		waitTimer = (int) (scaling.getStepsPerSecond() * 1.5);
 	}
 
 	@Override

@@ -68,16 +68,17 @@ public class EntityRoadReservation extends Entity implements Collidable {
 
 		oldReserved = false;
 		// Sets the reservation to last step rounds reservations if Light is not red
-		if (tLight != null && !tLight.getLightCycle().equals(LightCycle.STOP)) {
+		if (tLight != null && tLight.getLightCycle().equals(LightCycle.DRIVE)) {
 			oldReserved = reserved;
-			waitTimeout = scaling.getStepsPerSecond();
+			waitTimeout = scaling.getStepsPerSecond() * 4;
 
 		} else if (waitTimeout > 0) {
 			oldReserved = reserved;
 			waitTimeout--;
 
+		} else {
+			reserved = false;
 		}
-		reserved = false;
 
 	}
 

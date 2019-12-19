@@ -97,7 +97,7 @@ public class EntityTrafficLightNode extends EntityNode {
 			switch (caseTest) {
 			case 0:
 				toggleSignal(setVertical, LightCycle.STOP);
-				wait = scaler.getStepsPerSecond() * 4;
+				wait = scaler.getStepsPerSecond() * 6;
 				caseTest = 1;
 				break;
 			case 1:
@@ -107,7 +107,7 @@ public class EntityTrafficLightNode extends EntityNode {
 				break;
 			case 2:
 				toggleSignal(setHorizontal, LightCycle.STOP);
-				wait = scaler.getStepsPerSecond() * 4;
+				wait = scaler.getStepsPerSecond() * 6;
 				caseTest = 3;
 				break;
 			case 3:
