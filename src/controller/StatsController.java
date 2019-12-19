@@ -126,9 +126,9 @@ public class StatsController implements PropertyChangeListener {
 				if (mc.getVehicleFirstSpeed() != 0) {
 					if (mc.getVehicleFirstSpeed() < 20) {
 						if (mc.getVehicleFirstType().equals("Car"))
-							headings.get(hStr[3]).get("c2b_020").incValue();
+							headings.get(hStr[3]).get("c2b_0120").incValue();
 						else
-							headings.get(hStr[4]).get("sc2b_020").incValue();
+							headings.get(hStr[4]).get("sc2b_0120").incValue();
 					} else if (mc.getVehicleFirstSpeed() < 40) {
 						if (mc.getVehicleFirstType().equals("Car"))
 							headings.get(hStr[3]).get("c2b_2040").incValue();

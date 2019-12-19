@@ -10,10 +10,10 @@ public enum StatsEventType {
 	SMARTCAR2SMARTCAR("Smartcar2Smartcar", "Smartcar & Smartcar", "Collision"),
 	CAR2CAR("Car2Car", "Car & Car", "Collision"),
 	COLLISION_DATA("CollisionData","Collision","Data"),
-	COLLISION_C2B_020("c2b_020","Speed  0-20 kph","Cars - Bicycles"),
+	COLLISION_C2B_020("c2b_0120","Speed  1-20 kph","Cars - Bicycles"),
 	COLLISION_C2B_2040("c2b_2040","Speed 20-40 kph","Cars - Bicycles"),
 	COLLISION_C2B_4060("c2b_4060","Speed 40-60 kph","Cars - Bicycles"),
-	COLLISION_SC2B_020("sc2b_020","Speed  0-20 kph","Smartcars - Bicycles"),
+	COLLISION_SC2B_020("sc2b_0120","Speed  1-20 kph","Smartcars - Bicycles"),
 	COLLISION_SC2B_2040("sc2b_2040","Speed 20-40 kph","Smartcars - Bicycles"),
 	COLLISION_SC2B_4060("sc2b_4060","Speed 40-60 kph","Smartcars - Bicycles");
 	
