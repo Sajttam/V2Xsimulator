@@ -153,7 +153,7 @@ public class GuiPanel extends JPanel {
 		JMenu menuFile = new JMenu("File");
 		// JMenuItem itemSave = new JMenuItem("Save");
 		JMenuItem itemRestart = new JMenuItem("Restart");
-		itemRestart.addActionListener(e -> controller.restart());
+		itemRestart.addActionListener(e -> controller.restart(12, 6, 0.5));
 		// itemLoad.addActionListener(e -> controller.loadLevel());
 		JMenuItem itemExit = new JMenuItem("Exit");
 		itemExit.addActionListener(e -> System.exit(0));
@@ -164,7 +164,14 @@ public class GuiPanel extends JPanel {
 		itemSpeed.addActionListener(e -> changeSpeed());
 
 		JMenu menuDebug = new JMenu("Debug");
-		JMenuItem itemServer = new JMenuItem("Connect to server");
+		JMenuItem itemShowFieldOfView = new JMenuItem("Field of View");
+		itemShowFieldOfView.addActionListener(e -> {
+			SharedValues v = SharedValues.getInstance();
+			if (v.isShowFieldOfView()) {
+				v.setShowFieldOfView(false);
+			}
+			else v.setShowFieldOfView(true);
+		});
 		JMenuItem itemGetFromServer = new JMenuItem("GetFromServer");
 		JMenuItem itemCollisionBoxes = new JMenuItem("Collision Bounds");
 		JMenuItem itemPerformance = new JMenuItem("Performance");
@@ -191,7 +198,7 @@ public class GuiPanel extends JPanel {
 		// menuOptions.add(itemHighscore);
 
 		menuBar.add(menuDebug);
-		// menuDebug.add(itemServer);
+		menuDebug.add(itemShowFieldOfView);
 		// menuDebug.add(itemGetFromServer);
 		menuDebug.add(itemCollisionBoxes);
 		menuDebug.add(itemPerformance);

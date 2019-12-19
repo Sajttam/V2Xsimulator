@@ -33,7 +33,19 @@ public class main {
 		// StatsController statscontroller = new StatsController(stats);
 		StatsController.initialize(stats);
 		stats.setSize(700, 500);
-		Controller controller = new Controller(gui);
+		
+		int bikeCounter = 12;
+		int carCounter = 6;
+		double smartCarChance = 0.5;
+		int serverDelay = 0;
+		if (args.length == 4) {
+			bikeCounter = Integer.parseInt(args[0]);
+			carCounter = Integer.parseInt(args[1]);
+			smartCarChance = Double.parseDouble(args[2]);
+			serverDelay = Integer.parseInt(args[3]);
+		}
+		
+		Controller controller = new Controller(gui, bikeCounter, carCounter, smartCarChance, serverDelay);
 		gui.makeMenu(controller);
 		/*
 		 * } catch (IOException e) { JOptionPane.showMessageDialog(null,

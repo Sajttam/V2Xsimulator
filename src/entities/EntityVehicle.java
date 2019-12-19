@@ -341,7 +341,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	 * @param eventname event to be cast to receiving function
 	 * @param vehicle that has collided and should send data
 	 */
-	public void castPropertyChange(String eventname, EntityVehicle vehicle) {
+	public void castPropertyChange(String eventname, EntityBicycle vehicle) {
 
 		ModelCollision mc = new ModelCollision();
 
@@ -350,9 +350,11 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		mc.setVehicleFirstType(getVehicleName());
 
 		mc.setVehicleFirstSpeed(scaling.pixelsPerStepToKph(getSpeed()));
+		mc.setVehicleFirstSpawnTime(getBirthTime());
 
-		mc.setVehicleOtherType(getVehicleName());
+		mc.setVehicleOtherType(vehicle.getVehicleName());
 		mc.setVehicleOtherSpeed(scaling.pixelsPerStepToKph(vehicle.getSpeed()));
+		mc.setVehicleOtherSpawnTime(vehicle.getBirthTime());
 
 		propertyChangeSupportCounter.firePropertyChange(eventname, null, mc);
 	}
@@ -368,9 +370,10 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 
 		int alpha = 60; // 50% transparent
 		Color hitBoxYellow = new Color(235, 229, 52, alpha);
-		g.setColor(hitBoxYellow);
-
-		g.fillPolygon(visionArea);
+		if (SharedValues.getInstance().isShowFieldOfView()) {
+			g.setColor(hitBoxYellow);
+			g.fillPolygon(visionArea);
+		}
 	}
 	/**
 	 * collision: Handles collision decision of vehicle
@@ -402,7 +405,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 				if (this instanceof EntitySmartCar && other instanceof EntityBicycle) {
 					castPropertyChange(StatsEventType.SMARTCAR2BICYCLE.getEventType());
 					// cast a property change with collisionData
-					castPropertyChange(StatsEventType.COLLISION_DATA.getEventType(), (EntityVehicle) other);
+					castPropertyChange(StatsEventType.COLLISION_DATA.getEventType(), (EntityBicycle) other);
 				} else if (this instanceof EntitySmartCar && other instanceof EntitySmartCar) {
 					castPropertyChange(StatsEventType.SMARTCAR2SMARTCAR.getEventType());
 				} else if (this instanceof EntitySmartCar && other instanceof EntityCar) {
@@ -412,8 +415,7 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 					castPropertyChange(StatsEventType.CAR2CAR.getEventType());
 				} else if (this instanceof EntityCar && other instanceof EntityBicycle) {
 					castPropertyChange(StatsEventType.CAR2BYCYCLE.getEventType());
-					// cast a property change with collisionData
-					castPropertyChange(StatsEventType.COLLISION_DATA.getEventType(), (EntityVehicle) other);
+					castPropertyChange(StatsEventType.COLLISION_DATA.getEventType(), (EntityBicycle) other);
 				}
 				instanceDestroy();
 			}
@@ -562,5 +564,14 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		double y2 = this.getYPosition();
 		return Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
 	}
+	
+	public long getBirthTime() {
+		return birthTime;
+	}
+
+	public void setBirthTime(long birthTime) {
+		this.birthTime = birthTime;
+	}
+
 
 }

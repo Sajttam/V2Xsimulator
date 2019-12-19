@@ -6,9 +6,11 @@ public class ModelCollision {
 	private String statsEventType;
 	private String vehicleFirstType;
 	private double vehicleFirstSpeed;
-
+	private long vehicleFirstSpawnTime;
+	
 	private String vehicleOtherType;
 	private double vehicleOtherSpeed;
+	private long vehicleOtherSpawnTime;
 
 	private long timeStamp;
 
@@ -74,6 +76,30 @@ public class ModelCollision {
 		this.timeStamp = timeStamp;
 	}
 	
+	public static String getTsvHeadings() {
+		StringBuilder s = new StringBuilder();
+		s.append("First type\t");
+		s.append("First speed\t");
+		s.append("First spawn time\t");
+		s.append("Other type\t");
+		s.append("Other speed\t");
+		s.append("Other spawn time\t");
+		s.append("Time stamp");
+		return s.toString();
+	}
+	
+	public String toTsvString() {
+		StringBuilder s = new StringBuilder();
+		s.append(getVehicleFirstType() + "\t");
+		s.append(getVehicleFirstSpeed() + "\t");
+		s.append(getVehicleFirstSpawnTime() + "\t");
+		s.append(getVehicleOtherType() + "\t");
+		s.append(getVehicleOtherSpeed() + "\t");
+		s.append(getVehicleOtherSpawnTime() + "\t");
+		s.append(getTimeStamp());
+		return s.toString();
+	}
+	
 	public String toString() {
 		StringBuilder s = new StringBuilder();
 		
@@ -86,5 +112,21 @@ public class ModelCollision {
 		s.append(" timeStamp:" +getTimeStamp());
 		
 		return s.toString();
+	}
+
+	public long getVehicleFirstSpawnTime() {
+		return vehicleFirstSpawnTime;
+	}
+
+	public void setVehicleFirstSpawnTime(long vehicleFirstSpawnTime) {
+		this.vehicleFirstSpawnTime = vehicleFirstSpawnTime;
+	}
+
+	public long getVehicleOtherSpawnTime() {
+		return vehicleOtherSpawnTime;
+	}
+
+	public void setVehicleOtherSpawnTime(long vehicleOtherSpawnTime) {
+		this.vehicleOtherSpawnTime = vehicleOtherSpawnTime;
 	}
 }

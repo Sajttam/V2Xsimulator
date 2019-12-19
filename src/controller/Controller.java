@@ -60,15 +60,10 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 	 * 
 	 * @param guiPanel The GUI that the controller will draw on.
 	 */
-	public Controller(GuiPanel guiPanel) {
+	public Controller(GuiPanel guiPanel, int bikeCounter, int carCounter, double smartCarChance, int serverDelay) {
 		this.guiPanel = guiPanel;
 
-		GLOBAL.setBicycleCounter(8);
-		GLOBAL.setCarCounter(8);
-		GLOBAL.setServerPort(1000);
-		GLOBAL.setTimeOutValue(16.6667);
-		GLOBAL.setSMARTCAR_CHANCE(0.5);
-
+		setInitValues(bikeCounter, carCounter, smartCarChance, serverDelay);
 		instances = new CopyOnWriteArrayList<Entity>();
 		createInstances = new ArrayList<Entity>();
 		deleteInstances = new ArrayList<Entity>();
@@ -84,18 +79,23 @@ public class Controller extends Thread implements ActionListener, PropertyChange
 
 	}
 
-	public void restart() {
-		GLOBAL.setBicycleCounter(12);
-		GLOBAL.setCarCounter(6);
-		GLOBAL.setServerPort(1000);
-		GLOBAL.setTimeOutValue(16.6667);
-		GLOBAL.setSMARTCAR_CHANCE(0.5);
+	public void restart(int bikeCounter, int carCounter, double smartCarChance, int serverDelay) {
+		setInitValues(bikeCounter, carCounter, smartCarChance, serverDelay);
 		instances.clear();
 		createInstances.clear();
 		deleteInstances.clear();
 		guiPanel.setDrawInstaces(instances);
 		StatsController.getInstance().clear();
 		initializeGame("");
+	}
+	
+	public void setInitValues(int bikeCounter, int carCounter, double smartCarChance, int serverDelay) {
+		GLOBAL.setBicycleCounter(bikeCounter);
+		GLOBAL.setCarCounter(carCounter);
+		GLOBAL.setServerPort(1000);
+		GLOBAL.setTimeOutValue(16.6667);
+		GLOBAL.setSMARTCAR_CHANCE(smartCarChance);
+		GLOBAL.setServerDelayMiliseconds(serverDelay);
 	}
 
 	/**

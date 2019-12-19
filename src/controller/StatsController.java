@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -19,6 +22,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
+
 import models.SIScaling;
 import models.SharedValues;
 import models.stats.ModelCollision;
@@ -26,6 +32,11 @@ import models.stats.ModelStatsHolder;
 import models.stats.StatsEventType;
 import view.StatsPanel;
 
+/**
+ * Controlls the statistics in the program, logs crashes and spawns
+ * @author Mattias Sikvall Källström
+ *
+ */
 public class StatsController implements PropertyChangeListener {
 
 	private SIScaling scaling = new SIScaling();
@@ -48,24 +59,7 @@ public class StatsController implements PropertyChangeListener {
 	 */
 	private StatsController(JFrame jframe) {
 		this.jframe = jframe;
-		jpanel = new JPanel();
-		//clear();
-		
-		modelCollisions = new ArrayList<ModelCollision>();
-
-		headings = new TreeMap<String, Map<String, ModelStatsHolder>>();
-		for (String s : hStr)
-			headings.put(s, new TreeMap<String, ModelStatsHolder>());
-
-		createLabels(); // Creates labels and adds them to labelsWithValues
-
-		jpanel = new StatsPanel(headings);
-		
-		jframe.add(jpanel);
-		jframe.setJMenuBar(makeMenu());
-		jframe.setVisible(true);
-		jframe.pack();
-
+		clear();
 	}
 
 	/**
@@ -80,8 +74,12 @@ public class StatsController implements PropertyChangeListener {
 		JMenuItem itemSave = new JMenuItem("Save stats");
 		itemSave.addActionListener(e -> saveToFile());
 
+		JMenuItem itemSaveModels = new JMenuItem("Save stats models");
+		itemSaveModels.addActionListener(e -> modelsToFile());
+		
 		menuBar.add(menuFile);
 		menuFile.add(itemSave);
+		menuFile.add(itemSaveModels);
 		
 		return menuBar;
 	}
@@ -90,7 +88,10 @@ public class StatsController implements PropertyChangeListener {
 	 * @param jframe object
 	 */
 	private static StatsController statsController;
-
+	/**
+	 * Initializes the singleton
+	 * @param jFrame
+	 */
 	public static void initialize(JFrame jFrame) {
 		if (statsController == null)
 			statsController = new StatsController(jFrame);
@@ -101,9 +102,11 @@ public class StatsController implements PropertyChangeListener {
 		}
 
 	}
+
+	
 	/**
-	 * Statscontroller : Returns the instance of statsController
-	 * @return statsController instance
+	 * Get an instance of the StatsController singelton
+	 * @return the StatsController singleton, null if the class hasn't been initialized
 	 */
 	public static StatsController getInstance() {
 		return statsController;
@@ -149,15 +152,24 @@ public class StatsController implements PropertyChangeListener {
 	}
 
 	public void clear() {
-		// Creates labels and adds them to labelsWithValues
-		/*jpanel.removeAll();
+		jframe.getContentPane().removeAll();
+		jframe.repaint();
+		
+		modelCollisions = new ArrayList<ModelCollision>();
+
 		headings = new TreeMap<String, Map<String, ModelStatsHolder>>();
-		headings.put(hStr[0], new TreeMap<String, ModelStatsHolder>());
-		headings.put(hStr[1], new TreeMap<String, ModelStatsHolder>());
-		createLabels();
-		setFont();
-		addToPanel();
-		jframe.pack();*/
+		for (String s : hStr)
+			headings.put(s, new TreeMap<String, ModelStatsHolder>());
+
+		createLabels(); // Creates labels and adds them to labelsWithValues
+		
+		if (jpanel != null) jpanel.removeAll();
+		jpanel = new StatsPanel(headings);
+		
+		jframe.add(jpanel);
+		jframe.setJMenuBar(makeMenu());
+		jframe.setVisible(true);
+		jframe.pack();
 	}
 
 	private void createLabels() {
@@ -174,6 +186,29 @@ public class StatsController implements PropertyChangeListener {
 	public void saveToFile() {
 		String fileName = JOptionPane.showInputDialog(jframe, "Specifiy name for savefile");
 		writeStatsToFile("", fileName);
+	}
+	
+	public void modelsToFile() {
+		JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+		int returnValue = jfc.showSaveDialog(null);
+		// if (returnValue == JFileChooser.SAVE_DIALOG) {
+			File selectedFile = jfc.getSelectedFile();
+			try {
+				modelsToFile(selectedFile, '\t');
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		// }
+	}
+	
+	public void modelsToFile(File file, char seperator) throws IOException {
+		FileWriter fw = new FileWriter(file.getAbsoluteFile() + ".tsv");
+		fw.write(ModelCollision.getTsvHeadings());
+		for (ModelCollision mc : modelCollisions) {
+			fw.write("\n");
+			fw.write(mc.toTsvString());
+		}	 
+		fw.close();
 	}
 
 	/**
