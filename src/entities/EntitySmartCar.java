@@ -148,7 +148,12 @@ public class EntitySmartCar extends EntityCar {
 		super.step();
 
 	}
-
+	/**
+	 * Makes it possible to change color of car
+	 * when it has received a stopmessage from
+	 * the RSU
+	 * @return color of car in this instance
+	 */
 	private Color getSmartCarColor() {
 		if (colorWaitCounter <= 0) {
 			return Color.BLUE;
@@ -158,7 +163,7 @@ public class EntitySmartCar extends EntityCar {
 		}
 	}
 
-	/*
+	/**
 	 * Sets the smart car to be blue.
 	 */
 	@Override

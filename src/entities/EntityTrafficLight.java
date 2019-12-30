@@ -19,11 +19,20 @@ public class EntityTrafficLight extends Entity{
 		setCollisionBounds(1, 1, offsetX, offsetY);
 		setLightCycle(LightCycle.STOP);
 	}
-	
+	/**
+	 * Returns the status of the trafficlight.
+	 * @return Returns the status : STOP, DRIVE or SLOW_DOWN
+	 */
 	public LightCycle getLightCycle() {
 		return lightCycle;
 	}
-
+	/**
+	 * Makes the trafficlight a collidable object when its
+	 * status is set as STOP.
+	 * this to make vehicle able to recognise them and
+	 * stop when neccesary
+	 * @param lightCycle
+	 */
 	public void setLightCycle(LightCycle lightCycle) {
 		this.lightCycle = lightCycle;
 		

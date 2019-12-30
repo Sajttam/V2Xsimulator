@@ -84,7 +84,6 @@ public class EntityRoadReservation extends Entity implements Collidable {
 
 	/**
 	 * Gets the angle.
-	 *
 	 * @return the angle
 	 */
 	public double getAngle() {
@@ -93,7 +92,6 @@ public class EntityRoadReservation extends Entity implements Collidable {
 
 	/**
 	 * Sets the angle.
-	 *
 	 * @param angle the new angle
 	 */
 	public void setAngle(double angle) {
@@ -102,7 +100,6 @@ public class EntityRoadReservation extends Entity implements Collidable {
 
 	/**
 	 * Gets the reservation state.
-	 *
 	 * @return the reservations
 	 */
 	public boolean getReserved() {
@@ -111,7 +108,6 @@ public class EntityRoadReservation extends Entity implements Collidable {
 
 	/**
 	 * reserves this roadpart.
-	 *
 	 * @param reserved the new reserved
 	 */
 	public void setReserved(boolean reserved) {

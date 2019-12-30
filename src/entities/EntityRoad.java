@@ -60,7 +60,11 @@ public class EntityRoad extends Entity {
 		if (distX < 0)
 			angle += Math.PI;
 	}
-
+	/**
+	 * Returns the type of road
+	 * available : BICYCLE, CAR
+	 * @return type of Road
+	 */
 	public RoadType getRoadType() {
 		return roadType;
 	}
@@ -105,7 +109,11 @@ public class EntityRoad extends Entity {
 			}
 		wait--;
 	}
-
+	/**
+	 * returns the angle the road is pointing towards
+	 * relative horizontal axis
+	 * @return angle of road
+	 */
 	public double getAngle() {
 		return angle;
 	}

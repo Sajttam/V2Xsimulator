@@ -50,7 +50,15 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 		setRoad(road);
 		addCounter(listener);
 	}
-
+	/**
+	 * creates the graphical and logical representation
+	 * of the vehicles field of view.
+	 * the area that the vehicles can observe and react
+	 * to objects entering into.
+	 * In front of the vehicle in a cone with a 110 degree fov
+	 * 
+	 * @return return the area that is infront of the vehicle
+	 */
 	public Polygon getVisionArea() {
 		visionArea = new Polygon();
 
@@ -123,7 +131,9 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	}
 
 	/**
-	 * 
+	 * Determines the position of other entitiys in
+	 * relation to itself.
+	 * Used to prevent collision
 	 * @param e
 	 * @return -1 if entity to the left, 0 if entity in center, 1 if entity to the
 	 *         right
@@ -373,7 +383,10 @@ public class EntityVehicle extends Entity implements Collidable, EntityMouseList
 	public void setVehicleName(String vehicleName) {
 		this.vehicleName = vehicleName;
 	}
-
+	/**
+	 * getvehiclename
+	 * @return returns the name of the vehicle
+	 */
 	public String getVehicleName() {
 		return vehicleName;
 	}
