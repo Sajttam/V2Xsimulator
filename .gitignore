@@ -7,8 +7,9 @@
 # BlueJ files
 *.ctxt
 
-# intellij
+#Intellijfiles
 *.xml
+*.iml
 *.plantuml
 
 # Mobile Tools for Java (J2ME)

@@ -22,7 +22,9 @@ public class EntityTrafficLightNode extends EntityNode {
 		setCollisionBounds(getWidth(), getHeight());
 		// TODO Auto-generated constructor stub
 	}
-
+	/**
+	 * 
+	 */
 	public void generateTrafficLights() {
 		trafficLights = new ArrayList<EntityTrafficLight>();
 
@@ -44,14 +46,9 @@ public class EntityTrafficLightNode extends EntityNode {
 				if (r.straight && r.getRoadType().equals(RoadType.CAR)
 						&& Arrays.asList(0.0, 180.0).contains(Math.toDegrees(r.getAngle()))) {
 					addRoadReservation(r, l);
-
 				}
 			}
-
 		}
-
-		// t = new Thread(this);
-		// t.start();
 	}
 
 	@Override

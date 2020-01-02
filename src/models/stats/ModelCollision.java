@@ -75,7 +75,10 @@ public class ModelCollision {
 	public void setTimeStamp(long timeStamp) {
 		this.timeStamp = timeStamp;
 	}
-	
+	/**
+	 * Creates the label for each column of the statistics file
+	 * @return returns the row with all labels
+	 */
 	public static String getTsvHeadings() {
 		StringBuilder s = new StringBuilder();
 		s.append("First type\t");
@@ -87,7 +90,12 @@ public class ModelCollision {
 		s.append("Time stamp");
 		return s.toString();
 	}
-	
+	/**
+	 * Appends the data from each collision
+	 * Appends it as a full row 
+	 * 
+	 * @return returns a row with data from collisions
+	 */
 	public String toTsvString() {
 		StringBuilder s = new StringBuilder();
 		s.append(getVehicleFirstType() + "\t");

@@ -55,7 +55,15 @@ public class ConnectionUDP {
 		iStream.close();
 		return message;
 	}
-
+	/**
+	 * Takes a datagram packet and converts it to a V2X message, throws an
+	 * exceptions if it fails
+	 * 
+	 * @param p
+	 * @return
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	public V2XCommand receiveCommand(DatagramPacket p) throws IOException, ClassNotFoundException {
 		buf = p.getData();
 		ObjectInputStream iStream = new ObjectInputStream(new ByteArrayInputStream(buf));
@@ -63,7 +71,14 @@ public class ConnectionUDP {
 		iStream.close();
 		return message;
 	}
-
+	/**
+	 * Creates a broadcast on the network as a datagram packet
+	 * opens a socket and closes it after message is sent
+	 * 
+	 * @param broadcastMessage
+	 * @param address
+	 * @throws IOException
+	 */
 	public void broadcast(String broadcastMessage, InetAddress address) throws IOException {
 		DatagramSocket broadcastSocket = new DatagramSocket();
 		broadcastSocket.setBroadcast(true);

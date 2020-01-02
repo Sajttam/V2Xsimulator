@@ -60,11 +60,16 @@ public class EntityNode extends Entity {
 		setCollisionBounds(getWidth(), getHeight(), 0, 0);
 
 	}
-
+	/**
+	 * Tells if a node can spawn vehicles
+	 * @return Returns wether the node is spawning
+	 */
 	public boolean isSpawning() {
 		return spawning;
 	}
-
+	/**
+	 * Sets a node to spawn vehicles
+	 */
 	public void setSpawning(boolean spawning) {
 		this.spawning = spawning;
 	}
@@ -114,7 +119,11 @@ public class EntityNode extends Entity {
 		}
 		return direction;
 	}
-
+	/**
+	 * Return the next road in the pair if there is one
+	 * otherwise null
+	 * @return returns the next road
+	 */
 	public EntityRoad getNextRoad(EntityRoad road, Boolean turn) {
 		if (roadConnections.containsKey(road)) {
 			RoadPair rp = roadConnections.get(road);
@@ -123,7 +132,12 @@ public class EntityNode extends Entity {
 			return null;
 		}
 	}
-
+	/**
+	 * Creates the network of roads
+	 * links them together to make all the roads
+	 * connect to eachother
+	 * 
+	 */
 	public void doInternalConnections(List<EntityRoad> roads) {
 		int count = 0;
 		if (roadsWest.isEmpty())
@@ -205,7 +219,9 @@ public class EntityNode extends Entity {
 		doInternalConnections(roadsNorth);
 		doInternalConnections(roadsSouth);
 	}
-
+	/*
+	 * Connects the road to a node
+	 */
 	public void addConnectionTo(EntityNode other, Direction direction, RoadType roadType) {
 		EntityRoad road = new EntityRoad(this, other, roadType, spawning);
 
