@@ -54,7 +54,7 @@ public class EntityRoadReservation extends Entity implements Collidable {
 //
 //		g.setColor(Color.blue);
 //		g.drawRect((int) getCollisionBounds().getX(), (int) getCollisionBounds().getY(),
-//				(int) getCollisionBounds().getWidth(), (int) getCollisionBounds().getHeight());
+//		(int) getCollisionBounds().getWidth(), (int) getCollisionBounds().getHeight());
 
 	}
 
@@ -83,8 +83,7 @@ public class EntityRoadReservation extends Entity implements Collidable {
 	}
 
 	/**
-	 * Gets the angle.
-	 * @return the angle
+	 * @return Returns the angle
 	 */
 	public double getAngle() {
 		return angle;
@@ -92,7 +91,7 @@ public class EntityRoadReservation extends Entity implements Collidable {
 
 	/**
 	 * Sets the angle.
-	 * @param angle the new angle
+	 * @param angle the new angle to be set
 	 */
 	public void setAngle(double angle) {
 		this.angle = angle;
@@ -100,7 +99,7 @@ public class EntityRoadReservation extends Entity implements Collidable {
 
 	/**
 	 * Gets the reservation state.
-	 * @return the reservations
+	 * @return Returns the reservations
 	 */
 	public boolean getReserved() {
 		return oldReserved;

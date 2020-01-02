@@ -13,22 +13,22 @@ public class SharedValues {
 	private static SharedValues sharedValues = new SharedValues();
 
 	private SIScaling scaler = new SIScaling();
-	private int carCounter;
-	private int smartCarCounter;
+	private int carCounter;// Amount of cars not affected
+	private int smartCarCounter; // Amount of smartcars
 
-	private int bicycleCounter;
-	private int serverPort;
+	private int bicycleCounter; // Amount of bicycles
+	private int serverPort; // Portnumber for servercommunication
 	private double timeOutValue;
 
 	private volatile long stepsEpic = 0;
 
 	private ArrayList<Integer> serverPortNumbers = new ArrayList<Integer>();
-	private double carMaxSpeed = scaler.kphToPixelsPerStep(50);
-	private double bicycleMaxSpeed = scaler.kphToPixelsPerStep(20);
+	private double carMaxSpeed = scaler.kphToPixelsPerStep(50); // Maximum velocity a car can travel
+	private double bicycleMaxSpeed = scaler.kphToPixelsPerStep(20); // Maximum velocity a bike can travel
 	private double nodeHeight = scaler.getPixelsFromMeter(15.5);
 	private double nodeWidth = scaler.getPixelsFromMeter(15.5);
-	private double rsuHeight = nodeHeight * 2;
-	private double rsuWidth = nodeWidth * 2;
+	private double rsuHeight = nodeHeight * 2; 	// Grapihcal dimensions of area where RSU is active
+	private double rsuWidth = nodeWidth * 2;	// Grapihcal dimensions of area where RSU is active
 	private List<RSUServerUDP> availableRSUs = new ArrayList<RSUServerUDP>();
 	private boolean showFieldOfView = true;
 	private int serverDelayMiliseconds = 0;
@@ -112,7 +112,7 @@ public class SharedValues {
 	}
 
 	public void setTimeOutValue(double timeOutValue) {
-		// if (timeOutValue < 0) throw new Exception("");
+		// if (timeOutValue < 0) throw new Exception ("");
 		this.timeOutValue = timeOutValue;
 	}
 
@@ -179,7 +179,11 @@ public class SharedValues {
 			return carMaxSpeed;
 		}
 	}
-
+	/**
+	 * Gives the max velocity for a given vehicle type
+	 * @param vehicle, Available are BYCYCLE and CAR
+	 * @return Returns the maximum velocity
+	 */
 	public double getMaxSpeed(String vehicle) {
 
 		if (vehicle.equals("BICYCLE"))

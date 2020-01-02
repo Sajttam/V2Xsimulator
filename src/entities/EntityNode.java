@@ -62,7 +62,8 @@ public class EntityNode extends Entity {
 	}
 	/**
 	 * Tells if a node can spawn vehicles
-	 * @return Returns wether the node is spawning
+	 * 
+	 * @return Returns whether the node is spawning
 	 */
 	public boolean isSpawning() {
 		return spawning;
@@ -84,7 +85,11 @@ public class EntityNode extends Entity {
 		allRoads.addAll(roadsSouth);
 		return allRoads;
 	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see entities.Entity#draw(java.awt.Graphics)
+	 */
 	@Override
 	public void draw(Graphics g) {
 		int count = 0;
@@ -122,6 +127,7 @@ public class EntityNode extends Entity {
 	/**
 	 * Return the next road in the pair if there is one
 	 * otherwise null
+	 * 
 	 * @return returns the next road
 	 */
 	public EntityRoad getNextRoad(EntityRoad road, Boolean turn) {
@@ -135,7 +141,7 @@ public class EntityNode extends Entity {
 	/**
 	 * Creates the network of roads
 	 * links them together to make all the roads
-	 * connect to eachother
+	 * connect to each-other
 	 * 
 	 */
 	public void doInternalConnections(List<EntityRoad> roads) {
@@ -151,7 +157,7 @@ public class EntityNode extends Entity {
 
 		boolean starightRoads = !(count == 2);
 
-		// if (starightRoads) System.out.println("YES");
+		// if (starightRoads) System.out.println("YES ");
 
 		for (EntityRoad r : roads) {
 
@@ -172,7 +178,7 @@ public class EntityNode extends Entity {
 
 						// System.out.print("Angle: " + difAngle);
 
-						// EntityRoad newRoad = new EntityRoad(this, this, r.getRoadType(),false); //
+						// EntityRoad newRoad = new EntityRoad(this, this, r.getRoadType(), false); //
 						// False due to it should only be able to spawn on exit from node
 						EntityCurvedRoad newRoad = new EntityCurvedRoad(this, this, r.getRoadType(), r.getAngle(),
 								otherRoad.getAngle()); // False due to it should only be able to spawn on exit from node

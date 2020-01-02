@@ -18,7 +18,11 @@ public class EntityBicycle extends EntityVehicle {
 		super.castPropertyChange(entitytype);
 
 	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see entities.Entity#step()
+	 */
 	@Override
 	public void step() {
 		super.step();

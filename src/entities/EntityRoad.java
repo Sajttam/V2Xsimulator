@@ -63,6 +63,7 @@ public class EntityRoad extends Entity {
 	/**
 	 * Returns the type of road
 	 * available : BICYCLE, CAR
+	 * 
 	 * @return type of Road
 	 */
 	public RoadType getRoadType() {
@@ -76,9 +77,14 @@ public class EntityRoad extends Entity {
 			setPosition((int) getXPosition(), (int) getYPosition(), x, y);
 		}
 	}
-
+	// Random delay between vehicle spawning
 	int wait = (int) (50 + (Math.random() * 400));
-
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see entities.Entity#step
+	 */
 	@Override
 	public void step() {
 		if (spawning)
@@ -110,14 +116,19 @@ public class EntityRoad extends Entity {
 		wait--;
 	}
 	/**
-	 * returns the angle the road is pointing towards
+	 * Returns the angle the road is pointing towards
 	 * relative horizontal axis
+	 * 
 	 * @return angle of road
 	 */
 	public double getAngle() {
 		return angle;
 	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see entities.Entity#draw(java.awt.Graphics)
+	 */
 	@Override
 	public void draw(Graphics g) {
 		if (!drawn) {
@@ -135,8 +146,8 @@ public class EntityRoad extends Entity {
 			// g.fillRect(x2,y2-4,8,8);
 			g.setColor(Color.WHITE);
 			// g.drawString((angle*(180.0/Math.PI)) + "�",
-			// (int)(getXPosition()+(distX/2)),
-			// (int)(getYPosition()+distY/2));
+			// (int)(getXPosition() + (distX/2)),
+			// (int)(getYPosition() + (distY/2));
 
 		}
 

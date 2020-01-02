@@ -13,7 +13,7 @@ import controller.Controller;
 import view.Animation;
 
 /**
- * Abstract superclass for all Entities. Used by all all Entities, and have
+ * Abstract superclass for all Entities. Used by all Entities, and have
  * methods for position, image, animation, direction and collisionbounds. Also
  * extends Observable, which enables all Entities to notify the Controller of
  * changes to be made.
@@ -94,7 +94,7 @@ public abstract class Entity implements Comparable<Object> {
 
 	}
 	/**
-	 *
+	 * Sets the controller
 	 * @param controller
 	 */
 	public void setController(Controller controller) {
@@ -132,9 +132,9 @@ public abstract class Entity implements Comparable<Object> {
 
 	/**
 	 * Draws the image given a Graphics2D object and an image to draw. Image to be
-	 * used is gotten from the Entity
+	 * used is collected from the Entity
 	 *
-	 * @param g2d, a Graphics2D object for animation and tileset.
+	 * @param g2d, a Graphics2D object for animation and tile-set.
 	 */
 
 	/**
@@ -284,9 +284,9 @@ public abstract class Entity implements Comparable<Object> {
 	}
 
 	/**
-	 * setCollisionBounds with parameters for offset and base collisionBounds
+	 * setCollisionBounds with parameters handling offset and base collisionBounds
 	 *
-	 * @param collisionBounds, used to set a new collisionBounds using the old
+	 * @param collisionBounds, used to set a new collisionBounds using the old value
 	 * @param xOffset, offset in x-Axis
 	 * @param yOffset, offset in y-Axis
 	 */
@@ -299,7 +299,7 @@ public abstract class Entity implements Comparable<Object> {
 
 	/**
 	 * setCollisionBoundsLocation sets the location of collisionBounds with the
-	 * attributes from the entity, as long as there exists a collisionBounds for the
+	 * attributes from the entity provided there exists a collisionBounds for the
 	 * Entity.
 	 */
 	public void setCollisionBoundsLocation() {
@@ -326,8 +326,9 @@ public abstract class Entity implements Comparable<Object> {
 	}
 
 	/**
-	 * drawFlippedImage draws an image in reversed, used in animation to get the
-	 * image in the other way
+	 * drawFlippedImage draws an image in reversed, used in animation to get the mirrored
+	 * image
+	 * Flipped image around the vertical axis
 	 *
 	 * @param g2d, the Graphics2D object used to draw the image.
 	 * @param image, the BufferedImage sprite to be drawn.
