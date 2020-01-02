@@ -73,7 +73,7 @@ public class ConnectionUDP {
 	}
 	/**
 	 * Creates a broadcast on the network as a datagram packet
-	 * opens a socket and closes it after message is sent
+	 * opens a socket and closes it after a message is sent
 	 * 
 	 * @param broadcastMessage
 	 * @param address
