@@ -18,13 +18,15 @@ import view.Animation;
  * extends Observable, which enables all Entities to notify the Controller of
  * changes to be made.
  *
- * @author Mattias Kï¿½llstrï¿½m
+ * @author Mattias Källström
  * @version 2.0
  */
 
 public abstract class Entity implements Comparable<Object> {
 
+	
 	private double xPosition;
+
 	private double yPosition;
 	private Rectangle collisionBounds;
 	private BufferedImage sprite;
@@ -35,14 +37,31 @@ public abstract class Entity implements Comparable<Object> {
 	private Controller controller;
 	private int depth = 0;
 
+	/**
+	 * Instantiates a new entity.
+	 */
 	public Entity() {
 		setCollisionBounds();
 	}
 
+	/**
+	 * Instantiates a new entity.
+	 *
+	 * @param width the width
+	 * @param height the height
+	 */
 	public Entity(int width, int height) {
 		setCollisionBounds(width, height);
 	}
 
+	/**
+	 * Instantiates a new entity.
+	 *
+	 * @param xPosition the x position
+	 * @param yPosition the y position
+	 * @param width the width
+	 * @param height the height
+	 */
 	public Entity(double xPosition, double yPosition, int width, int height) {
 		this.xPosition = xPosition;
 		this.yPosition = yPosition;
@@ -53,9 +72,9 @@ public abstract class Entity implements Comparable<Object> {
 	 * Creates an instance of an Entity at the given coordinates with the given
 	 * image as a sprite.
 	 *
-	 * @param xPosition, initial x coordinates for the player character.
-	 * @param yPosition, initial y coordinates for the player character.
-	 * @param sprite, chosen image for the Entity.
+	 * @param xPosition the x position
+	 * @param yPosition the y position
+	 * @param sprite the sprite
 	 */
 	public Entity(int xPosition, int yPosition, BufferedImage sprite) {
 		this.xPosition = xPosition;
@@ -68,10 +87,10 @@ public abstract class Entity implements Comparable<Object> {
 	 * Creates an instance of an Entity at the given coordinates. Has both image and
 	 * animation.
 	 *
-	 * @param xPosition, initial x coordinates for the player character.
-	 * @param yPosition, initial y coordinates for the player character.
-	 * @param sprite, chosen image for the Entity.
-	 * @param anim, chosen animations for the Entity.
+	 * @param xPosition the x position
+	 * @param yPosition the y position
+	 * @param sprite the sprite
+	 * @param anim the anim
 	 */
 	public Entity(int xPosition, int yPosition, BufferedImage sprite, Animation anim) {
 		this.xPosition = xPosition;
@@ -80,9 +99,11 @@ public abstract class Entity implements Comparable<Object> {
 		this.anim = anim;
 		setCollisionBounds();
 	}
+	
 	/**
-	 * addObserver : Makes i possible to observe changes of objects
-	 * @param listener
+	 * addObserver : Makes i possible to observe changes of objects.
+	 *
+	 * @param listener the listener
 	 */
 	public void addObserver(PropertyChangeListener listener) {
 		if (propertyChangeSupport == null)
@@ -90,19 +111,28 @@ public abstract class Entity implements Comparable<Object> {
 		propertyChangeSupport.addPropertyChangeListener(listener);
 	}
 	
+	/**
+	 * Draw this instance. Is overriden in the children of this class.
+	 *
+	 * @param g the graphics
+	 */
 	public void draw(Graphics g) {
 
 	}
+	
 	/**
-	 * Sets the controller
-	 * @param controller
+	 * Sets the controller.
+	 *
+	 * @param controller the new controller
 	 */
 	public void setController(Controller controller) {
 		this.controller = controller;
 	}
+	
 	/**
-	 * getEntityAtPosition : 
-	 * @param x position, where the 
+	 * getEntityAtPosition : .
+	 *
+	 * @param x position, where the
 	 * @param y position,
 	 * @return returns entity at the coordinates x position and y position
 	 */
@@ -112,6 +142,12 @@ public abstract class Entity implements Comparable<Object> {
 		return controller.getEntityAtPosition(x, y);
 	}
 
+	/**
+	 * Gets the entities inside area.
+	 *
+	 * @param area the area
+	 * @return the entities inside area
+	 */
 	public List<Entity> getEntitiesInsideArea(Polygon area) {
 		if (controller == null)
 			return null;
@@ -119,10 +155,10 @@ public abstract class Entity implements Comparable<Object> {
 	}
 
 	/**
-	 * Updates the Entities position, given how much the Entity is supposed to move
+	 * Updates the Entities position, given how much the Entity is supposed to move.
 	 *
-	 * @param x, how many pixels Entity is supposed to be moved in x-Axis.
-	 * @param y, how many pixels Entity is supposed to be moved in y-Axis.
+	 * @param x the x
+	 * @param y the y
 	 */
 	public void move(double x, double y) {
 		xPosition += x;
@@ -131,26 +167,16 @@ public abstract class Entity implements Comparable<Object> {
 	}
 
 	/**
-	 * Draws the image given a Graphics2D object and an image to draw. Image to be
-	 * used is collected from the Entity
-	 *
-	 * @param g2d, a Graphics2D object for animation and tile-set.
-	 */
-
-	/**
 	 * Draws a rectangle that depicts the collisionBounds limits. Used for debugging
 	 * purposes to show when objects intersects.
 	 *
 	 * @param g2d, a Graphics2D object for animation and tileset.
 	 */
 	public void drawCollisionBounds(Graphics2D g2d) {
-//		if (this instanceof EntityVehicle) {
-//			g2d.draw(((EntityVehicle) this).getVehicleBounds());
-//			g2d.setColor(Color.ORANGE);
-//		} else {
+
 		g2d.drawRect((int) getCollisionBounds().getX(), (int) getCollisionBounds().getY(),
 				(int) getCollisionBounds().getWidth(), (int) getCollisionBounds().getHeight());
-//		}
+
 	}
 
 	/**
@@ -169,13 +195,16 @@ public abstract class Entity implements Comparable<Object> {
 		propertyChangeSupport.firePropertyChange("INSTANCE DESTROY", this, null);
 	}
 
+	/**
+	 * Alerts a propertychange to create this instance
+	 *
+	 * @param entity the entity to create
+	 */
 	public void instanceCreate(Entity entity) {
 		propertyChangeSupport.firePropertyChange("INSTANCE CREATE", null, entity);
 	}
 
-	/*
-	 * public void instanceCreate() { }
-	 */
+
 
 	/**
 	 * getXPosition returns the value of xPosition.
@@ -217,9 +246,9 @@ public abstract class Entity implements Comparable<Object> {
 
 	/**
 	 * setXPosition changes xPosition coordinate of the Entity to x, and sets the
-	 * new collisionbounds position accordingly
+	 * new collisionbounds position accordingly.
 	 *
-	 * @param x, the new value for the xPosition.
+	 * @param x1 the new x position
 	 */
 	public void setXPosition(double x1) {
 		xPosition = x1;
@@ -228,9 +257,9 @@ public abstract class Entity implements Comparable<Object> {
 
 	/**
 	 * setYPosition changes yPosition coordinate of the Entity to y, and sets the
-	 * new collisionbounds position accordingly
+	 * new collisionbounds position accordingly.
 	 *
-	 * @param y, the new value for the yPosition.
+	 * @param y1 the new y position
 	 */
 	public void setYPosition(double y1) {
 		yPosition = y1;
@@ -247,9 +276,9 @@ public abstract class Entity implements Comparable<Object> {
 	}
 
 	/**
-	 * setSprite changes the image of the Entity to sprite,
+	 * setSprite changes the image of the Entity to sprite,.
 	 *
-	 * @param sprite, the new image for the sprite.
+	 * @param sprite the new sprite
 	 */
 	public void setSprite(BufferedImage sprite) {
 		this.sprite = sprite;
@@ -272,11 +301,25 @@ public abstract class Entity implements Comparable<Object> {
 		setCollisionBounds(new Rectangle((int) getXPosition(), (int) getYPosition(), width, height), 0, 0);
 	}
 
+	/**
+	 * Sets the collision bounds.
+	 *
+	 * @param width the width
+	 * @param height the height
+	 * @param xOffset the x offset
+	 * @param yOffset the y offset
+	 */
 	public void setCollisionBounds(int width, int height, int xOffset, int yOffset) {
 		setCollisionBounds(width, height);
 		setCollisionBounds(getCollisionBounds(), xOffset, yOffset);
 	}
 
+	/**
+	 * Sets the collision bounds.
+	 *
+	 * @param width the width
+	 * @param height the height
+	 */
 	public void setCollisionBounds(int width, int height) {
 		collisionBoundsXOffset = 0;
 		collisionBoundsYOffset = 0;
@@ -284,11 +327,11 @@ public abstract class Entity implements Comparable<Object> {
 	}
 
 	/**
-	 * setCollisionBounds with parameters handling offset and base collisionBounds
+	 * setCollisionBounds with parameters handling offset and base collisionBounds.
 	 *
-	 * @param collisionBounds, used to set a new collisionBounds using the old value
-	 * @param xOffset, offset in x-Axis
-	 * @param yOffset, offset in y-Axis
+	 * @param collisionBounds the collision bounds
+	 * @param xOffset the x offset
+	 * @param yOffset the y offset
 	 */
 	public void setCollisionBounds(Rectangle collisionBounds, int xOffset, int yOffset) {
 		collisionBoundsXOffset = xOffset;
@@ -318,6 +361,15 @@ public abstract class Entity implements Comparable<Object> {
 		return collisionBounds;
 	}
 
+	/**
+	 * Gets the angle between two given points.
+	 *
+	 * @param x1 the x-coordinate of the first point
+	 * @param y1 the y-coordinate of the first point
+	 * @param x2 the x-coordinate of the second point
+	 * @param y2 the y-coordinate of the second point
+	 * @return the angle between points
+	 */
 	public double getAngleBetweenPoints(double x1, double y1, double x2, double y2) {
 		double delta_x = x2 - x1;
 		double delta_y = y2 - y1;
@@ -328,20 +380,28 @@ public abstract class Entity implements Comparable<Object> {
 	/**
 	 * drawFlippedImage draws an image in reversed, used in animation to get the mirrored
 	 * image
-	 * Flipped image around the vertical axis
+	 * Flipped image around the vertical axis.
 	 *
-	 * @param g2d, the Graphics2D object used to draw the image.
-	 * @param image, the BufferedImage sprite to be drawn.
+	 * @param g2d the g 2 d
+	 * @param image the image
 	 */
 	public void drawFlippedImage(Graphics2D g2d, BufferedImage image) {
 		g2d.drawImage(image, (int) (getXPosition() + image.getWidth()), (int) getYPosition(), -image.getWidth(),
 				image.getHeight(), null);
 	}
 
+	/**
+	 * Gets the depth.
+	 *
+	 * @return the depth
+	 */
 	public int getDepth() {
 		return depth;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
 	@Override
 	public int compareTo(Object arg0) {
 		if (!(arg0 instanceof Entity))

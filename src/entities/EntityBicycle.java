@@ -6,8 +6,21 @@ import java.beans.PropertyChangeListener;
 
 import models.SharedValues;
 
+/**
+ * The Class EntityBicycle which controls the behavior of the bicycle entities.
+ * 
+ * @author Mattias Källström
+ * @version 2.0
+ */
 public class EntityBicycle extends EntityVehicle {
 
+	/**
+	 * Instantiates a new entity bicycle.
+	 *
+	 * @param road the road
+	 * @param listener the listener
+	 * @param entitytype the entitytype
+	 */
 	public EntityBicycle(EntityRoad road, PropertyChangeListener listener, String entitytype) {
 		super(road, listener);
 		setVehicleName("Bicycle");
@@ -19,7 +32,6 @@ public class EntityBicycle extends EntityVehicle {
 
 	}
 	/*
-	 * (non-Javadoc)
 	 * 
 	 * @see entities.Entity#step()
 	 */
@@ -31,6 +43,9 @@ public class EntityBicycle extends EntityVehicle {
 
 	}
 
+	/* 
+	 * @see entities.EntityVehicle#draw(java.awt.Graphics)
+	 */
 	@Override
 	public void draw(Graphics g) {
 		super.draw(g);
@@ -38,6 +53,9 @@ public class EntityBicycle extends EntityVehicle {
 
 	}
 	
+	/* 
+	 * @see entities.Entity#instanceDestroy()
+	 */
 	@Override
 	public void instanceDestroy() {
 		super.instanceDestroy();

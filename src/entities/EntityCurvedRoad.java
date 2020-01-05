@@ -3,22 +3,43 @@ package entities;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * The Class EntityCurvedRoad.
+ */
 public class EntityCurvedRoad extends EntityRoad {
 
+	/**
+	 * The Class RoadPart which defines a singular fraction of a road.
+	 */
 	private class RoadPart extends EntityRoad {
+		
+	
 		protected EntityCurvedRoad first = null;
 		protected EntityRoad last = null;
 
+		/**
+		 * Instantiates a new road part.
+		 *
+		 * @param enterNode the enter node
+		 * @param exitNode the exit node
+		 * @param roadType the road type
+		 */
 		public RoadPart(EntityNode enterNode, EntityNode exitNode, RoadType roadType) {
 			super(enterNode, exitNode, roadType, false); // False is for roadspawning
-			// TODO Auto-generated constructor stub
+			
 		}
 
+		/* 
+		 * @see entities.EntityRoad#getNextRoad(java.lang.Boolean)
+		 */
 		@Override
 		public EntityRoad getNextRoad(Boolean turn) {
 			return first.getNextRoadPart(this, turn);
 		}
 
+		/* 
+		 * @see entities.EntityRoad#toString()
+		 */
 		@Override
 		public String toString() {
 			StringBuilder s = new StringBuilder();
@@ -28,6 +49,7 @@ public class EntityCurvedRoad extends EntityRoad {
 
 	}
 
+	
 	private Map<EntityRoad, EntityRoad> roadToRoad;
 	private EntityRoad first = null;
 	private EntityRoad last = null;
@@ -35,6 +57,15 @@ public class EntityCurvedRoad extends EntityRoad {
 	private double exitAngle;
 	private double standardRadius;
 
+	/**
+	 * Instantiates a new entity curved road.
+	 *
+	 * @param enterNode the enter node
+	 * @param exitNode the exit node
+	 * @param roadType the road type
+	 * @param startAngle the start angle
+	 * @param exitAngle the exit angle
+	 */
 	public EntityCurvedRoad(EntityNode enterNode, EntityNode exitNode, RoadType roadType, double startAngle,
 			double exitAngle) {
 		super(enterNode, exitNode, roadType, false); // False is for roadspawning
@@ -43,6 +74,9 @@ public class EntityCurvedRoad extends EntityRoad {
 		// TODO Auto-generated constructor stub
 	}
 
+	/* (non-Javadoc)
+	 * @see entities.EntityRoad#setPosition(double, double, double, double)
+	 */
 	@Override
 	public void setPosition(double x1, double y1, double x2, double y2) {
 
@@ -203,11 +237,21 @@ public class EntityCurvedRoad extends EntityRoad {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see entities.EntityRoad#getNextRoad(java.lang.Boolean)
+	 */
 	@Override
 	public EntityRoad getNextRoad(Boolean turn) {
 		return roadToRoad.get(this);
 	}
 
+	/**
+	 * Gets the next road part.
+	 *
+	 * @param road the road
+	 * @param turn the turn
+	 * @return the next road part
+	 */
 	public EntityRoad getNextRoadPart(EntityRoad road, Boolean turn) {
 		if (road.equals(last))
 			return getExitNode().getNextRoad(this, turn);
@@ -215,6 +259,9 @@ public class EntityCurvedRoad extends EntityRoad {
 			return roadToRoad.get(road);
 	}
 
+	/* (non-Javadoc)
+	 * @see entities.EntityRoad#toString()
+	 */
 	@Override
 	public String toString() {
 		StringBuilder s = new StringBuilder();
