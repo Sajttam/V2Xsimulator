@@ -11,36 +11,73 @@ import entities.EntityRoad.RoadType;
 import models.SIScaling;
 import models.SharedValues;
 
+/**
+ * The Class EntityNode which sets the behaviour of the traffic Nodes.
+ */
 public class EntityNode extends Entity {
 
+	
 	private boolean spawning;
 	public static final int MAX_SPEED_TURNS_CARS = 20;
 	public static final int MAX_SPEED_BIKE = 20;
 
+	/**
+	 * The Enum Direction.
+	 */
 	public enum Direction {
 		WEST, EAST, NORTH, SOUTH;
 	}
 
+	/**
+	 * The Class RoadPair.
+	 */
 	public class RoadPair {
+		
 		EntityRoad road1, road2;
 
+		/**
+		 * Instantiates a new road pair.
+		 *
+		 * @param road1 the road 1
+		 * @param road2 the road 2
+		 */
 		public RoadPair(EntityRoad road1, EntityRoad road2) {
 			this.road1 = road1;
 			this.road2 = road2;
 		}
 
+		/**
+		 * Gets the first road.
+		 *
+		 * @return the road 1
+		 */
 		public EntityRoad getRoad1() {
 			return road1;
 		}
 
+		/**
+		 * Gets the second road.
+		 *
+		 * @return the road 2
+		 */
 		public EntityRoad getRoad2() {
 			return road2;
 		}
 
+		/**
+		 * Sets the first road.
+		 *
+		 * @param road1 the new road 1
+		 */
 		public void setRoad1(EntityRoad road1) {
 			this.road1 = road1;
 		}
 
+		/**
+		 * Sets the second road.
+		 *
+		 * @param road2 the new road 2
+		 */
 		public void setRoad2(EntityRoad road2) {
 			this.road2 = road2;
 		}
@@ -50,9 +87,14 @@ public class EntityNode extends Entity {
 	private ArrayList<EntityRoad> roadsEast = new ArrayList<EntityRoad>();
 	private ArrayList<EntityRoad> roadsNorth = new ArrayList<EntityRoad>();
 	private ArrayList<EntityRoad> roadsSouth = new ArrayList<EntityRoad>();
-
 	private Map<EntityRoad, RoadPair> roadConnections = new HashMap<EntityRoad, RoadPair>();;
 
+	/**
+	 * Instantiates a new entity node.
+	 *
+	 * @param x the x
+	 * @param y the y
+	 */
 	public EntityNode(int x, int y) {
 		setXPosition(x);
 		setYPosition(y);
@@ -60,23 +102,33 @@ public class EntityNode extends Entity {
 		setCollisionBounds(getWidth(), getHeight(), 0, 0);
 
 	}
+	
 	/**
-	 * Tells if a node can spawn vehicles
-	 * 
+	 * Tells if a node can spawn vehicles.
+	 *
 	 * @return Returns whether the node is spawning
 	 */
 	public boolean isSpawning() {
 		return spawning;
 	}
+	
 	/**
-	 * Sets a node to spawn vehicles
+	 * Sets a node to spawn vehicles.
+	 *
+	 * @param spawning the new spawning
 	 */
 	public void setSpawning(boolean spawning) {
 		this.spawning = spawning;
 	}
 
+	/** The wait. */
 	int wait = (int) (20 + (Math.random() * 400));
 
+	/**
+	 * Gets the all roads.
+	 *
+	 * @return the all roads
+	 */
 	public List<EntityRoad> getAllRoads() {
 		List<EntityRoad> allRoads = new ArrayList<EntityRoad>(roadsWest);
 		allRoads.addAll(roadsWest);
@@ -111,7 +163,13 @@ public class EntityNode extends Entity {
 		g.drawRect((int) getXPosition(), (int) getYPosition(), getWidth(), getHeight());
 	}
 
-	public Direction getOppositDirection(Direction direction) {
+	/**
+	 * Gets the opposite direction.
+	 *
+	 * @param direction the direction
+	 * @return the opposite direction
+	 */
+	public Direction getOppositeDirection(Direction direction) {
 		switch (direction) {
 		case WEST:
 			return Direction.EAST;
@@ -124,10 +182,13 @@ public class EntityNode extends Entity {
 		}
 		return direction;
 	}
+	
 	/**
 	 * Return the next road in the pair if there is one
-	 * otherwise null
-	 * 
+	 * otherwise null.
+	 *
+	 * @param road the road
+	 * @param turn the turn
 	 * @return returns the next road
 	 */
 	public EntityRoad getNextRoad(EntityRoad road, Boolean turn) {
@@ -138,27 +199,16 @@ public class EntityNode extends Entity {
 			return null;
 		}
 	}
+	
 	/**
 	 * Creates the network of roads
 	 * links them together to make all the roads
-	 * connect to each-other
-	 * 
+	 * connect to each-other.
+	 *
+	 * @param roads the roads
 	 */
 	public void doInternalConnections(List<EntityRoad> roads) {
-		int count = 0;
-		if (roadsWest.isEmpty())
-			count++;
-		if (roadsEast.isEmpty())
-			count++;
-		if (roadsNorth.isEmpty())
-			count++;
-		if (roadsSouth.isEmpty())
-			count++;
-
-		boolean starightRoads = !(count == 2);
-
-		// if (starightRoads) System.out.println("YES ");
-
+	
 		for (EntityRoad r : roads) {
 
 			if (equals(r.getExitNode())) {
@@ -219,12 +269,23 @@ public class EntityNode extends Entity {
 
 	}
 
+	/**
+	 * Handle to create all internal connections.
+	 */
 	public void doInternalConnections() {
 		doInternalConnections(roadsWest);
 		doInternalConnections(roadsEast);
 		doInternalConnections(roadsNorth);
 		doInternalConnections(roadsSouth);
 	}
+	
+	/**
+	 * Adds the connection to.
+	 *
+	 * @param other the other
+	 * @param direction the direction
+	 * @param roadType the road type
+	 */
 	/*
 	 * Connects the road to a node
 	 */
@@ -232,11 +293,17 @@ public class EntityNode extends Entity {
 		EntityRoad road = new EntityRoad(this, other, roadType, spawning);
 
 		addRoad(road, direction);
-		other.addRoad(road, getOppositDirection(direction));
+		other.addRoad(road, getOppositeDirection(direction));
 
 		instanceCreate(road);
 	}
 
+	/**
+	 * Adds a road to to this node.
+	 *
+	 * @param road the road
+	 * @param direction the direction
+	 */
 	public void addRoad(EntityRoad road, Direction direction) {
 		ArrayList<EntityRoad> roads = null;
 		int roadXOffset = (int) (getWidth() * 0.15);
@@ -284,10 +351,22 @@ public class EntityNode extends Entity {
 
 	}
 
+	/**
+	 * Returns true if the input road ends at this node.
+	 *
+	 * @param road the road
+	 * @return true, if successful
+	 */
 	public boolean roadIsExit(EntityRoad road) {
 		return equals(road.getExitNode());
 	}
 
+	/**
+	 * Adds a road reservation to this node. The reservations are used to prevent vehicles crossing the crossing when the reservation is occupied.
+	 *
+	 * @param r the r
+	 * @param l the l
+	 */
 	public void addRoadReservation(EntityRoad r, EntityTrafficLight l) {
 
 		int resHeight = getWidth();
@@ -315,11 +394,17 @@ public class EntityNode extends Entity {
 
 	}
 
+	/* 
+	 * Returns the node width.
+	 */
 	@Override
 	public int getWidth() {
 		return (int) SharedValues.getInstance().getNodeWidth();
 	}
 
+	/* 
+	 * Returns the node height.
+	 */
 	@Override
 	public int getHeight() {
 		return (int) SharedValues.getInstance().getNodeHeight();

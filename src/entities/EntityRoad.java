@@ -8,7 +8,10 @@ import models.SIScaling;
 import models.SharedValues;
 
 public class EntityRoad extends Entity {
+	
+	
 	public enum RoadType {
+		
 		CAR, BICYCLE;
 	}
 
@@ -24,10 +27,17 @@ public class EntityRoad extends Entity {
 	private double speedLimit = 2;
 	private SIScaling scaler = new SIScaling();
 	boolean drawn;
-
 	public boolean straight = true;
 	public boolean leftCurve = false;
 
+	/**
+	 * Instantiates a new entity road.
+	 *
+	 * @param enterNode the enter node
+	 * @param exitNode the exit node
+	 * @param roadType the road type
+	 * @param spawning the spawning
+	 */
 	public EntityRoad(EntityNode enterNode, EntityNode exitNode, RoadType roadType, Boolean spawning) {
 		this.enterNode = enterNode;
 		this.exitNode = exitNode;
@@ -47,6 +57,14 @@ public class EntityRoad extends Entity {
 		}
 	}
 
+	/**
+	 * Sets the position of the road.
+	 *
+	 * @param x1 the x-position for the start of the road.
+	 * @param y1 the y-position for the start of the road.
+	 * @param nextX2 the x-position for the end of the road.
+	 * @param nextY2 the y-position for the end of the road.
+	 */
 	public void setPosition(double x1, double y1, double nextX2, double nextY2) {
 		setXPosition(x1);
 		setYPosition(y1);
@@ -60,16 +78,24 @@ public class EntityRoad extends Entity {
 		if (distX < 0)
 			angle += Math.PI;
 	}
+	
 	/**
 	 * Returns the type of road
-	 * available : BICYCLE, CAR
-	 * 
+	 * available : BICYCLE, CAR.
+	 *
 	 * @return type of Road
 	 */
 	public RoadType getRoadType() {
 		return roadType;
 	}
 
+	/**
+	 * Sets the position of the road in reference to a node.
+	 *
+	 * @param node the node
+	 * @param x the x
+	 * @param y the y
+	 */
 	public void setPosition(EntityNode node, int x, int y) {
 		if (node.equals(enterNode)) {
 			setPosition(x, y, x2, y2);
@@ -77,13 +103,13 @@ public class EntityRoad extends Entity {
 			setPosition((int) getXPosition(), (int) getYPosition(), x, y);
 		}
 	}
+	
+
 	// Random delay between vehicle spawning
 	int wait = (int) (50 + (Math.random() * 400));
 	
 	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see entities.Entity#step
+	 * Step-function for entityroad. Controls spawning of vehicles.
 	 */
 	@Override
 	public void step() {
@@ -115,10 +141,11 @@ public class EntityRoad extends Entity {
 			}
 		wait--;
 	}
+	
 	/**
 	 * Returns the angle the road is pointing towards
-	 * relative horizontal axis
-	 * 
+	 * relative horizontal axis.
+	 *
 	 * @return angle of road
 	 */
 	public double getAngle() {
@@ -153,34 +180,76 @@ public class EntityRoad extends Entity {
 
 	}
 
+	/**
+	 * Gets the distance of the road on the x-axis.
+	 *
+	 * @return the dist X
+	 */
 	public double getDistX() {
 		return distX;
 	}
 
+	/**
+	 * Sets the distance of the road on the x-axis.
+	 *
+	 * @param distX the new dist X
+	 */
 	public void setDistX(double distX) {
 		this.distX = distX;
 	}
 
+	/**
+	 * Gets the distance of the road on the y-axis.
+	 *
+	 * @return the dist Y
+	 */
 	public double getDistY() {
 		return distY;
 	}
 
+	/**
+	 * Sets the distance of the road on the x-axis.
+	 *
+	 * @param distY the new dist Y
+	 */
 	public void setDistY(double distY) {
 		this.distY = distY;
 	}
 
+	/**
+	 * Gets the next road.
+	 *
+	 * @param turn the turn
+	 * @return the next road
+	 */
 	public EntityRoad getNextRoad(Boolean turn) {
 		return exitNode.getNextRoad(this, turn);
 	}
 
+	/**
+	 * Gets the entry node.
+	 *
+	 * @return the entry node
+	 */
 	public EntityNode getEntryNode() {
 		return enterNode;
 	}
 
+	/**
+	 * Gets the exit node.
+	 *
+	 * @return the exit node
+	 */
 	public EntityNode getExitNode() {
 		return exitNode;
 	}
 
+	/**
+	 * Gets the other node.
+	 *
+	 * @param node the node
+	 * @return the other node
+	 */
 	public EntityNode getOtherNode(EntityNode node) {
 		if (node.equals(enterNode))
 			return exitNode;
@@ -188,6 +257,9 @@ public class EntityRoad extends Entity {
 			return enterNode;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		StringBuilder s = new StringBuilder();
@@ -195,10 +267,20 @@ public class EntityRoad extends Entity {
 		return s.toString();
 	}
 
+	/**
+	 * Gets the speed limit.
+	 *
+	 * @return the speed limit
+	 */
 	public double getSpeedLimit() {
 		return speedLimit;
 	}
 
+	/**
+	 * Sets the speed limit.
+	 *
+	 * @param speedLimit the new speed limit
+	 */
 	public void setSpeedLimit(double speedLimit) {
 		this.speedLimit = speedLimit;
 	}
